@@ -27,6 +27,33 @@ FILTER = '--tf accept-relations route=trolleybus'
 #Будут удалены маршруты, проходящие через red_zone, то есть междугородные.
 RED_ZONE = 'cfg/mostrans-bus_red_zone.geojson'
 
+def argparser_prepare():
+
+    class PrettyFormatter(argparse.ArgumentDefaultsHelpFormatter,
+        argparse.RawDescriptionHelpFormatter):
+
+        max_help_position = 35
+
+    parser = argparse.ArgumentParser(description='',
+            formatter_class=PrettyFormatter)
+    parser.add_argument('--dump_path', dest='dump_path', description='Path to local .pbf file. Can both be filtered, or unfiltered')
+    parser.add_argument('--filter', dest='filter', description='parameter string to osmfilter. "--tf accept-relations route=trolleybus" ')
+    parser.add_argument('--pg_creds',dest='pg_creds', description='PostGIS creditinals, format as described in GDAL PostGIS driver'
+    parser.add_argument('--red_zone',dest='red_zone', description='Path to local GeoJSON file with red zone. Routes intersects with red zone will be deleted.'
+    parser.add_argument('--output',dest='output', description='Output folder'
+                         
+        
+    parser.set_defaults(download=False)
+
+    parser.epilog = \
+        '''Samples:
+%(prog)s --download
+%(prog)s --no-download
+
+''' \
+        % {'prog': parser.prog}
+    return parser
+
 
 def download_osm_dump():
 
@@ -67,27 +94,7 @@ def filter_osm_dump():
 
 
 
-def argparser_prepare():
 
-    class PrettyFormatter(argparse.ArgumentDefaultsHelpFormatter,
-        argparse.RawDescriptionHelpFormatter):
-
-        max_help_position = 35
-
-    parser = argparse.ArgumentParser(description='',
-            formatter_class=PrettyFormatter)
-    parser.add_argument('--download', dest='download', action='store_true')
-    parser.add_argument('--no-download', dest='download', action='store_false')
-    parser.set_defaults(download=False)
-
-    parser.epilog = \
-        '''Samples:
-%(prog)s --download
-%(prog)s --no-download
-
-''' \
-        % {'prog': parser.prog}
-    return parser
 
 def cleardb(host,dbname,user,password):
     ConnectionString="dbname=" + dbname + " user="+ user + " host=" + host + " password=" + password
