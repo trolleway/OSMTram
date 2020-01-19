@@ -69,7 +69,6 @@ def filter_osm_dump():
 
         refs=[]
        
-        print 'Filter step 1'
         #TODO var
         cmd='''
 ~/osmosis/bin/osmosis \
@@ -81,7 +80,6 @@ def filter_osm_dump():
 '''
         os.system(cmd)
 
-        print 'Filter step 3'
         cmd='''
 ~/osmosis/bin/osmosis \
   -q \
