@@ -1,6 +1,19 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
+'''
+Inputs:
+* dump url
+* filter string for osmfilter
+* red_zone.geojson(optionaly)
+* database creds
+* output folder
+
+Returns:
+* folder/terminals.geojson
+* folder/rotes_with_refs.geojson
+'''
+
 import os
 import psycopg2
 import time
