@@ -36,58 +36,52 @@ def argparser_prepare():
 
     parser = argparse.ArgumentParser(description='',
             formatter_class=PrettyFormatter)
-    parser.add_argument('--dump_path', dest='dump_path', required=True, description='Path to local .pbf file. Can both be filtered, or unfiltered')
-    parser.add_argument('--filter', dest='filter', required=True, description='parameter string to osmfilter. "--tf accept-relations route=trolleybus" ')
-    parser.add_argument('--red_zone',dest='red_zone', required=False, description='Path to local GeoJSON file with red zone. Routes intersects with red zone will be deleted.'
-    parser.add_argument('--output',dest='output', required=True, description='Output folder'
-                         
-        
-    parser.set_defaults(download=False)
+    parser.add_argument('--dump_path', dest='dump_path', required=True, help='Path to local .pbf file. Can both be filtered, or unfiltered')
+    parser.add_argument('--filter', dest='filter', required=True, help='parameter string to osmfilter. \ ')
+    parser.add_argument('--red_zone',dest='red_zone', required=False, help='Path to local GeoJSON file with red zone. Routes intersects with red zone will be deleted.')
+    parser.add_argument('--output',dest='output', required=True, help='Output folder')
 
     parser.epilog = \
         '''Samples:
-%(prog)s --download
-%(prog)s --no-download
+%(prog)s --dump_path yaroslavl.pbf --filter "--tf accept-relations route=trolleybus" --output "temp/yaroslavl"
 
 ''' \
         % {'prog': parser.prog}
     return parser
 
-
-def download_osm_dump():
-
-        if not os.path.exists('osm'):
-            os.makedirs('osm')
-        #TODO var
-        os.system('wget --timestamping  https://s3.amazonaws.com/metro-extracts.mapzen.com/moscow_russia.osm.pbf')
-
-def filter_osm_dump():
+def filter_osm_dump(dump_path, filter, folder):
         import json
         import pprint
         pp=pprint.PrettyPrinter(indent=2)
 
         refs=[]
-       
+        output_path_1 = os.path.join(folder,'routes1.osm.pbf')
+        output_path_2 = os.path.join(folder,'routesFinal.osm.pbf')
+
         #TODO var
         cmd='''
 ~/osmosis/bin/osmosis \
   -q \
-  --read-pbf moscow_russia.osm.pbf \
-  --tf accept-relations route=trolleybus \
+  --read-pbf {dump_path} \
+  {filter} \
   --used-way --used-node \
-  --write-pbf routes.osm.pbf
+  --write-pbf {output_path_1}
 '''
+        cmd = cmd.format(dump_path = dump_path, filter = filter, output_path_1 = output_path_1)
         os.system(cmd)
 
         cmd='''
 ~/osmosis/bin/osmosis \
   -q \
-  --read-pbf routes.osm.pbf \
+  --read-pbf {output_path_1} \
   --tf accept-relations "type=route" \
   --used-way --used-node \
-  --write-pbf routesFinal.osm.pbf
+  --write-pbf {output_path_2}
     '''
+        cmd = cmd.format(output_path_1 = output_path_1, output_path_2 = output_path_2)
         os.system(cmd)
+
+        os.unlink(output_path_1)
 
 
 
@@ -100,8 +94,8 @@ def cleardb(host,dbname,user,password):
 
         conn = psycopg2.connect(ConnectionString)
     except:
-        print 'I am unable to connect to the database                  ' 
-        print ConnectionString
+        print('Unable to connect to the database')
+        print(ConnectionString)
         return 0
     cur = conn.cursor()
     sql ='''
@@ -133,8 +127,8 @@ def filter_routes(host,dbname,user,password):
     try:
         conn = psycopg2.connect(ConnectionString)
     except:
-        print 'I am unable to connect to the database                  ' 
-        print ConnectionString
+        print('Unable to connect to the database')
+        print(ConnectionString)
         return 0
     cur = conn.cursor()
 
@@ -144,7 +138,6 @@ ogr2ogr -overwrite    \
   "PG:host='''+host+''' dbname='''+dbname+''' user='''+user+''' password='''+password+'''" -nln red_zone \
      cfg/mostrans-bus_red_zone.geojson -t_srs EPSG:3857
     '''
-    print cmd
     os.system(cmd)
     #выбираем веи, которые касаются красной зоны
     sql='''
@@ -156,9 +149,8 @@ WHERE ST_Intersects(l.way , red_zone.wkb_geometry);'''
     rows = cur.fetchall()
     for row in rows:
         WaysInRedZone.append(str(row[0]))
-        #удаляем релейшены, если в них есть веи, касающиеся красной зоны 
+        #удаляем релейшены, если в них есть веи, касающиеся красной зоны
         sql='''DELETE FROM planet_osm_rels WHERE members::VARCHAR LIKE CONCAT('%w',''' + str(row[0])+''','%') '''
-        print sql
         cur.execute(sql)
         conn.commit()
     #Удаление всех линий в красной зоне
@@ -175,7 +167,7 @@ WHERE ST_Intersects(l.way , red_zone.wkb_geometry);  '''
     #Удаление всех веев, по которым не проходит маршрутов
 
 def process(host,dbname,user,password):
-    
+
         cmd='''python osmot/osmot.py -hs {host} -d {dbname} -u {user} -p {password}
     '''.format(
                 host=host,
@@ -205,23 +197,14 @@ if __name__ == '__main__':
 
         parser = argparser_prepare()
         args = parser.parse_args()
-        
-        import time
-        now = time.strftime("%c")
-        print ("Current time %s"  % now )
-        
-        is_download = args.download
-        
-        if is_download == True:
-            print "downloading"
-            download_osm_dump()
-        
-        filter_osm_dump()
+
+
+        filter_osm_dump(dump_path=args.dump_path, filter=args.filter,folder=args.folder)
         os.system('export PGPASS='+password)
 
         cleardb(host,dbname,user,password)
         importdb(host,dbname,user,password)
-        filter_routes(host,dbname,user,password) 
-        process(host,dbname,user,password) 
+        filter_routes(host,dbname,user,password)
+        process(host,dbname,user,password)
         postgis2geojson(host,dbname,user,password,'terminals_export')
         postgis2geojson(host,dbname,user,password,'routes_with_refs')
