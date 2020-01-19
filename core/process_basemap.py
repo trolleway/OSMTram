@@ -15,17 +15,28 @@ Returns:
 '''
 
 import os
-import psycopg2
-import time
-import config
 import argparse
+import logging
+logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
+logger = logging.getLogger(__name__)
 
+logger.info('Start convert pbf to basemap layers')
 # move all magic variables to up
 
-DUMP_URL = 'https://s3.amazonaws.com/metro-extracts.mapzen.com/moscow_russia.osm.pbf'
-FILTER = '--tf accept-relations route=trolleybus'
-#Будут удалены маршруты, проходящие через red_zone, то есть междугородные.
-RED_ZONE = 'cfg/mostrans-bus_red_zone.geojson'
+'''
+Usage
+
+python3 /home/trolleway/tmp/OSMTram/core/process_basemap.py --dump_path /home/trolleway/tmp/tests/northwestern-fed-district-latest.osm.pbf --bbox 31.0467,58.421,31.4765,58.6117 --output "/home/trolleway/tmp/tests/"
+
+    osmconvert /home/trolleway/tmp/tests/northwestern-fed-district-latest.osm.pbf -o=/home/trolleway/tmp/tests/tmp1.o5m
+    osmfilter /home/trolleway/tmp/tests/tmp1.o5m --keep-tags="all highway= railway= landuse= natural= " --drop-tags="=footway" -o=/home/trolleway/tmp/tests/tmp2.o5m
+    osmconvert /home/trolleway/tmp/tests/tmp2.o5m -o=/home/trolleway/tmp/tests/filtered_dump.pbf
+
+    rm -r /home/trolleway/tmp/tests/tmp1.o5m
+    rm -r /home/trolleway/tmp/tests/tmp2.o5m
+
+'''
+
 
 def argparser_prepare():
 
@@ -37,6 +48,7 @@ def argparser_prepare():
     parser = argparse.ArgumentParser(description='',
             formatter_class=PrettyFormatter)
     parser.add_argument('--dump_path', dest='dump_path', required=True, help='Path to local .pbf file. Can both be filtered, or unfiltered')
+    parser.add_argument('--bbox', dest='bbox', required=False, help='text bbox')
     parser.add_argument('--output',dest='output', required=True, help='Output folder')
 
     parser.epilog = \
@@ -47,125 +59,65 @@ def argparser_prepare():
         % {'prog': parser.prog}
     return parser
 
-def filter_osm_dump(dump_path, filter, folder):
-        import json
-        import pprint
-        pp=pprint.PrettyPrinter(indent=2)
+def filter_osm_dump(dump_path, folder, bbox=None):
+    import json
+    import pprint
+    pp=pprint.PrettyPrinter(indent=2)
 
-        refs=[]
-        output_path_1 = os.path.join(folder,'routes1.osm.pbf')
-        output_path_2 = os.path.join(folder,'routesFinal.osm.pbf')
+    refs=[]
+    output_path_1 = os.path.join(folder,'tmp1')
+    output_path_2 = os.path.join(folder,'tmp2')
+    output_path_final = os.path.join(folder,FILTERED_DUMP_NAME)
+    bbox_string = ''
+    if bbox is not None: bbox_string='-b='+bbox
 
-        #TODO var
-        cmd='''
-        osmfilter {dump_path} --keep-tags="all highway= railway= landuse= natural= " --drop-tags="=footway" -o={output_path_1}
+    cmd='''
+    osmconvert {dump_path} {bbox_string} -o={output_path_1}.o5m
+    osmfilter {output_path_1}.o5m --keep-tags="all highway= railway= landuse= natural= " --drop-tags="=footway" -o={output_path_2}.o5m
+    osmconvert {output_path_2}.o5m -o={output_path_final}
+
+    rm -r {output_path_1}.o5m
+    rm -r {output_path_2}.o5m
 
 '''
-        cmd = cmd.format(dump_path = dump_path, filter = filter, output_path_1 = output_path_1)
-        os.system(cmd)
+    cmd = cmd.format(dump_path = dump_path,
+    filter = filter,
+    output_path_1 = output_path_1,
+    output_path_2 = output_path_2,
+    output_path_final = output_path_final,
+    bbox_string = bbox_string)
 
-        cmd='''
-~/osmosis/bin/osmosis \
-  -q \
-  --read-pbf {output_path_1} \
-  --tf accept-relations "type=route" \
-  --used-way --used-node \
-  --write-pbf {output_path_2}
-    '''
-        cmd = cmd.format(output_path_1 = output_path_1, output_path_2 = output_path_2)
-        os.system(cmd)
-
-        os.unlink(output_path_1)
-
-
-
-def cleardb(host,dbname,user,password):
-    ConnectionString="dbname=" + dbname + " user="+ user + " host=" + host + " password=" + password
-
-    try:
-        conn = psycopg2.connect(ConnectionString)
-    except:
-        print('Unable to connect to the database')
-        print(ConnectionString)
-        return 0
-    cur = conn.cursor()
-    sql ='''
-    DROP TABLE  IF EXISTS planet_osm_line         CASCADE;
-    DROP TABLE  IF EXISTS planet_osm_nodes         CASCADE;
-    DROP TABLE  IF EXISTS planet_osm_point         CASCADE;
-    DROP TABLE  IF EXISTS planet_osm_polygon     CASCADE;
-    DROP TABLE  IF EXISTS planet_osm_rels         CASCADE;
-    DROP TABLE  IF EXISTS planet_osm_roads         CASCADE;
-    DROP TABLE  IF EXISTS planet_osm_ways         CASCADE;
-    DROP TABLE  IF EXISTS route_line_labels         CASCADE;
-    --TRUNCATE TABLE  routes_with_refs         CASCADE;
-    DROP TABLE  IF EXISTS terminals             CASCADE;
-    --TRUNCATE TABLE  terminals_export         CASCADE;
-    '''
-
-    cur.execute(sql)
-    conn.commit()
-
-def importdb(host,database,username,password):
-    os.system('osm2pgsql --create --slim -E 3857 --cache-strategy sparse --cache 100 --host {host} --database {database} --username {username} routesFinal.osm.pbf'.format(host=host,
-    database=database,username=username,password=password))
-
-
-def filter_routes(host,dbname,user,password):
-    ConnectionString="dbname=" + dbname + " user="+ user + " host=" + host + " password=" + password
-
-    try:
-        conn = psycopg2.connect(ConnectionString)
-    except:
-        print('Unable to connect to the database')
-        print(ConnectionString)
-        return 0
-    cur = conn.cursor()
-
-    #TODO var
-    cmd='''
-ogr2ogr -overwrite    \
-  "PG:host='''+host+''' dbname='''+dbname+''' user='''+user+''' password='''+password+'''" -nln red_zone \
-     cfg/mostrans-bus_red_zone.geojson -t_srs EPSG:3857
-    '''
+    logger.debug(cmd)
     os.system(cmd)
-    #выбираем веи, которые касаются красной зоны
-    sql='''
-    SELECT l.osm_id
-FROM planet_osm_line l, red_zone
-WHERE ST_Intersects(l.way , red_zone.wkb_geometry);'''
-    cur.execute(sql)
-    WaysInRedZone=[]
-    rows = cur.fetchall()
-    for row in rows:
-        WaysInRedZone.append(str(row[0]))
-        #удаляем релейшены, если в них есть веи, касающиеся красной зоны
-        sql='''DELETE FROM planet_osm_rels WHERE members::VARCHAR LIKE CONCAT('%w',''' + str(row[0])+''','%') '''
-        cur.execute(sql)
-        conn.commit()
-    #Удаление всех линий в красной зоне
-    sql='''DELETE FROM planet_osm_line l
-USING red_zone
-WHERE ST_Intersects(l.way , red_zone.wkb_geometry);  '''
-    cur.execute(sql)
-    conn.commit()
+    logger.info('pbf filtering complete')
 
-    #Удаление всех маршрутов с пустым ref
-    sql='''DELETE from planet_osm_rels  WHERE tags::VARCHAR NOT LIKE CONCAT('%ref,%')  '''
-    cur.execute(sql)
-    conn.commit()
-    #Удаление всех веев, по которым не проходит маршрутов
 
-def process(host,dbname,user,password):
 
-        cmd='''python osmot/osmot.py -hs {host} -d {dbname} -u {user} -p {password}
-    '''.format(
-                host=host,
-                dbname=dbname,
-                user=user,
-                password=password
-        )
-        os.system(cmd)
+def pbf2layer(dump_path, folder, name='landuse',pbf_layer='multipolygons',where=None,select=None):
+    output_file_path = os.path.join(folder,name)+'.gpkg'
+
+    where_string = ''
+    if where is not None: where_string = ' -where "{where}"'.format(where=where)
+    select_string = ''
+    if select is not None: select_string = ' -select "{select}"'.format(select=select)
+    cmd = '''
+rm -f  {output_file_path}
+ogr2ogr -f "GPKG" -overwrite -oo CONFIG_FILE={script_folder}/osmconf_basemap.ini {select_string} {where_string}  {output_file_path} {dump_path} {pbf_layer}
+    '''
+    cmd = cmd.format(output_file_path = output_file_path,
+    dump_path = dump_path,
+    pbf_layer = pbf_layer,
+    where_string = where_string,
+    select_string = select_string,
+    script_folder = os.path.dirname(os.path.realpath(__file__)),
+    )
+    logger.debug(cmd)
+    os.system(cmd)
+
+    return 0
+
+
+
 
 def postgis2geojson(host,dbname,user,password,table, folder=''):
     file_path = os.path.join(folder,table) + '.geojson'
@@ -181,19 +133,40 @@ ogr2ogr -f GeoJSON {file_path}    \
     os.system(cmd)
 
 if __name__ == '__main__':
-    
-    
+
+
         FILTERED_DUMP_NAME = 'filtered_dump.pbf'
         parser = argparser_prepare()
         args = parser.parse_args()
-        
-        filter_osm_dump(dump_path=args.dump_path, folder=args.folder)
-        pbf2layer(dump_path=os.path.join(folder,FILTERED_DUMP_NAME), folder=args.folder, filter='landuse')
-        os.system('export PGPASS='+password)
 
-        cleardb(host,dbname,user,password)
-        importdb(host,dbname,user,password)
-        if (args.red_zone <> ''): filter_routes(host,dbname,user,password)
-        process(host,dbname,user,password)
-        postgis2geojson(host,dbname,user,password,'terminals_export')
-        postgis2geojson(host,dbname,user,password,'routes_with_refs')
+
+        #filter_osm_dump(dump_path=args.dump_path, folder=args.output, bbox = args.bbox)
+        pbf2layer(dump_path=os.path.join(args.output,FILTERED_DUMP_NAME),
+        folder=args.output,
+        pbf_layer='multipolygons',
+        name='landuse',
+        where="landuse is not null and landuse NOT IN ('grass','meadow','farmland')",
+        select="landuse,name"
+        )
+        pbf2layer(dump_path=os.path.join(args.output,FILTERED_DUMP_NAME),
+        folder=args.output,
+        pbf_layer='multipolygons',
+        name='water',
+        where="natural='water' OR waterway='riverbank'",
+        select="natural,name,waterway"
+        )
+        pbf2layer(dump_path=os.path.join(args.output,FILTERED_DUMP_NAME),
+        folder=args.output,
+        pbf_layer='lines',
+        name='highway',
+        where="highway is not null and highway NOT IN ('footway','path','track','service')",
+        select="highway,name,bridge,tunnel"
+        )
+
+        pbf2layer(dump_path=os.path.join(args.output,FILTERED_DUMP_NAME),
+        folder=args.output,
+        name='railway',
+        pbf_layer='lines',
+        where="railway is not null and railway NOT IN ('construction','proposed','razed','abandoned','disused')",
+        select="railway,name,bridge,tunnel"
+        )
