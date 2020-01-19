@@ -36,11 +36,11 @@ def argparser_prepare():
 
     parser = argparse.ArgumentParser(description='',
             formatter_class=PrettyFormatter)
-    parser.add_argument('--dump_path', dest='dump_path', description='Path to local .pbf file. Can both be filtered, or unfiltered')
-    parser.add_argument('--filter', dest='filter', description='parameter string to osmfilter. "--tf accept-relations route=trolleybus" ')
-    parser.add_argument('--pg_creds',dest='pg_creds', description='PostGIS creditinals, format as described in GDAL PostGIS driver'
-    parser.add_argument('--red_zone',dest='red_zone', description='Path to local GeoJSON file with red zone. Routes intersects with red zone will be deleted.'
-    parser.add_argument('--output',dest='output', description='Output folder'
+    parser.add_argument('--dump_path', dest='dump_path', required=True, description='Path to local .pbf file. Can both be filtered, or unfiltered')
+    parser.add_argument('--filter', dest='filter', required=True, description='parameter string to osmfilter. "--tf accept-relations route=trolleybus" ')
+    parser.add_argument('--pg_creds',dest='pg_creds', required=True, description='PostGIS creditinals, format as described in GDAL PostGIS driver'
+    parser.add_argument('--red_zone',dest='red_zone', required=False, description='Path to local GeoJSON file with red zone. Routes intersects with red zone will be deleted.'
+    parser.add_argument('--output',dest='output', required=True, description='Output folder'
                          
         
     parser.set_defaults(download=False)
