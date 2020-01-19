@@ -62,7 +62,7 @@ There are many great public transport routing services online, however, I stil n
 
 Here's why:
 * Changes of public transport lines become quickly, but transit authorities news resourses do not provide up-to-date maps, only text descriptions.
-* Public transport routing services solve one problem: how to get to specific address. A map of all lines solve diffirent problem: where i can go from some point. 
+* Public transport routing services solve one problem: how to get to specific address. A map of all lines solve diffirent problem: where i can go from some point.
 * Old maps may disappear from Internet, due to closed licensing, and no one can copy it. A maps generated from OpenStreetMap keep open license, and can be reproduced to many resources.
 * Public Transport lines information in OSM keeps from 2010-s, so historical map generation already possible.
 
@@ -84,7 +84,7 @@ This section should list any major frameworks that you built your project using.
 * [Python](https://www.python.org/)
 * [QGIS Server]
 
-
+https://dev.to/abiodunjames/why-docker-creating-a-multi-container-application-with-docker--1gpb
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -127,8 +127,8 @@ It consists from there scripts:
 
 * dump_prepare.py - Takes a url or pbf file, poly file, filter string, and filtering it to basemap.pbf and pt_data.pbf. Use osmfilter.
 * historical_dump.py - Download and prepare historical dump for dump_prepare. May will be run outside container, due to huge size of dumps. Use osmupdate and osmfilter.
-* basemap_process.py - Generate image of basemap for bbox. Importing basemap.pbf to postgis, create QGIS Server WMS, make png from WMS. 
-* pt_data_process.py - Generate image of public transport map for 
+* basemap_process.py - Generate image of basemap for bbox. Importing basemap.pbf to postgis, create QGIS Server WMS, make png from WMS.
+* pt_data_process.py - Generate image of public transport map for
 
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
@@ -206,4 +206,3 @@ Project Link: [https://github.com/your_username/repo_name](https://github.com/yo
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/othneildrew
 [product-screenshot]: images/screenshot.png
-
