@@ -79,9 +79,10 @@ This scripts provive points 1, 2, 3, calculating from OSM data. And also 5 and 6
 
 ### Built With
 This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
-* [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
-* [Laravel](https://laravel.com)
+* [PostGIS](https://postgis.net/)
+* [Docker](https://www.docker.com/)
+* [Python](https://www.python.org/)
+* [QGIS Server]
 
 
 
@@ -119,6 +120,16 @@ const API_KEY = 'ENTER YOUR API';
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+
+This is a docker container. It uses for input a bbox, filter string and map style, and generate a png image file.
+
+It consists from there scripts:
+
+* dump_prepare.py - Takes a url or pbf file, poly file, filter string, and filtering it to basemap.pbf and pt_data.pbf. Use osmfilter.
+* historical_dump.py - Download and prepare historical dump for dump_prepare. May will be run outside container, due to huge size of dumps. Use osmupdate and osmfilter.
+* basemap_process.py - Generate image of basemap for bbox. Importing basemap.pbf to postgis, create QGIS Server WMS, make png from WMS. 
+* pt_data_process.py - Generate image of public transport map for 
+
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
