@@ -28,12 +28,7 @@ Usage
 
 python3 /home/trolleway/tmp/OSMTram/core/process_basemap.py --dump_path /home/trolleway/tmp/tests/northwestern-fed-district-latest.osm.pbf --bbox 31.0467,58.421,31.4765,58.6117 --output "/home/trolleway/tmp/tests/"
 
-    osmconvert /home/trolleway/tmp/tests/northwestern-fed-district-latest.osm.pbf -o=/home/trolleway/tmp/tests/tmp1.o5m
-    osmfilter /home/trolleway/tmp/tests/tmp1.o5m --keep-tags="all highway= railway= landuse= natural= " --drop-tags="=footway" -o=/home/trolleway/tmp/tests/tmp2.o5m
-    osmconvert /home/trolleway/tmp/tests/tmp2.o5m -o=/home/trolleway/tmp/tests/filtered_dump.pbf
 
-    rm -r /home/trolleway/tmp/tests/tmp1.o5m
-    rm -r /home/trolleway/tmp/tests/tmp2.o5m
 
 '''
 
@@ -72,7 +67,7 @@ def filter_osm_dump(dump_path, folder, bbox=None):
     if bbox is not None: bbox_string='-b='+bbox
 
     cmd='''
-    osmconvert {dump_path} {bbox_string} -o={output_path_1}.o5m
+    osmconvert {dump_path} {bbox_string} --complete-ways  -o={output_path_1}.o5m
     osmfilter {output_path_1}.o5m --keep-tags="all highway= railway= landuse= natural= " --drop-tags="=footway" -o={output_path_2}.o5m
     osmconvert {output_path_2}.o5m -o={output_path_final}
 
@@ -135,12 +130,12 @@ ogr2ogr -f GeoJSON {file_path}    \
 if __name__ == '__main__':
 
 
-        FILTERED_DUMP_NAME = 'filtered_dump.pbf'
+        FILTERED_DUMP_NAME = 'filtered_dump.osm.pbf'
         parser = argparser_prepare()
         args = parser.parse_args()
 
 
-        #filter_osm_dump(dump_path=args.dump_path, folder=args.output, bbox = args.bbox)
+        filter_osm_dump(dump_path=args.dump_path, folder=args.output, bbox = args.bbox)
         pbf2layer(dump_path=os.path.join(args.output,FILTERED_DUMP_NAME),
         folder=args.output,
         pbf_layer='multipolygons',
@@ -152,7 +147,7 @@ if __name__ == '__main__':
         folder=args.output,
         pbf_layer='multipolygons',
         name='water',
-        where="natural='water' OR waterway='riverbank'",
+        where="natural='water' OR waterway='riverbank' OR water='lake'" ,
         select="natural,name,waterway"
         )
         pbf2layer(dump_path=os.path.join(args.output,FILTERED_DUMP_NAME),
