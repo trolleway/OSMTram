@@ -58,12 +58,8 @@ def filter_osm_dump(dump_path, filter, folder):
 
         #TODO var
         cmd='''
-~/osmosis/bin/osmosis \
-  -q \
-  --read-pbf {dump_path} \
-  {filter} \
-  --used-way --used-node \
-  --write-pbf {output_path_1}
+        osmfilter {dump_path} --keep-tags="all highway= railway= landuse= natural= " --drop-tags="=footway" -o={output_path_1}
+
 '''
         cmd = cmd.format(dump_path = dump_path, filter = filter, output_path_1 = output_path_1)
         os.system(cmd)
@@ -185,17 +181,14 @@ ogr2ogr -f GeoJSON {file_path}    \
     os.system(cmd)
 
 if __name__ == '__main__':
-
-        host=config.host
-        dbname=config.dbname
-        user=config.user
-        password=config.password
-
+    
+    
+        FILTERED_DUMP_NAME = 'filtered_dump.pbf'
         parser = argparser_prepare()
         args = parser.parse_args()
-
-
-        filter_osm_dump(dump_path=args.dump_path, filter=args.filter,folder=args.folder)
+        
+        filter_osm_dump(dump_path=args.dump_path, folder=args.folder)
+        pbf2layer(dump_path=os.path.join(folder,FILTERED_DUMP_NAME), folder=args.folder, filter='landuse')
         os.system('export PGPASS='+password)
 
         cleardb(host,dbname,user,password)
