@@ -66,9 +66,16 @@ Here's why:
 * Old maps may disappear from Internet, due to closed licensing, and no one can copy it. A maps generated from OpenStreetMap keep open license, and can be reproduced to many resources.
 * Public Transport lines information in OSM keeps from 2010-s, so historical map generation already possible.
 
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue.
+A data features, needed to orientation by static public transport map is
 
-A list of commonly used resources that I find helpful are listed in the acknowledgements.
+1. Geometry of lines, with route refs
+2. Places of terminus, with route refs and names.
+3. Directions for one-line lines.
+4. Interval information, or marking of low interval lines.
+5. Date of map source.
+6. Good looking basemap withouth distracting map features, like "boundary of national parks".
+
+This scripts provive points 1, 2, 3, calculating from OSM data. And also 5 and 6.
 
 ### Built With
 This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
