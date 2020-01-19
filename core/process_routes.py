@@ -85,13 +85,10 @@ def filter_osm_dump(dump_path, filter, folder):
 
 
 
-
-
 def cleardb(host,dbname,user,password):
     ConnectionString="dbname=" + dbname + " user="+ user + " host=" + host + " password=" + password
 
     try:
-
         conn = psycopg2.connect(ConnectionString)
     except:
         print('Unable to connect to the database')
@@ -114,7 +111,6 @@ def cleardb(host,dbname,user,password):
 
     cur.execute(sql)
     conn.commit()
-    print ('Database wiped')
 
 def importdb(host,database,username,password):
     os.system('osm2pgsql --create --slim -E 3857 --cache-strategy sparse --cache 100 --host {host} --database {database} --username {username} routesFinal.osm.pbf'.format(host=host,
@@ -177,14 +173,16 @@ def process(host,dbname,user,password):
         )
         os.system(cmd)
 
-def postgis2geojson(host,dbname,user,password,table):
-    if os.path.exists(table+'.geojson'):
-        os.remove(table+'.geojson')
+def postgis2geojson(host,dbname,user,password,table, folder=''):
+    file_path = os.path.join(folder,table) + '.geojson'
+    if os.path.exists(file_path):
+        os.remove(file_path)
 
     cmd='''
-ogr2ogr -f GeoJSON '''+table+'''.geojson    \
+ogr2ogr -f GeoJSON {file_path}    \
   "PG:host='''+host+''' dbname='''+dbname+''' user='''+user+''' password='''+password+'''" "'''+table+'''"
     '''
+    cmd = cmd.format(file_path = file_path)
     print(cmd)
     os.system(cmd)
 
@@ -204,7 +202,7 @@ if __name__ == '__main__':
 
         cleardb(host,dbname,user,password)
         importdb(host,dbname,user,password)
-        filter_routes(host,dbname,user,password)
+        if (args.red_zone <> ''): filter_routes(host,dbname,user,password)
         process(host,dbname,user,password)
         postgis2geojson(host,dbname,user,password,'terminals_export')
         postgis2geojson(host,dbname,user,password,'routes_with_refs')
