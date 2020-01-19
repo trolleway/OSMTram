@@ -26,7 +26,7 @@ logger.info('Start convert pbf to basemap layers')
 '''
 Usage
 
-python3 /home/trolleway/tmp/OSMTram/core/process_basemap.py --dump_path /home/trolleway/tmp/tests/northwestern-fed-district-latest.osm.pbf --bbox 31.0467,58.421,31.4765,58.6117 --output "/home/trolleway/tmp/tests/"
+python3 /home/trolleway/tmp/OSMTram/core/process_basemap.py --dump_path /home/trolleway/tmp/tests/nw.osm.pbf --bbox 31.0467,58.421,31.4765,58.6117 --output "/home/trolleway/tmp/tests/"
 
 
 
@@ -67,8 +67,8 @@ def filter_osm_dump(dump_path, folder, bbox=None):
     if bbox is not None: bbox_string='-b='+bbox
 
     cmd='''
-    osmconvert {dump_path} {bbox_string} --complete-ways  -o={output_path_1}.o5m
-    osmfilter {output_path_1}.o5m --keep-tags="all highway= railway= landuse= natural= " --drop-tags="=footway" -o={output_path_2}.o5m
+    osmconvert {dump_path} {bbox_string} --complete-ways  --complex-ways -o={output_path_1}.o5m
+    osmfilter {output_path_1}.o5m --keep-tags="all type= highway= railway= landuse= natural= water= waterway= " --drop-tags="=footway" -o={output_path_2}.o5m
     osmconvert {output_path_2}.o5m -o={output_path_final}
 
     rm -r {output_path_1}.o5m
@@ -113,19 +113,6 @@ ogr2ogr -f "GPKG" -overwrite -oo CONFIG_FILE={script_folder}/osmconf_basemap.ini
 
 
 
-
-def postgis2geojson(host,dbname,user,password,table, folder=''):
-    file_path = os.path.join(folder,table) + '.geojson'
-    if os.path.exists(file_path):
-        os.remove(file_path)
-
-    cmd='''
-ogr2ogr -f GeoJSON {file_path}    \
-  "PG:host='''+host+''' dbname='''+dbname+''' user='''+user+''' password='''+password+'''" "'''+table+'''"
-    '''
-    cmd = cmd.format(file_path = file_path)
-    print(cmd)
-    os.system(cmd)
 
 if __name__ == '__main__':
 
