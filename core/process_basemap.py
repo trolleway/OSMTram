@@ -37,13 +37,11 @@ def argparser_prepare():
     parser = argparse.ArgumentParser(description='',
             formatter_class=PrettyFormatter)
     parser.add_argument('--dump_path', dest='dump_path', required=True, help='Path to local .pbf file. Can both be filtered, or unfiltered')
-    parser.add_argument('--filter', dest='filter', required=True, help='parameter string to osmfilter. \ ')
-    parser.add_argument('--red_zone',dest='red_zone', required=False, help='Path to local GeoJSON file with red zone. Routes intersects with red zone will be deleted.')
     parser.add_argument('--output',dest='output', required=True, help='Output folder')
 
     parser.epilog = \
         '''Samples:
-%(prog)s --dump_path yaroslavl.pbf --filter "--tf accept-relations route=trolleybus" --output "temp/yaroslavl"
+%(prog)s --dump_path country.pbf --output "temp/yaroslavl"
 
 ''' \
         % {'prog': parser.prog}
