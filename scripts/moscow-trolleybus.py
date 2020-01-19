@@ -11,7 +11,9 @@ import argparse
 
 DUMP_URL = 'https://s3.amazonaws.com/metro-extracts.mapzen.com/moscow_russia.osm.pbf'
 FILTER = '--tf accept-relations route=trolleybus'
+#Будут удалены маршруты, проходящие через red_zone, то есть междугородные.
 RED_ZONE = 'cfg/mostrans-bus_red_zone.geojson'
+
 
 def download_osm_dump():
 
@@ -174,7 +176,7 @@ def postgis2geojson(host,dbname,user,password,table):
 ogr2ogr -f GeoJSON '''+table+'''.geojson    \
   "PG:host='''+host+''' dbname='''+dbname+''' user='''+user+''' password='''+password+'''" "'''+table+'''"
     '''
-    print cmd
+    print(cmd)
     os.system(cmd)
 
 if __name__ == '__main__':
@@ -206,6 +208,3 @@ if __name__ == '__main__':
         process(host,dbname,user,password) 
         postgis2geojson(host,dbname,user,password,'terminals_export')
         postgis2geojson(host,dbname,user,password,'routes_with_refs')
-
-        os.system('python update_ngw_from_geojson.py  --ngw_url '+config.ngw_url+' --ngw_resource_id 686 --ngw_login '+config.ngw_login+' --ngw_password '+config.ngw_password+' --check_field road_id --filename routes_with_refs.geojson')
-        os.system('python update_ngw_from_geojson.py  --ngw_url '+config.ngw_url+' --ngw_resource_id 688 --ngw_login '+config.ngw_login+' --ngw_password '+config.ngw_password+' --check_field terminal_id --filename terminals_export.geojson')
