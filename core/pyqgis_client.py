@@ -1,11 +1,34 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
-
 from qgis.core import  QgsApplication, QgsProject, QgsLayoutExporter
 import os
+import argparse
 
-def export_atlas(qgs_project_path, layout_name, outputs_folder):
+def argparser_prepare():
+
+    class PrettyFormatter(argparse.ArgumentDefaultsHelpFormatter,
+        argparse.RawDescriptionHelpFormatter):
+
+        max_help_position = 35
+
+    parser = argparse.ArgumentParser(description='Export QGIS map composer layout to png using pyqgis',
+            formatter_class=PrettyFormatter)
+    parser.add_argument('--project', dest='project', required=True, help='Path to qgis project')
+    parser.add_argument('--layout', dest='layout', required=True, help='layout name')
+    parser.add_argument('--output',dest='output', required=True, help='Output raster file')
+
+    parser.epilog = \
+        '''Samples:
+%(prog)s --project "/home/trolleway/tmp/tests/basemap.qgs" --layout "Layout 1" --output "/home/trolleway/tmp/out.png"
+
+''' \
+        % {'prog': parser.prog}
+    return parser
+
+
+
+def export_atlas(qgs_project_path, layout_name, img_path):
 
     # Open existing project
     project = QgsProject.instance()
@@ -22,7 +45,6 @@ def export_atlas(qgs_project_path, layout_name, outputs_folder):
     settings = QgsLayoutExporter.ImageExportSettings()
 
 
-    img_path = os.path.join(outputs_folder, "output.png")
     if os.path.isfile(img_path):
         os.unlink(img_path)
 
@@ -32,15 +54,20 @@ def export_atlas(qgs_project_path, layout_name, outputs_folder):
 
 
 def main():
+
+    parser = argparser_prepare()
+    args = parser.parse_args()
+
     # Start a QGIS application without GUI
     qgs = QgsApplication([], False)
     qgs.initQgis()
 
-    project_path = '/home/trolleway/tmp/tests/basemap.qgs'
-    output_folder = '/home/trolleway/tmp/tests'
-    layout_name = 'layout_retrowave'
 
-    export_atlas(project_path, layout_name, output_folder)
+    project_path = args.project
+    output_folder = '/home/trolleway/tmp/tests'
+    layout_name = args.layout
+
+    export_atlas(args.project, args.layout, args.output)
 
     # Close the QGIS application
     qgs.exitQgis()
