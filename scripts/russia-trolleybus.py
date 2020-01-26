@@ -31,6 +31,7 @@ os.system(cmd)
 
 cmd = 'python3 ../core/process_routes.py --dump_path ../../tests/touchdown/rus-nw.osm.pbf --filter "route=trolleybus" --output "../../tests/touchdown/" '
 logger.info(cmd)
+quit()
 os.system(cmd)
 quit()
 substitute_project(src='../qgis_project_templates/retrowave.qgs.template.qgs',dst = '../../tests/touchdown/out.qgs', layout_extent='''<Extent ymax="8087642" xmax="3487345" xmin="3470799" ymin="8075943"/>''')
