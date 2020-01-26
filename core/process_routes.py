@@ -19,13 +19,16 @@ import psycopg2
 import time
 import config
 import argparse
+import logging
 
 # move all magic variables to up
 
-DUMP_URL = 'https://s3.amazonaws.com/metro-extracts.mapzen.com/moscow_russia.osm.pbf'
-FILTER = '--tf accept-relations route=trolleybus'
-#Будут удалены маршруты, проходящие через red_zone, то есть междугородные.
-RED_ZONE = 'cfg/mostrans-bus_red_zone.geojson'
+FILTERED_DUMP_NAME = 'routes.osm.pbf'
+
+logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
+logger = logging.getLogger(__name__)
+
+logger.info('Start')
 
 def argparser_prepare():
 
@@ -49,39 +52,30 @@ def argparser_prepare():
         % {'prog': parser.prog}
     return parser
 
-def filter_osm_dump(dump_path, filter, folder):
+def filter_osm_dump(dump_path,  folder,filter='route=bus',):
         import json
         import pprint
         pp=pprint.PrettyPrinter(indent=2)
 
         refs=[]
-        output_path_1 = os.path.join(folder,'routes1.osm.pbf')
-        output_path_2 = os.path.join(folder,'routesFinal.osm.pbf')
+        output_path_1 = os.path.join(folder,'filtering1')
+        output_path_2 = os.path.join(folder,'filtering2')
+        output_path_3 = os.path.join(folder,FILTERED_DUMP_NAME)
 
-        #TODO var
-        cmd='''
-~/osmosis/bin/osmosis \
-  -q \
-  --read-pbf {dump_path} \
-  {filter} \
-  --used-way --used-node \
-  --write-pbf {output_path_1}
-'''
-        cmd = cmd.format(dump_path = dump_path, filter = filter, output_path_1 = output_path_1)
+        cmd = '''
+        osmconvert {dump_path} -o={output_path_1}.o5m
+        osmfilter {output_path_1}.o5m --keep= --keep-relations="{filter}" --out-o5m >{output_path_2}.o5m
+        rm -f {output_path_1}.o5m
+        osmconvert {output_path_2}.o5m -o={output_path_3}
+        rm -f {output_path_2}.o5m
+        '''
+        cmd = cmd.format(dump_path=dump_path,output_path_1=output_path_1,output_path_2=output_path_2,output_path_3=output_path_3, filter=filter)
+        logger.info(cmd)
+
+
         os.system(cmd)
 
-        cmd='''
-~/osmosis/bin/osmosis \
-  -q \
-  --read-pbf {output_path_1} \
-  --tf accept-relations "type=route" \
-  --used-way --used-node \
-  --write-pbf {output_path_2}
-    '''
-        cmd = cmd.format(output_path_1 = output_path_1, output_path_2 = output_path_2)
-        os.system(cmd)
 
-        os.unlink(output_path_1)
 
 
 
@@ -112,9 +106,9 @@ def cleardb(host,dbname,user,password):
     cur.execute(sql)
     conn.commit()
 
-def importdb(host,database,username,password):
-    os.system('osm2pgsql --create --slim -E 3857 --cache-strategy sparse --cache 100 --host {host} --database {database} --username {username} routesFinal.osm.pbf'.format(host=host,
-    database=database,username=username,password=password))
+def importdb(host,database,username,password,filepath):
+    os.system('osm2pgsql --create --slim -E 3857 --cache-strategy sparse --cache 100 --host {host} --database {database} --username {username} {filepath}'.format(host=host,
+    database=database,username=username,password=password,filepath=filepath))
 
 
 def filter_routes(host,dbname,user,password):
@@ -164,13 +158,16 @@ WHERE ST_Intersects(l.way , red_zone.wkb_geometry);  '''
 
 def process(host,dbname,user,password):
 
-        cmd='''python osmot/osmot.py -hs {host} -d {dbname} -u {user} -p {password}
+
+        cmd='''python3 {path_osmot}/osmot/osmot.py --host {host} -d {dbname} -u {user} --password "{password}"
     '''.format(
                 host=host,
                 dbname=dbname,
                 user=user,
-                password=password
+                password=password,
+                path_osmot=os.path.dirname(os.path.realpath(__file__))
         )
+        logger.info(cmd)
         os.system(cmd)
 
 def postgis2geojson(host,dbname,user,password,table, folder=''):
@@ -197,12 +194,12 @@ if __name__ == '__main__':
         args = parser.parse_args()
 
 
-        filter_osm_dump(dump_path=args.dump_path, filter=args.filter,folder=args.folder)
+        filter_osm_dump(dump_path=args.dump_path, filter=args.filter,folder=args.output)
         os.system('export PGPASS='+password)
 
         cleardb(host,dbname,user,password)
-        importdb(host,dbname,user,password)
-        if (args.red_zone <> ''): filter_routes(host,dbname,user,password)
+        importdb(host,dbname,user,password,os.path.join(args.output,FILTERED_DUMP_NAME))
+        if (args.red_zone is not None): filter_routes(host,dbname,user,password)
         process(host,dbname,user,password)
         postgis2geojson(host,dbname,user,password,'terminals_export')
         postgis2geojson(host,dbname,user,password,'routes_with_refs')

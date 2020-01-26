@@ -4,11 +4,11 @@
 dbname='gis'
 user='trolleway'
 host='localhost'
-password=''
+password='16208ii'
 
 ngw_url='https://sandbox.nextgis.com'
 ngw_login = 'administrator'
-ngw_password = 'demodemo' 
+ngw_password = 'demodemo'
 
 #register new yandex.disk app at https://oauth.yandex.ru/
 #obtain yandex token from https://oauth.yandex.ru/authorize?response_type=token&client_id=<идентификатор приложения>
