@@ -19,6 +19,7 @@ def argparser_prepare():
             formatter_class=PrettyFormatter)
     parser.add_argument('--url', dest='dump_url', required=True, help='url of pbf file')
     parser.add_argument('--output', dest='work_dump', required=True, help='path to new pbf file')
+    parser.add_argument('--bbox', dest='bbox', required=False)
 
     parser.epilog = \
         '''Samples:
@@ -34,7 +35,7 @@ def get_filename_from_url(dump_url):
 def get_folder_from_path(path):
     return os.path.dirname((os.path.abspath(path)))
 
-def get_fresh_dump(dump_url,work_dump='touchdown/rus-nw.osm.pbf'):
+def get_fresh_dump(dump_url,work_dump='touchdown/rus-nw.osm.pbf',bbox='31.0467,58.421,31.4765,58.6117'):
     #get fresh dump by osmupdate or download from dump
 
     downloaded_dump=get_filename_from_url(dump_url)
@@ -54,8 +55,8 @@ def get_fresh_dump(dump_url,work_dump='touchdown/rus-nw.osm.pbf'):
         os.rename(downloaded_dump, work_dump) #os.rename should move file beetwen dirs too
 
     #if prevdump dump exists - run osmupdate, it updating it to last hour state with MosOblast clipping, and save as currentdump
-    cmd = 'osmupdate {work_dump} {updated_dump} -v --hour'
-    cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump)
+    cmd = 'osmupdate {work_dump} {updated_dump} -v -b={bbox} --hour'
+    cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump, bbox=bbox)
     logger.info(cmd)
     os.system(cmd)
 

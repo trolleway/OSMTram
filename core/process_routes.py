@@ -201,5 +201,5 @@ if __name__ == '__main__':
         importdb(host,dbname,user,password,os.path.join(args.output,FILTERED_DUMP_NAME))
         if (args.red_zone is not None): filter_routes(host,dbname,user,password)
         process(host,dbname,user,password)
-        postgis2geojson(host,dbname,user,password,'terminals_export')
-        postgis2geojson(host,dbname,user,password,'routes_with_refs')
+        postgis2geojson(host,dbname,user,password,'terminals_export',folder=args.output)
+        postgis2geojson(host,dbname,user,password,'routes_with_refs',folder=args.output)
