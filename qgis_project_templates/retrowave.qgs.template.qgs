@@ -20,16 +20,16 @@
   </projectCrs>
   <layer-tree-group>
     <customproperties/>
-    <layer-tree-layer id="lines_1892106a_d2b5_4be6_a075_25317550b690" providerKey="ogr" name="lines" source="../../tests/railway.gpkg|layername=lines" expanded="1" checked="Qt::Checked">
+    <layer-tree-layer id="lines_1892106a_d2b5_4be6_a075_25317550b690" providerKey="ogr" name="lines" source="./railway.gpkg|layername=lines" expanded="1" checked="Qt::Checked">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer id="water_multipolygons_27eccb3a_e197_4023_8204_417eb6f9b106" providerKey="ogr" name="water multipolygons" source="../../tests/water.gpkg|layername=multipolygons" expanded="1" checked="Qt::Checked">
+    <layer-tree-layer id="water_multipolygons_27eccb3a_e197_4023_8204_417eb6f9b106" providerKey="ogr" name="water multipolygons" source="./water.gpkg|layername=multipolygons" expanded="1" checked="Qt::Checked">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer id="lines_d4856f55_a4de_4a64_81db_aee974a40236" providerKey="ogr" name="lines" source="../../tests/highway.gpkg|layername=lines" expanded="1" checked="Qt::Checked">
+    <layer-tree-layer id="lines_d4856f55_a4de_4a64_81db_aee974a40236" providerKey="ogr" name="lines" source="./highway.gpkg|layername=lines" expanded="1" checked="Qt::Checked">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer id="multipolygons_e1a4fe65_279d_4674_8aa6_8b31b9141572" providerKey="ogr" name="multipolygons" source="../../tests/landuse.gpkg|layername=multipolygons" expanded="1" checked="Qt::Checked">
+    <layer-tree-layer id="multipolygons_e1a4fe65_279d_4674_8aa6_8b31b9141572" providerKey="ogr" name="multipolygons" source="./landuse.gpkg|layername=multipolygons" expanded="1" checked="Qt::Checked">
       <customproperties/>
     </layer-tree-layer>
     <custom-order enabled="0">
@@ -107,7 +107,7 @@
         <ymax>58.70568466186523438</ymax>
       </extent>
       <id>lines_1892106a_d2b5_4be6_a075_25317550b690</id>
-      <datasource>../../tests/railway.gpkg|layername=lines</datasource>
+      <datasource>railway.gpkg|layername=lines</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -630,7 +630,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>58.64394760131835938</ymax>
       </extent>
       <id>lines_d4856f55_a4de_4a64_81db_aee974a40236</id>
-      <datasource>../../tests/highway.gpkg|layername=lines</datasource>
+      <datasource>./highway.gpkg|layername=lines</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -1171,7 +1171,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>58.6401214599609375</ymax>
       </extent>
       <id>multipolygons_e1a4fe65_279d_4674_8aa6_8b31b9141572</id>
-      <datasource>../../tests/landuse.gpkg|layername=multipolygons</datasource>
+      <datasource>./landuse.gpkg|layername=multipolygons</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -1462,7 +1462,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>58.77243423461914063</ymax>
       </extent>
       <id>water_multipolygons_27eccb3a_e197_4023_8204_417eb6f9b106</id>
-      <datasource>../../tests/water.gpkg|layername=multipolygons</datasource>
+      <datasource>./water.gpkg|layername=multipolygons</datasource>
       <keywordList>
         <value></value>
       </keywordList>

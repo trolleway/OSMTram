@@ -20,7 +20,7 @@ def argparser_prepare():
 
     parser.epilog = \
         '''Samples:
-%(prog)s --project "/home/trolleway/tmp/tests/basemap.qgs" --layout "Layout 1" --output "/home/trolleway/tmp/out.png"
+%(prog)s --project "/home/trolleway/tmp/tests/basemap.qgs" --layout "layout_retrowave_album" --output "/home/trolleway/tmp/out.png"
 
 ''' \
         % {'prog': parser.prog}
