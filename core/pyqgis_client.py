@@ -44,7 +44,8 @@ def export_atlas(qgs_project_path, layout_name, img_path):
     exporter = QgsLayoutExporter(layout)
     settings = QgsLayoutExporter.ImageExportSettings()
 
-
+    print('layout_name= {layout_name} '.format(layout_name=layout_name) )
+    print('try export to {img_path} '.format(img_path=img_path) )
     if os.path.isfile(img_path):
         os.unlink(img_path)
 
@@ -63,9 +64,9 @@ def main():
     qgs.initQgis()
 
 
-    project_path = args.project
-    output_folder = '/home/trolleway/tmp/tests'
-    layout_name = args.layout
+    #project_path = args.project
+    #output_folder = '/home/trolleway/tmp/tests'
+    #layout_name = args.layout
 
     export_atlas(args.project, args.layout, args.output)
 

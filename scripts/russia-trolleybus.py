@@ -3,7 +3,10 @@
 
 import os
 import logging
-#import qgis_project_substitute
+
+import sys
+sys.path.append("../core")
+from qgis_project_substitute import substitute_project
 
 datafolder=''
 dump_url = 'http://download.geofabrik.de/russia/northwestern-fed-district-latest.osm.pbf'
@@ -36,5 +39,7 @@ os.system(cmd)
 
 substitute_project(src='../qgis_project_templates/retrowave.qgs.template.qgs',dst = '../../tests/touchdown/out.qgs', layout_extent='''<Extent ymax="8087642" xmax="3487345" xmin="3470799" ymin="8075943"/>''')
 
-cmd = 'python3 ../core/pyqgis_client.py --project "../../tests/touchdown/out.qgs" --layout "Layout_retrowave_album" --output "../../tests/touchdown/Velikiy_Novgorod.png" '
+cmd = 'python3 ../core/pyqgis_client.py --project "../../tests/touchdown/out.qgs" --layout "layout_retrowave_album" --output "{png_file}" '
+cmd = cmd.format(png_file=os.path.join(os.path.realpath('../../tests/touchdown'),'Veliky_Novgorod.png'))
+logger.info(cmd)
 os.system(cmd)
