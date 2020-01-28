@@ -32,7 +32,12 @@ def export_atlas(qgs_project_path, layout_name, img_path):
 
     # Open existing project
     project = QgsProject.instance()
-    project.read(qgs_project_path)
+    print(os.path.abspath(os.path.dirname(qgs_project_path)))
+    #quit()
+    os.chdir(os.path.abspath(os.path.dirname(qgs_project_path)))
+    #project.read(qgs_project_path)
+    project.read(os.path.abspath(qgs_project_path))
+    project.readPath(os.path.abspath(os.path.dirname(qgs_project_path)))
 
     #print(f'Project in "{project.fileName()} loaded successfully')
     print('Project in "{fn} loaded successfully'.format(fn=project.fileName()) )
