@@ -52,14 +52,18 @@ def get_fresh_dump(dump_url,work_dump='touchdown/rus-nw.osm.pbf',bbox='31.0467,5
         os.makedirs(directory)
 
     #frist run of program
-    
+
     if os.path.exists(work_dump) == False:
-        os.system('aria2c '+dump_url)
-        os.rename(downloaded_dump, work_dump) #os.rename should move file beetwen dirs too
+        cmd = 'aria2c --dir="{dir}" --out="{file}" {dump_url}'
+        cmd = cmd.format(dir=directory,file=os.path.basename(work_dump), dump_url=dump_url)
+        os.system(cmd)
+        #os.rename(downloaded_dump, work_dump) #os.rename should move file beetwen dirs too
 
     #if prevdump dump exists - run osmupdate, it updating it to last hour state with MosOblast clipping, and save as currentdump
-    cmd = 'osmupdate {work_dump} {updated_dump} -v -B={poly} --hour'
-    cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump, poly=poly)
+    osmupdate_tempdir = os.path.join(directory,'osmupdate_temp')
+    os.makedirs(osmupdate_tempdir)
+    cmd = 'osmupdate {work_dump} {updated_dump} --tempfiles={tempdir}/temp -v -B={poly} --hour'
+    cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump, tempdir=osmupdate_tempdir,poly=poly)
     logger.info(cmd)
     os.system(cmd)
 
