@@ -1,0 +1,16 @@
+{
+"type": "FeatureCollection",
+"name": "terminals",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::3857" } },
+"features": [
+{ "type": "Feature", "properties": { "terminal_id": 1, "name": "\"ул. Хейкконена (Heikkosenkatu)\"", "routes": "1,8", "long_text": "ул. Хейкконена (Heikkosenkatu) [1,8]" }, "geometry": { "type": "Point", "coordinates": [ 3818705.926711213774979, 8802906.050809172913432 ] } },
+{ "type": "Feature", "properties": { "terminal_id": 2, "name": "\"ул. Заводская (Tehtaankatu)\"", "routes": "3,8", "long_text": "ул. Заводская (Tehtaankatu) [3,8]" }, "geometry": { "type": "Point", "coordinates": [ 3817907.910677675623447, 8814020.06774958409369 ] } },
+{ "type": "Feature", "properties": { "terminal_id": 3, "name": "\"ст. Товарная\"", "routes": "5,6", "long_text": "ст. Товарная [5,6]" }, "geometry": { "type": "Point", "coordinates": [ 3820766.439353561494499, 8811319.909570068120956 ] } },
+{ "type": "Feature", "properties": { "terminal_id": 4, "name": "\"пр. Октябрьский\"", "routes": "4", "long_text": "пр. Октябрьский [4]" }, "geometry": { "type": "Point", "coordinates": [ 3824384.04450511187315, 8811049.970351463183761 ] } },
+{ "type": "Feature", "properties": { "terminal_id": 5, "name": "\"ул. Лыжная\"", "routes": "2,4,5", "long_text": "ул. Лыжная [2,4,5]" }, "geometry": { "type": "Point", "coordinates": [ 3828035.034371947403997, 8804115.466507347300649 ] } },
+{ "type": "Feature", "properties": { "terminal_id": 6, "name": "\"ул. Корабелов (Merimiehenkatu)\"", "routes": "6", "long_text": "ул. Корабелов (Merimiehenkatu) [6]" }, "geometry": { "type": "Point", "coordinates": [ 3833517.853251224849373, 8801937.398059533908963 ] } },
+{ "type": "Feature", "properties": { "terminal_id": 7, "name": "\"Хлебокомбинат (Leipätehdas)\"", "routes": "3", "long_text": "Хлебокомбинат (Leipätehdas) [3]" }, "geometry": { "type": "Point", "coordinates": [ 3830408.287991685792804, 8806675.320354510098696 ] } },
+{ "type": "Feature", "properties": { "terminal_id": 8, "name": "ДСК", "routes": "2", "long_text": "ДСК [2]" }, "geometry": { "type": "Point", "coordinates": [ 3819689.334224693477154, 8815686.432471597567201 ] } },
+{ "type": "Feature", "properties": { "terminal_id": 9, "name": "\"ул. Кемская (Keminkatu)\"", "routes": "1", "long_text": "ул. Кемская (Keminkatu) [1]" }, "geometry": { "type": "Point", "coordinates": [ 3835348.435485370922834, 8801572.13718992844224 ] } }
+]
+}
