@@ -17,10 +17,7 @@ Returns:
 import os
 import argparse
 import logging
-logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
-logger = logging.getLogger(__name__)
 
-logger.info('Start convert pbf to basemap layers')
 # move all magic variables to up
 
 '''
@@ -45,6 +42,8 @@ def argparser_prepare():
     parser.add_argument('--dump_path', dest='dump_path', required=True, help='Path to local .pbf file. Can both be filtered, or unfiltered')
     parser.add_argument('--bbox', dest='bbox', required=False, help='text bbox')
     parser.add_argument('--output',dest='output', required=True, help='Output folder')
+    parser.add_argument("-v", "--verbose", help="increase output verbosity",
+                    action="store_true")
 
     parser.epilog = \
         '''Samples:
@@ -120,6 +119,13 @@ if __name__ == '__main__':
         FILTERED_DUMP_NAME = 'filtered_dump.osm.pbf'
         parser = argparser_prepare()
         args = parser.parse_args()
+
+        logging.basicConfig(level=logging.WARNING,format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
+        logger = logging.getLogger(__name__)
+        if args.verbose:
+            logging.basicConfig(level=logging.DEBUG)
+
+        logger.info('Start convert pbf to basemap layers')
 
 
         filter_osm_dump(dump_path=args.dump_path, folder=args.output, bbox = args.bbox)

@@ -61,7 +61,9 @@ def get_fresh_dump(dump_url,work_dump='touchdown/rus-nw.osm.pbf',bbox='31.0467,5
 
     #if prevdump dump exists - run osmupdate, it updating it to last hour state with MosOblast clipping, and save as currentdump
     osmupdate_tempdir = os.path.join(directory,'osmupdate_temp')
-    os.makedirs(osmupdate_tempdir)
+    if not os.path.exists(osmupdate_tempdir):
+        os.makedirs(osmupdate_tempdir)
+
     cmd = 'osmupdate {work_dump} {updated_dump} --tempfiles={tempdir}/temp -v -B={poly} --hour'
     cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump, tempdir=osmupdate_tempdir,poly=poly)
     logger.info(cmd)
