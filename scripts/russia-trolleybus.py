@@ -8,10 +8,11 @@ import sys
 sys.path.append("../core")
 from qgis_project_substitute import substitute_project
 
-WORKDIR='../../tests/touchdown'
+WORKDIR='/media/trolleway/elvideo/osmtram'
 POLY='russia-trolleybus.poly'
 dump_url = 'http://download.geofabrik.de/russia/northwestern-fed-district-latest.osm.pbf'
-dump_filename = 'northwestern-fed-district-latest.osm.pbf'
+dump_url = 'http://download.geofabrik.de/russia/volga-fed-district-latest.osm.pbf'
+
 
 logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger(__name__)
@@ -26,6 +27,7 @@ def process_map(name,WORKDIR,bbox,layout_extent='<Extent ymax="8087642" xmax="34
     cmd = 'python3 ../core/get_fresh_dump.py --url "{url}" --output "{WORKDIR}/rus-nw.osm.pbf" --poly "{POLY}"'
     cmd = cmd.format(url=dump_url,WORKDIR=WORKDIR,bbox=bbox,POLY=POLY)
     os.system(cmd)
+    #quit()
 
     #-------------
     cmd = 'python3 ../core/process_basemap.py --dump_path {WORKDIR}/rus-nw.osm.pbf --bbox {bbox} --output "{WORKDIR}/" '
@@ -57,6 +59,8 @@ cities.append({'name':'Petrozavodsk','bbox':'34.2809,61.7473,34.4622,61.8187','l
 cities.append({'name':'Murmansk','bbox':'32.9329,68.8745,33.2941,69.0641','layout_extent':'''<Extent xmax="3722126" xmin="3646811" ymin="10710797" ymax="10764050"/>'''})
 cities.append({'name':'Vologda','bbox':'39.6604,59.1689,40.023,59.2994','layout_extent':'''<Extent xmax="4451269" xmin="4429472" ymin="8218346" ymax="8233757"/>'''})
 cities.append({'name':'Saint-Petersburg','bbox':'29.9997,59.7816,30.6396,60.1117','layout_extent':'''<Extent xmax="3415025" xmin="3331990" ymin="8356650" ymax="8415361"/>'''})
+
+cities.append({'name':'Tolyatti','bbox':'49.192815,53.415604,49.652226,53.597258','layout_extent':'''<Extent xmax="5513789" xmin="5479632" ymin="7067270" ymax="7091421"/>'''})
 
 
 2809,61.7473,34.4622,61.8187

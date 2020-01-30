@@ -43,6 +43,7 @@ def get_fresh_dump(dump_url,work_dump='touchdown/rus-nw.osm.pbf',bbox='31.0467,5
     logger.info('downloaded_dump='+downloaded_dump)
     directory=get_folder_from_path(work_dump)
     logger.info(directory)
+    logger.info('work_dump='+work_dump)
 
     updated_dump=os.path.join(directory,'just_updated_dump.osm.pbf')
 
@@ -51,6 +52,7 @@ def get_fresh_dump(dump_url,work_dump='touchdown/rus-nw.osm.pbf',bbox='31.0467,5
         os.makedirs(directory)
 
     #frist run of program
+    
     if os.path.exists(work_dump) == False:
         os.system('aria2c '+dump_url)
         os.rename(downloaded_dump, work_dump) #os.rename should move file beetwen dirs too
