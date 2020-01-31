@@ -56,14 +56,49 @@ def process_map(name,WORKDIR,bbox,layout_extent='<Extent ymax="8087642" xmax="34
     os.system(cmd)
 
 cities = list()
-cities.append({'name':'Veliky_Novgorod','bbox':'31.0467,58.421,31.4765,58.6117','layout_extent':'''<Extent ymax="8089470" xmax="3489740" xmin="3469769" ymin="8075350"/>'''})
-cities.append({'name':'Petrozavodsk','bbox':'34.2809,61.7473,34.4622,61.8187','layout_extent':'''<Extent xmax="3837010.00714727956801653" xmin="3814612.03897902462631464" ymin="8800347.35082474164664745" ymax="8816184.03821748681366444"/>'''})
-cities.append({'name':'Murmansk','bbox':'32.9329,68.8745,33.2941,69.0641','layout_extent':'''<Extent xmax="3722126" xmin="3646811" ymin="10710797" ymax="10764050"/>'''})
-cities.append({'name':'Vologda','bbox':'39.6604,59.1689,40.023,59.2994','layout_extent':'''<Extent xmax="4451269" xmin="4429472" ymin="8218346" ymax="8233757"/>'''})
-cities.append({'name':'Saint-Petersburg','bbox':'29.9997,59.7816,30.6396,60.1117','layout_extent':'''<Extent xmax="3415025" xmin="3331990" ymin="8356650" ymax="8415361"/>'''})
-cities.append({'name':'Tolyatti','bbox':'49.192815,53.415604,49.652226,53.597258','layout_extent':'''<Extent xmax="5513789" xmin="5479632" ymin="7067270" ymax="7091421"/>'''})
+#cities.append({'name':'Veliky_Novgorod','bbox':'31.0467,58.421,31.4765,58.6117','layout_extent':'''<Extent ymax="8089470" xmax="3489740" xmin="3469769" ymin="8075350"/>'''})
+#cities.append({'name':'Petrozavodsk','bbox':'34.2809,61.7473,34.4622,61.8187','layout_extent':'''<Extent xmax="3837010.00714727956801653" xmin="3814612.03897902462631464" ymin="8800347.35082474164664745" ymax="8816184.03821748681366444"/>'''})
+#cities.append({'name':'Murmansk','bbox':'32.9329,68.8745,33.2941,69.0641','layout_extent':'''<Extent xmax="3722126" xmin="3646811" ymin="10710797" ymax="10764050"/>'''})
+#cities.append({'name':'Vologda','bbox':'39.6604,59.1689,40.023,59.2994','layout_extent':'''<Extent xmax="4451269" xmin="4429472" ymin="8218346" ymax="8233757"/>'''})
+#cities.append({'name':'Saint-Petersburg','bbox':'29.9997,59.7816,30.6396,60.1117','layout_extent':'''<Extent xmax="3415025" xmin="3331990" ymin="8356650" ymax="8415361"/>'''})
+#cities.append({'name':'Tolyatti','bbox':'49.192815,53.415604,49.652226,53.597258','layout_extent':'''<Extent xmax="5513789" xmin="5479632" ymin="7067270" ymax="7091421"/>'''})
+#cities.append({'name':'Kaliningrad','bbox':'20.356018,54.6532,20.61248,54.77497','layout_extent':'''<Extent  xmin="2265291" ymin="7296762" xmax="2294848" ymax="7316479"/>'''})
 
-cities.append({'name':'Kaliningrad','bbox':'20.356018,54.6532,20.61248,54.77497','layout_extent':'''<Extent  xmin="2265291" ymin="7296762" xmax="2294848" ymax="7316479"/>'''})
+cities.append({'name':'Tver','bbox_map_3857':'3979225,7720242,4011885,7742030'})
+
+
+# TODO: move to core
+from pyproj import Proj, transform
+
+for i, c in enumerate(cities):
+    if 'bbox' not in c:
+        inProj = Proj('epsg:3857')
+        outProj = Proj('epsg:4326')
+        x1 = c['bbox_map_3857'].split(',')[0]
+        y1 = c['bbox_map_3857'].split(',')[1]
+        xmin,ymin = transform(inProj,outProj,x1,y1)
+        x2 = c['bbox_map_3857'].split(',')[0]
+        y2 = c['bbox_map_3857'].split(',')[1]
+        xmax,ymax = transform(inProj,outProj,x2,y2)
+
+
+
+        cities[i]['bbox'] = '''{xmin},{ymin},{xmax},{ymax}'''.format(
+        xmin=round(xmin,3),
+        ymin=round(ymin,3),
+        xmax=round(xmax,3),
+        ymax=round(ymax,3),
+        )
+
+for i, c in enumerate(cities):
+    if 'layout_extent' not in c:
+        cities[i]['layout_extent'] = '''<Extent xmin="{xmin}" ymin="{ymin}" xmax="{xmax}" ymax="{ymax}"/>'''.format(
+        xmin=c['bbox_map_3857'].split(',')[0],
+        ymin=c['bbox_map_3857'].split(',')[1],
+        xmax=c['bbox_map_3857'].split(',')[2],
+        ymax=c['bbox_map_3857'].split(',')[3],
+         )
+
 
 
 for city in cities:
