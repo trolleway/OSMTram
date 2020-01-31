@@ -4,7 +4,7 @@
 dbname='gis'
 user='trolleway'
 host='localhost'
-password='16208ii'
+password=''
 
 ngw_url='https://sandbox.nextgis.com'
 ngw_login = 'administrator'
