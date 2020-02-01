@@ -107,12 +107,15 @@ cities = list()
 #cities.append({'name':'Murmansk','bbox':'32.9329,68.8745,33.2941,69.0641','layout_extent':'''<Extent xmax="3722126" xmin="3646811" ymin="10710797" ymax="10764050"/>'''})
 #cities.append({'name':'Vologda','bbox':'39.6604,59.1689,40.023,59.2994','layout_extent':'''<Extent xmax="4451269" xmin="4429472" ymin="8218346" ymax="8233757"/>'''})
 #cities.append({'name':'Saint-Petersburg','bbox':'29.9997,59.7816,30.6396,60.1117','layout_extent':'''<Extent xmax="3415025" xmin="3331990" ymin="8356650" ymax="8415361"/>'''})
-#cities.append({'name':'Tolyatti','bbox':'49.192815,53.415604,49.652226,53.597258','layout_extent':'''<Extent xmax="5513789" xmin="5479632" ymin="7067270" ymax="7091421"/>'''})
+cities.append({'name':'Tolyatti','bbox':'49.192815,53.415604,49.652226,53.597258','layout_extent':'''<Extent xmax="5513789" xmin="5479632" ymin="7067270" ymax="7091421"/>'''})
 #cities.append({'name':'Kaliningrad','bbox':'20.356018,54.6532,20.61248,54.77497','layout_extent':'''<Extent  xmin="2265291" ymin="7296762" xmax="2294848" ymax="7316479"/>'''})
 
-cities.append({'name':'Tver','bbox_map_3857':'3981933,7721410,4010609,7740540'})
+cities.append({'name':'Карта Тверского троллейбуса','bbox_map_3857':'3981933,7721410,4010609,7740540'})
+cities.append({'name':'Карта Калининградского троллейбуса','bbox_map_3857':'2271741,7301160,2294437,7316301'})
+cities.append({'name':'Карта Ярославского троллейбуса','bbox_map_3857':'4408853,7876929,4456037,7907894'})
+#cities.append({'name':'Карта Московского троллейбуса','bbox_map_3857':'4136880,7473496,4237984,7540944'})
 
-cities.append({'name':'Tver2','bbox':'35.402756,56.731259,36.276512,56.966690','layout_extent':'''<Extent xmax="4010077" xmin="3981401" ymin="7720806" ymax="7739936"/>'''})
+#cities.append({'name':'Tver2','bbox':'35.402756,56.731259,36.276512,56.966690','layout_extent':'''<Extent xmax="4010077" xmin="3981401" ymin="7720806" ymax="7739936"/>'''})
 
 
 
