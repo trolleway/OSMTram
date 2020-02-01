@@ -4,6 +4,7 @@
 import os
 import logging
 import argparse
+import shutil
 
 logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger(__name__)
@@ -21,6 +22,8 @@ def argparser_prepare():
     parser.add_argument('--output', dest='work_dump', required=True, help='path to new pbf file')
     #parser.add_argument('--bbox', dest='bbox', required=False)
     parser.add_argument('--poly', dest='poly', required=False)
+    parser.add_argument('--prune',dest='prune', required=False, action='store_true', help='Clear temporary folder')
+    parser.add_argument('--skip-osmupdate',dest='skip-osmupdate', required=False, action='store_true')
 
     parser.epilog = \
         '''Samples:
@@ -36,26 +39,45 @@ def get_filename_from_url(dump_url):
 def get_folder_from_path(path):
     return os.path.dirname((os.path.abspath(path)))
 
-def get_fresh_dump(dump_url,work_dump='touchdown/rus-nw.osm.pbf',bbox='31.0467,58.421,31.4765,58.6117', poly='poly.poly'):
+def get_fresh_dump(dump_url,
+work_dump='touchdown/rus-nw.osm.pbf',
+bbox='31.0467,58.421,31.4765,58.6117',
+poly='poly.poly',
+prune=None,
+skip_osmupdate=None):
     #get fresh dump by osmupdate or download from dump
 
     downloaded_dump=get_filename_from_url(dump_url)
     logger.info('downloaded_dump='+downloaded_dump)
     directory=get_folder_from_path(work_dump)
-    logger.info(directory)
+    logger.info('directory='+directory)
     logger.info('work_dump='+work_dump)
-
+    logger.info('existing of dump='+str(os.path.exists(work_dump)))
+    logger.info('prune='+str(prune))
+    logger.info('skip_osmupdate='+str(skip_osmupdate))
     updated_dump=os.path.join(directory,'just_updated_dump.osm.pbf')
 
 
     if not os.path.exists(directory):
         os.makedirs(directory)
+    if prune == True:
+        try:
+           shutil.rmtree(directory)
+        except:
+           logger.error('Error while deleting directory')
+           quit()
+        os.makedirs(directory)
+
+
 
     #frist run of program
 
     if os.path.exists(work_dump) == False:
+
         cmd = 'aria2c --dir="{dir}" --out="{file}" {dump_url}'
         cmd = cmd.format(dir=directory,file=os.path.basename(work_dump), dump_url=dump_url)
+        print(cmd)
+
         os.system(cmd)
         #os.rename(downloaded_dump, work_dump) #os.rename should move file beetwen dirs too
 
@@ -64,8 +86,12 @@ def get_fresh_dump(dump_url,work_dump='touchdown/rus-nw.osm.pbf',bbox='31.0467,5
     if not os.path.exists(osmupdate_tempdir):
         os.makedirs(osmupdate_tempdir)
 
-    cmd = 'osmupdate {work_dump} {updated_dump} --tempfiles={tempdir}/temp -v -B={poly} --hour'
-    cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump, tempdir=osmupdate_tempdir,poly=poly)
+    if skip_osmupdate != True:
+        cmd = 'osmupdate {work_dump} {updated_dump} --tempfiles={tempdir}/temp -v -B={poly} --hour'
+        cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump, tempdir=osmupdate_tempdir,poly=poly)
+    else:
+        cmd = 'osmconvert {work_dump} -o={updated_dump}'
+        cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump, tempdir=osmupdate_tempdir,poly=poly)
     logger.info(cmd)
     os.system(cmd)
 
@@ -80,4 +106,4 @@ def get_fresh_dump(dump_url,work_dump='touchdown/rus-nw.osm.pbf',bbox='31.0467,5
 if __name__ == '__main__':
         parser = argparser_prepare()
         args = parser.parse_args()
-        get_fresh_dump(args.dump_url,args.work_dump, poly=args.poly)
+        get_fresh_dump(args.dump_url,args.work_dump, poly=args.poly,prune=args.prune)

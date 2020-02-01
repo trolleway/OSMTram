@@ -5,14 +5,41 @@ import os
 import logging
 
 import sys
+import argparse
 sys.path.append("../core")
 from qgis_project_substitute import substitute_project
+
+
+def argparser_prepare():
+
+    class PrettyFormatter(argparse.ArgumentDefaultsHelpFormatter,
+        argparse.RawDescriptionHelpFormatter):
+
+        max_help_position = 35
+
+    parser = argparse.ArgumentParser(description='OSMTram process',
+            formatter_class=PrettyFormatter)
+    parser.add_argument('--prune',dest='prune', required=False, action='store_true', help='Clear temporary folder')
+    parser.add_argument('--skip-osmupdate',dest='skip_osmupdate', required=False, action='store_true')
+
+    parser.epilog = \
+        '''Samples:
+%(prog)s
+
+''' \
+        % {'prog': parser.prog}
+    return parser
+
 
 WORKDIR='/media/trolleway/elvideo/osmtram'
 POLY='russia-trolleybus.poly'
 dump_url = 'http://download.geofabrik.de/russia/northwestern-fed-district-latest.osm.pbf'
 dump_url = 'http://download.geofabrik.de/russia/volga-fed-district-latest.osm.pbf'
 dump_url = 'http://download.geofabrik.de/russia-latest.osm.pbf'
+
+parser = argparser_prepare()
+args = parser.parse_args()
+
 
 
 
@@ -22,14 +49,33 @@ logger = logging.getLogger(__name__)
 logger.info('Start')
 
 #перенести в core
-def process_map(name,WORKDIR,bbox,layout_extent='<Extent ymax="8087642" xmax="3487345" xmin="3470799" ymin="8075943"/>'):
+def process_map(name,
+WORKDIR,
+bbox,
+layout_extent='<Extent ymax="8087642" xmax="3487345" xmin="3470799" ymin="8075943"/>',
+prune=None,
+skip_osmupdate=None):
+
 
     filename = name+'.png'
+    if prune == True:
+        isprune = ' --prune '
+    else:
+        isprune = ''
 
-    cmd = 'python3 ../core/get_fresh_dump.py --url "{url}" --output "{WORKDIR}/rus-nw.osm.pbf" --poly "{POLY}"'
-    cmd = cmd.format(url=dump_url,WORKDIR=WORKDIR,bbox=bbox,POLY=POLY)
+    if skip_osmupdate == True:
+        isskip_osmupdate = ' --skip-osmupdate '
+    else:
+        isskip_osmupdate = ''
+
+
+
+    cmd = 'python3 ../core/get_fresh_dump.py --url "{url}" --output "{WORKDIR}/rus-nw.osm.pbf" --poly "{POLY} {prune} {skip_osmupdate}"'
+    cmd = cmd.format(url=dump_url,WORKDIR=WORKDIR,bbox=bbox,POLY=POLY,prune=isprune,skip_osmupdate=isskip_osmupdate)
     os.system(cmd)
-    #quit()
+
+
+
 
     #-------------
     cmd = 'python3 ../core/process_basemap.py --dump_path {WORKDIR}/rus-nw.osm.pbf --bbox {bbox} --output "{WORKDIR}/" '
@@ -64,7 +110,10 @@ cities = list()
 #cities.append({'name':'Tolyatti','bbox':'49.192815,53.415604,49.652226,53.597258','layout_extent':'''<Extent xmax="5513789" xmin="5479632" ymin="7067270" ymax="7091421"/>'''})
 #cities.append({'name':'Kaliningrad','bbox':'20.356018,54.6532,20.61248,54.77497','layout_extent':'''<Extent  xmin="2265291" ymin="7296762" xmax="2294848" ymax="7316479"/>'''})
 
-cities.append({'name':'Tver','bbox_map_3857':'3979225,7720242,4011885,7742030'})
+cities.append({'name':'Tver','bbox_map_3857':'3981933,7721410,4010609,7740540'})
+
+cities.append({'name':'Tver2','bbox':'35.402756,56.731259,36.276512,56.966690','layout_extent':'''<Extent xmax="4010077" xmin="3981401" ymin="7720806" ymax="7739936"/>'''})
+
 
 
 # TODO: move to core
@@ -77,13 +126,13 @@ for i, c in enumerate(cities):
         x1 = c['bbox_map_3857'].split(',')[0]
         y1 = c['bbox_map_3857'].split(',')[1]
         xmin,ymin = transform(inProj,outProj,x1,y1)
-        x2 = c['bbox_map_3857'].split(',')[0]
-        y2 = c['bbox_map_3857'].split(',')[1]
+        x2 = c['bbox_map_3857'].split(',')[2]
+        y2 = c['bbox_map_3857'].split(',')[3]
         xmax,ymax = transform(inProj,outProj,x2,y2)
 
 
 
-        cities[i]['bbox'] = '''{xmin},{ymin},{xmax},{ymax}'''.format(
+        cities[i]['bbox'] = '''{ymin},{xmin},{ymax},{xmax}'''.format(
         xmin=round(xmin,3),
         ymin=round(ymin,3),
         xmax=round(xmax,3),
@@ -100,10 +149,11 @@ for i, c in enumerate(cities):
          )
 
 
-
+print(cities)
 for city in cities:
     #print(city['name'])
-    process_map(name=city['name'],WORKDIR=WORKDIR,bbox=city['bbox'], layout_extent = city['layout_extent'])
+    process_map(name=city['name'],WORKDIR=WORKDIR,bbox=city['bbox'], layout_extent = city['layout_extent'],
+    prune=args.prune,skip_osmupdate=args.skip_osmupdate)
 
 
 #process_map(name='Veliky_Novgorod',WORKDIR=WORKDIR,bbox='31.0467,58.421,31.4765,58.6117', layout_extent = '''<Extent ymax="8087642" xmax="3487345" xmin="3470799" ymin="8075943"/>''')
