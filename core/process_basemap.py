@@ -110,20 +110,105 @@ ogr2ogr -f "GPKG" -overwrite -oo CONFIG_FILE={script_folder}/osmconf_basemap.ini
 
     return 0
 
+def bbox2ogr_clipdst(bbox):
+    """
+    convert "29.9997,59.7816,30.6396,60.1117" to "29.9997 59.7816 30.6396 60.1117"
+    """
+    clipdst = '{x1} {y1} {x2} {y2}'
+    clipdst = clipdst.format(
+    x1 = bbox.split(',')[0],
+    y1 = bbox.split(',')[1],
+    x2 = bbox.split(',')[2],
+    y2 = bbox.split(',')[3],
+    )
+    return clipdst
+
+def download_oceans(folder,bbox):
+    URL='https://osmdata.openstreetmap.de/download/simplified-water-polygons-split-3857.zip'
+    SOURCEFILE='sea_source.zip'
+    export_name='oceans.gpkg'
+    export_name='water.gpkg'
 
 
+    export_filepath = os.path.join(folder,export_name)
+    filepath = os.path.join(folder,SOURCEFILE)
+
+    if os.path.exists(filepath) == False:
+        cmd = '''aria2c --dir="{dir}" --out="{file}" {dump_url}
+        '''
+        cmd = cmd.format(dir=folder,
+        file=os.path.basename(SOURCEFILE),
+        dump_url=URL,
+        export_filepath=export_filepath,
+        clipdst=bbox2ogr_clipdst(bbox))
+        os.system(cmd)
+
+    cmd = '''
+    ogr2ogr -overwrite {export_filepath} -t_srs EPSG:4326 -clipdst {clipdst} /vsizip/{dir}/{file}/simplified-water-polygons-split-3857
+    '''
+
+    #append oceans to water layer
+    cmd = '''
+    ogr2ogr -append {export_filepath} -nln multipolygons -t_srs EPSG:4326 -clipdst {clipdst} /vsizip/{dir}/{file}/simplified-water-polygons-split-3857
+    '''
+    cmd = cmd.format(dir=folder,
+    file=os.path.basename(SOURCEFILE),
+    dump_url=URL,
+    export_filepath=export_filepath,
+    clipdst=bbox2ogr_clipdst(bbox))
+    print(cmd)
+    os.system(cmd)
+
+def download_land(folder,bbox):
+    URL='https://osmdata.openstreetmap.de/download/simplified-land-polygons-complete-3857.zip'
+    SOURCEFILE='land_source.zip'
+    export_name='land.gpkg'
+
+    export_filepath = os.path.join(folder,export_name)
+    filepath = os.path.join(folder,SOURCEFILE)
+
+    if os.path.exists(filepath) == False:
+        cmd = '''aria2c --dir="{dir}" --out="{file}" {dump_url}
+        '''
+        cmd = cmd.format(dir=folder,
+        file=os.path.basename(SOURCEFILE),
+        dump_url=URL,
+        export_filepath=export_filepath,
+        clipdst=bbox2ogr_clipdst(bbox))
+        os.system(cmd)
+
+    cmd = '''
+    ogr2ogr -overwrite {export_filepath} -t_srs EPSG:4326 -clipdst {clipdst} /vsizip/{dir}/{file}/simplified-land-polygons-complete-3857
+    '''
+     # simplified-land-polygons-complete-3857/simplified_land_polygons
+
+    cmd = cmd.format(dir=folder,
+    file=os.path.basename(SOURCEFILE),
+    dump_url=URL,
+    export_filepath=export_filepath,
+    clipdst=bbox2ogr_clipdst(bbox))
+    print(cmd)
+    os.system(cmd)
+
+
+
+
+'''ogrinfo /vsizip/simplified-water-polygons-split-3857.zip/simplified-water-polygons-split-3857
+
+ogr2ogr -overwrite ocean.gpkg -t_srs EPSG:4326 -clipdst 29.9997 59.7816 30.6396 60.1117 /vsizip/simplified-water-polygons-split-3857.zip/simplified-water-polygons-split-3857
+'''
 
 if __name__ == '__main__':
 
 
-        FILTERED_DUMP_NAME = 'filtered_dump.osm.pbf'
+        FILTERED_DUMP_NAME = 'basemap.osm.pbf'
         parser = argparser_prepare()
         args = parser.parse_args()
 
         logging.basicConfig(level=logging.WARNING,format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
         logger = logging.getLogger(__name__)
         if args.verbose:
-            logging.basicConfig(level=logging.DEBUG)
+            logging.basicConfig(level=logging.INFO)
 
         logger.info('Start convert pbf to basemap layers')
 
@@ -158,3 +243,6 @@ if __name__ == '__main__':
         where="railway is not null and railway NOT IN ('construction','proposed','razed','abandoned','disused')",
         select="railway,name,bridge,tunnel"
         )
+
+        download_oceans(folder=args.output, bbox = args.bbox)
+        download_land(folder=args.output, bbox = args.bbox)
