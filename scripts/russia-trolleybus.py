@@ -97,7 +97,7 @@ skip_osmupdate=None):
                     dst = WORKDIR+'/out.qgs',
                     layout_extent=layout_extent)
 
-    cmd = 'python3 ../core/pyqgis_client.py --project "{WORKDIR}/out.qgs" --layout "layout_retrowave_album" --output "{png_file}" '
+    cmd = 'python3 ../core/pyqgis_client.py --project "{WORKDIR}/out.qgs" --layout "4000x4000" --output "{png_file}" '
     cmd = cmd.format(WORKDIR=WORKDIR,png_file=os.path.join(os.path.realpath(WORKDIR),filename))
     logger.info(cmd)
     os.system(cmd)
@@ -111,15 +111,15 @@ cities = list()
 #cities.append({'name':'Tolyatti','bbox':'49.192815,53.415604,49.652226,53.597258','layout_extent':'''<Extent xmax="5513789" xmin="5479632" ymin="7067270" ymax="7091421"/>'''})
 #cities.append({'name':'Kaliningrad','bbox':'20.356018,54.6532,20.61248,54.77497','layout_extent':'''<Extent  xmin="2265291" ymin="7296762" xmax="2294848" ymax="7316479"/>'''})
 
-#cities.append({'name':'Карта Тверского троллейбуса','bbox_map_3857':'3981933,7721410,4010609,7740540'})
-#cities.append({'name':'Карта Калининградского троллейбуса','bbox_map_3857':'2271741,7301160,2294437,7316301'})
-#cities.append({'name':'Карта Ярославского троллейбуса','bbox_map_3857':'4408853,7876929,4456037,7907894'})
-#cities.append({'name':'Карта Тольяттинского троллейбуса','bbox_map_3857':'5480823,7062886,5525761,7092376'})
-#cities.append({'name':'Карта Московского троллейбуса','bbox_map_3857':'4136880,7473496,4237984,7540944'})
+cities.append({'name':'Карта Тверского троллейбуса','bbox_map_3857':'3981933,7721410,4010609,7740540'})
+cities.append({'name':'Карта Калининградского троллейбуса','bbox_map_3857':'2271741,7301160,2294437,7316301'})
+cities.append({'name':'Карта Ярославского троллейбуса','bbox_map_3857':'4408853,7876929,4456037,7907894'})
+cities.append({'name':'Карта Тольяттинского троллейбуса','bbox_map_3857':'5480823,7062886,5525761,7092376'})
+cities.append({'name':'Карта Московского троллейбуса','bbox_map_3857':'4136880,7473496,4237984,7540944'})
 
-#cities.append({'name':'Tver2','bbox':'35.402756,56.731259,36.276512,56.966690','layout_extent':'''<Extent xmax="4010077" xmin="3981401" ymin="7720806" ymax="7739936"/>'''})
+cities.append({'name':'Tver2','bbox':'35.402756,56.731259,36.276512,56.966690','layout_extent':'''<Extent xmax="4010077" xmin="3981401" ymin="7720806" ymax="7739936"/>'''})
 
-cities.append({'name':'Карта Санкт-Петербургского троллейбуса','bbox_map_3857':'3334792,8357382,3417827,8415750'})
+cities.append({'name':'Карта Санкт-Петербургского троллейбуса','bbox_map_3857':'3346186,8358602,3405197,8416728'})
 
 
 # TODO: move to core
