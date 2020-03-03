@@ -1,0 +1,24 @@
+version: '3.3'
+services:
+    osmtramshell:
+        build:
+            context: ./
+        # uncomment for debug
+        #command:
+        #    - /bin/bash
+        volumes:
+            - ./data:/osmtram_preprocessing/volumedata
+
+        depends_on:
+          - db
+
+    db:
+        image: mdillon/postgis
+        ports:
+            - "8001:5432"
+
+        environment:
+          - POSTGRES_USER=gisuser
+          - POSTGRES_PASSWORD=user
+          - POSTGRES_DB=gis
+
