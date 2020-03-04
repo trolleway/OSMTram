@@ -101,16 +101,19 @@ https://dev.to/abiodunjames/why-docker-creating-a-multi-container-application-wi
 Docker image stil in development, script is avaible for install in Ubuntu.
 
 1. Install PostGIS, and create a database.
-2. Install stable version of QGIS 
+2. Install stable version of QGIS
+3. Install gdal osmctools aria2c
+4. Edit OSMTram/core/config.py, set PostGIS creditials
+
 ```
-git clone --recurse-submodules https://github.com/trolleway/OSMTram.git 
+git clone --recurse-submodules https://github.com/trolleway/OSMTram.git
 mkdir workdir
 cd OSMTram/scripts
-python3 scripts/russia-trolleybus.py --workdir "../../workdir"
+python3 latvia-tram.py --workdir "../../workdir"
 ```
 
 <!-- USAGE EXAMPLES -->
-## Detail description
+## Detailed description
 
 This is a docker container. It uses for input a bbox, filter string and map style, and generate a png image file.
 
@@ -119,7 +122,7 @@ It consists from there scripts:
 * dump_prepare.py - Takes a url or pbf file, poly file, filter string, and filtering it to basemap.pbf and pt_data.pbf. Use osmfilter.
 * historical_dump.py - Download and prepare historical dump for dump_prepare. May will be run outside container, due to huge size of dumps. Use osmupdate and osmfilter.
 * basemap_process.py - Generate image of basemap for bbox. Importing basemap.pbf to postgis, create QGIS Server WMS, make png from WMS.
-* pt_data_process.py - Generate image of public transport map for
+* pt_data_process.py - Generate image of public transport map 
 
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.

@@ -34,7 +34,7 @@ def argparser_prepare():
 
 
 POLY='latvia-tram.poly'
-dump_url = 'http://download.geofabrik.de/http://download.geofabrik.de/europe/latvia-latest.osm.pbf'
+dump_url = 'http://download.geofabrik.de/europe/latvia-latest.osm.pbf'
 
 parser = argparser_prepare()
 args = parser.parse_args()
@@ -86,7 +86,7 @@ skip_osmupdate=None):
     cmd = cmd.format(WORKDIR=WORKDIR,bbox=bbox)
     os.system(cmd)
 
-    cmd = 'python3 ../core/process_routes.py --dump_path "{WORKDIR}/current_city.osm.pbf" --filter "route=trolleybus" --output "{WORKDIR}/" '
+    cmd = 'python3 ../core/process_routes.py --dump_path "{WORKDIR}/current_city.osm.pbf" --filter "route=tram" --output "{WORKDIR}/" '
     cmd = cmd.format(WORKDIR=WORKDIR)
     logger.info(cmd)
     os.system(cmd)
@@ -105,9 +105,9 @@ cities = list()
 #cities.append({'name':'Kaliningrad','bbox':'20.356018,54.6532,20.61248,54.77497','layout_extent':'''<Extent  xmin="2265291" ymin="7296762" xmax="2294848" ymax="7316479"/>'''})
 #use http://bboxfinder.com to obtain bbox in EPSG:3857
 
-cities.append({'name':'Daugavpils tram map','bbox_map_3857':'2948405.4920,7530251.1693,2961208.6943,7542060.6902'})
-cities.append({'name':'Liepaja tram map','bbox_map_3857':'2332170,7651040,2347228,7667627'})
-cities.append({'name':'Riga tram map','2672085.6348,7740897.2873,2698991.4687,7768562.7142'})
+cities.append({'name':'Daugavpils_tram_map','bbox_map_3857':'2948405.4920,7530251.1693,2961208.6943,7542060.6902'})
+cities.append({'name':'Liepaja_tram_map','bbox_map_3857':'2332170,7651040,2347228,7667627'})
+cities.append({'name':'Riga_tram_map','bbox_map_3857':'2672085,7740897,2698991,7768562'})
 
 
 # TODO: move to core
@@ -148,4 +148,3 @@ for city in cities:
     #print(city['name'])
     process_map(name=city['name'],WORKDIR=WORKDIR,bbox=city['bbox'], layout_extent = city['layout_extent'],
     prune=args.prune,skip_osmupdate=args.skip_osmupdate)
-
