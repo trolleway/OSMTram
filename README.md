@@ -96,13 +96,14 @@ https://dev.to/abiodunjames/why-docker-creating-a-multi-container-application-wi
 
 
 
-### Installation
+### Installation withouth docker
 
-This repository uses submodules, so you need to
+Docker image stil in development, script is avaible for install in Ubuntu.
 
-```
-git clone --recurse-submodules https://github.com/trolleway/OSMTram.git 
-```
+1. Install PostGIS, and create a database.
+2. Install stable version of QGIS 
+3. git clone --recurse-submodules https://github.com/trolleway/OSMTram.git 
+
 
 <!-- USAGE EXAMPLES -->
 ## Usage
