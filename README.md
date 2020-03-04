@@ -102,11 +102,15 @@ Docker image stil in development, script is avaible for install in Ubuntu.
 
 1. Install PostGIS, and create a database.
 2. Install stable version of QGIS 
-3. git clone --recurse-submodules https://github.com/trolleway/OSMTram.git 
-
+```
+git clone --recurse-submodules https://github.com/trolleway/OSMTram.git 
+mkdir workdir
+cd OSMTram/scripts
+python3 scripts/russia-trolleybus.py --workdir "../../workdir"
+```
 
 <!-- USAGE EXAMPLES -->
-## Usage
+## Detail description
 
 This is a docker container. It uses for input a bbox, filter string and map style, and generate a png image file.
 
