@@ -15,7 +15,7 @@ services:
     db:
         image: mdillon/postgis
         ports:
-            - "8001:5432"
+            - "54320:5432"
 
         environment:
           - POSTGRES_USER=gisuser
