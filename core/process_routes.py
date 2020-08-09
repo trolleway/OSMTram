@@ -71,13 +71,7 @@ def filter_osm_dump(dump_path,  folder,filter='route=bus',):
         '''
         cmd = cmd.format(dump_path=dump_path,output_path_1=output_path_1,output_path_2=output_path_2,output_path_3=output_path_3, filter=filter)
         logger.info(cmd)
-
-
         os.system(cmd)
-
-
-
-
 
 def cleardb(host,dbname,user,password):
     ConnectionString="dbname=" + dbname + " user="+ user + " host=" + host + " password=" + password
@@ -107,8 +101,11 @@ def cleardb(host,dbname,user,password):
     conn.commit()
 
 def importdb(host,database,username,password,filepath):
-    os.system('osm2pgsql --create --slim -E 3857 --cache-strategy sparse --cache 100 --host {host} --database {database} --username {username} {filepath}'.format(host=host,
-    database=database,username=username,password=password,filepath=filepath))
+    osm2pgsql_cmd = 'osm2pgsql --create --slim -E 3857 --cache-strategy sparse --cache 100 --host {host} --database {database} --username {username} {filepath}'.format(host=host,
+    database=database,username=username,password=password,filepath=filepath)
+    logger.debug(osm2pgsql_cmd)
+    
+    os.system(osm2pgsql_cmd)
 
 
 def filter_routes(host,dbname,user,password):
@@ -193,9 +190,8 @@ if __name__ == '__main__':
         parser = argparser_prepare()
         args = parser.parse_args()
 
-
         filter_osm_dump(dump_path=args.dump_path, filter=args.filter,folder=args.output)
-        os.system('export PGPASS='+password)
+        os.system('export PGPASSWORD='+password)
 
         cleardb(host,dbname,user,password)
         importdb(host,dbname,user,password,os.path.join(args.output,FILTERED_DUMP_NAME))

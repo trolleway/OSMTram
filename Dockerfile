@@ -20,7 +20,7 @@ RUN apt-get install --no-install-recommends -y gdal-bin
 RUN apt-get install --no-install-recommends -y python3-pip
 RUN apt-get install --no-install-recommends -y python3-psycopg2
 RUN apt-get install --no-install-recommends -y time
-RUN apt-get install --no-install-recommends -y osm2pgsql osmctools
+RUN apt-get install --no-install-recommends -y osm2pgsql osmctools aria2
 RUN pip3 install tqdm
 
 #add to sudoers
@@ -29,15 +29,15 @@ RUN apt-get install -y sudo
 RUN adduser trolleway sudo
 RUN usermod -aG sudo trolleway
 
-
-
-RUN git clone --recurse-submodules https://github.com/trolleway/OSMTram.git
-
+#RUN git clone --recurse-submodules https://github.com/trolleway/OSMTram.git
+RUN mkdir /OSMTram
 
 RUN chmod  --recursive 777 /OSMTram
 
 RUN mkdir /OSMTram/volumedata
 WORKDIR /OSMTram
+
+RUN pip3 install pyproj
 
 
 

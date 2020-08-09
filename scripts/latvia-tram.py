@@ -71,19 +71,17 @@ skip_osmupdate=None):
 
     cmd = 'python3 ../core/get_fresh_dump.py --url "{url}" --output "{WORKDIR}/rus-nw.osm.pbf" --poly "{POLY} {prune} {skip_osmupdate}"'
     cmd = cmd.format(url=dump_url,WORKDIR=WORKDIR,bbox=bbox,POLY=POLY,prune=isprune,skip_osmupdate=isskip_osmupdate)
+    logger.info(cmd)
     os.system(cmd)
-
-
-
-
-    #-------------
+    
     cmd = 'python3 ../core/process_basemap.py --dump_path {WORKDIR}/rus-nw.osm.pbf --bbox {bbox} -v --output "{WORKDIR}/" '
     cmd = cmd.format(WORKDIR=WORKDIR,bbox=bbox)
+    logger.info(cmd)
     os.system(cmd)
-
 
     cmd = 'osmconvert "{WORKDIR}/rus-nw.osm.pbf" -b={bbox} -o="{WORKDIR}/current_city.osm.pbf"'
     cmd = cmd.format(WORKDIR=WORKDIR,bbox=bbox)
+    logger.info(cmd)
     os.system(cmd)
 
     cmd = 'python3 ../core/process_routes.py --dump_path "{WORKDIR}/current_city.osm.pbf" --filter "route=tram" --output "{WORKDIR}/" '
@@ -148,3 +146,4 @@ for city in cities:
     #print(city['name'])
     process_map(name=city['name'],WORKDIR=WORKDIR,bbox=city['bbox'], layout_extent = city['layout_extent'],
     prune=args.prune,skip_osmupdate=args.skip_osmupdate)
+    quit('frist city only')
