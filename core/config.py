@@ -2,9 +2,9 @@
 # -*- coding: utf8 -*-
 
 dbname='gis'
-user='trolleway'
+user='user'
 host='localhost'
-password=''
+password='user'
 
 ngw_url='https://sandbox.nextgis.com'
 ngw_login = 'administrator'
