@@ -101,7 +101,7 @@ def cleardb(host,dbname,user,password):
     conn.commit()
 
 def importdb(host,database,username,password,filepath):
-    osm2pgsql_cmd = 'osm2pgsql --create --slim -E 3857 --cache-strategy sparse --cache 100 --host {host} --database {database} --username {username} {filepath}'.format(host=host,
+    osm2pgsql_cmd = 'export PGPASSWORD={password} ; osm2pgsql --create --slim -E 3857 --cache-strategy sparse --cache 100 --host {host} --database {database} --username {username} {filepath}'.format(host=host,
     database=database,username=username,password=password,filepath=filepath)
     logger.debug(osm2pgsql_cmd)
     
