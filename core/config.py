@@ -3,7 +3,7 @@
 
 dbname='gis'
 user='user'
-host='localhost'
+host='backend_db'
 password='user'
 
 ngw_url='https://sandbox.nextgis.com'
