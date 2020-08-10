@@ -4,21 +4,31 @@ services:
         build:
             context: ./
         # uncomment for debug
-        #command:
-        #    - /bin/bash
+        command:
+            - /bin/bash
         volumes:
-            - ./data:/osmtram_preprocessing/volumedata
-
+            #- ./data:/osmtram_preprocessing/volumedata
+            - ./volumedata:/data 
+            - .:/OSMTram
         depends_on:
           - db
+        stdin_open: true # docker run -i
+        tty: true        # docker run -t
 
     db:
         image: mdillon/postgis
         ports:
-            - "54320:5432"
+            - "5432:5432"
 
         environment:
-          - POSTGRES_USER=gisuser
+          - POSTGRES_USER=user
           - POSTGRES_PASSWORD=user
           - POSTGRES_DB=gis
-
+          
+    tilemill:
+        image: pcces/tilemill:latest
+        volumes:
+                - ./volumedata/tmproject:/var/lib/tilemill/project
+        ports:
+                - 20008:20008
+                - 20009:20009
