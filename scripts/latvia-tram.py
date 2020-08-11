@@ -146,4 +146,4 @@ for city in cities:
     #print(city['name'])
     process_map(name=city['name'],WORKDIR=WORKDIR,bbox=city['bbox'], layout_extent = city['layout_extent'],
     prune=args.prune,skip_osmupdate=args.skip_osmupdate)
-    quit('frist city only')
+    
