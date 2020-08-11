@@ -1,5 +1,4 @@
 FROM ubuntu:focal
-#там ubuntu с gdal
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
