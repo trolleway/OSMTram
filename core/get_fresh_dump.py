@@ -16,7 +16,7 @@ def argparser_prepare():
 
         max_help_position = 35
 
-    parser = argparse.ArgumentParser(description='Export QGIS map composer layout to png using pyqgis',
+    parser = argparse.ArgumentParser(description='Download PBF file from web, update it by hourly dump with poly file',
             formatter_class=PrettyFormatter)
     parser.add_argument('--url', dest='dump_url', required=True, help='url of pbf file')
     parser.add_argument('--output', dest='work_dump', required=True, help='path to new pbf file')
@@ -68,12 +68,9 @@ skip_osmupdate=None):
            quit()
         os.makedirs(directory)
 
-
-
     #frist run of program
-
+    #download pbf
     if os.path.exists(work_dump) == False:
-
         cmd = 'aria2c --dir="{dir}" --out="{file}" {dump_url}'
         cmd = cmd.format(dir=directory,file=os.path.basename(work_dump), dump_url=dump_url)
         print(cmd)
@@ -81,7 +78,7 @@ skip_osmupdate=None):
         os.system(cmd)
         #os.rename(downloaded_dump, work_dump) #os.rename should move file beetwen dirs too
 
-    #if prevdump dump exists - run osmupdate, it updating it to last hour state with MosOblast clipping, and save as currentdump
+    #if prevdump dump exists - run osmupdate, it updating it to last hour state and save as currentdump
     osmupdate_tempdir = os.path.join(directory,'osmupdate_temp')
     if not os.path.exists(osmupdate_tempdir):
         os.makedirs(osmupdate_tempdir)
