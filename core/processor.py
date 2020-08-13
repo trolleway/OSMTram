@@ -11,11 +11,61 @@ import stat
 #sys.path.append("../core")
 from qgis_project_substitute import substitute_project
 
+import config
 
+logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
+logger = logging.getLogger(__name__)
 
 class Processor:
 
     def make_poly(self,filepath):
+        #import layout geojson to postgis, and generating page bounds in all formats
+        
+        cmd = 'ogr2ogr -overwrite -f "PostgreSQL" PG:"host={host} dbname={dbname} user={user} password={password}" -nln layouts "{filepath}"'
+        cmd = cmd.format(host=config.host, dbname=config.dbname, user=config.user, password=config.password, filepath=filepath)
+        logger.debug(cmd)
+        os.system(cmd)
+        
+        '''SELECT 
+    --min(a.id) as id, 
+    --array_agg(a.id) as ids, 
+    b.wkb_geometry
+FROM 
+    layouts_poly0 a,
+    (SELECT 
+        (ST_Dump(St_multi(ST_Union(wkb_geometry)))).geom as wkb_geometry
+    FROM layouts_poly0) b
+WHERE 
+    st_intersects(a.wkb_geometry, b.wkb_geometry)
+GROUP BY 
+    b.wkb_geometry;
+    '''
+        # magic postgis process for generating poly file with lesser nodes count
+        sql = 'DROP TABLE IF EXISTS layouts_poly0 ; CREATE TABLE layouts_poly0 AS SELECT ST_Transform(ST_Envelope(ST_Buffer(ST_Transform(wkb_geometry,3857),9000)),4326) AS wkb_geometry FROM layouts;'
+        cmd = '''ogrinfo PG:"host={host} dbname={dbname} user={user} password={password}"  -sql '{sql}' '''
+        cmd = cmd.format(host=config.host, dbname=config.dbname, user=config.user, password=config.password, sql=sql)
+        logger.debug(cmd)
+        os.system(cmd)
+
+        sql = 'DROP TABLE IF EXISTS layouts_poly ; CREATE TABLE layouts_poly AS SELECT  b.wkb_geometry FROM     layouts_poly0 a,    (SELECT         (ST_Dump(St_multi(ST_Union(wkb_geometry)))).geom as wkb_geometry     FROM layouts_poly0) b WHERE    st_intersects(a.wkb_geometry, b.wkb_geometry) GROUP BY    b.wkb_geometry;'
+        cmd = '''ogrinfo PG:"host={host} dbname={dbname} user={user} password={password}"  -sql '{sql}' '''
+        cmd = cmd.format(host=config.host, dbname=config.dbname, user=config.user, password=config.password, sql=sql)
+        logger.debug(cmd)
+        os.system(cmd)
+        
+        os.remove('layouts_poly.geojson') if os.path.exists('layouts_poly.geojson') else None 
+        cmd = '''ogr2ogr -overwrite -f "GeoJSON" layouts_poly.geojson PG:"host={host} dbname={dbname} user={user} password={password}" -sql 'SELECT ST_Envelope(wkb_geometry) FROM layouts_poly'  '''
+        cmd = cmd.format(host=config.host, dbname=config.dbname, user=config.user, password=config.password, filepath=filepath)
+        logger.debug(cmd)
+        os.system(cmd)   
+        os.chmod('layouts_poly.geojson', 0o0777)    
+        
+        quit()
+        return 0
+        
+        
+        
+        
         driver = ogr.GetDriverByName("GeoJSON")
         dataSource = driver.Open(filepath, 0)
         layer = dataSource.GetLayer()
@@ -64,7 +114,7 @@ class Processor:
         else:
             isskip_osmupdate = ''
             
-        #self.make_poly('siberia.geojson')
+        self.make_poly('siberia.geojson')
 
 
 
