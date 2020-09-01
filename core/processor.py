@@ -60,33 +60,8 @@ GROUP BY
         os.system(cmd)   
         os.chmod('layouts_poly.geojson', 0o0777)    
         
-        quit()
         return 0
-        
-        
-        
-        
-        driver = ogr.GetDriverByName("GeoJSON")
-        dataSource = driver.Open(filepath, 0)
-        layer = dataSource.GetLayer()
-        
-        new_driver = ogr.GetDriverByName("GeoJSON")
-        new_data_source = new_driver.CreateDataSource("poly.geojson")
-        srs = osr.SpatialReference()
-        srs.ImportFromEPSG(4326)
-        new_layer = new_data_source.CreateLayer("poly", srs, ogr.wkbPolygon)
-        
-        for feature in layer:
-            new_feature = ogr.Feature(new_layer.GetLayerDefn())
-            geom = feature.GetGeometryRef().Buffer(0.01).GetEnvelope()
-            print("minX: %r, minY: %r, maxX: %r, maxY: %r" %(geom[0],geom[2],geom[1],geom[3]))
-            
-            new_feature.SetGeometry(geom)
-            new_layer.CreateFeature(new_feature)
-            new_feature = None
-        new_data_source = None
-            
-        layer.ResetReading()
+           
 
     def process_map(self,name,
     WORKDIR,
