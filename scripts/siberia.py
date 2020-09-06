@@ -59,6 +59,7 @@ cities.append({'name':'Красноярск','bbox_map_3857':'10321750.5515,7552
 
 
 # TODO: move to core
+
 from pyproj import Proj, transform
 
 for i, c in enumerate(cities):
@@ -94,6 +95,16 @@ for i, c in enumerate(cities):
 print(cities)
 for city in cities:
     #print(city['name'])
-    processor.process_map(name=city['name'],WORKDIR=WORKDIR,bbox=city['bbox'], layout_extent = city['layout_extent'],osmfilter_string='route=trolleybus',
-    prune=args.prune,dump_url=dump_url,poly=poly,dump_name='siberia',skip_osmupdate=args.skip_osmupdate)
+    processor.process_map(
+    name=city['name'],
+    WORKDIR=WORKDIR,
+    bbox=city['bbox'], 
+    layout_extent = city['layout_extent'],
+    osmfilter_string='route=trolleybus',
+    prune=args.prune,
+    dump_url=dump_url,
+    poly=poly,
+    dump_name='siberia',
+    skip_osmupdate=args.skip_osmupdate
+    )
     

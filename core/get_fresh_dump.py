@@ -22,6 +22,7 @@ def argparser_prepare():
     parser.add_argument('--output', dest='work_dump', required=True, help='path to new pbf file')
     #parser.add_argument('--bbox', dest='bbox', required=False)
     parser.add_argument('--poly', dest='poly', required=False)
+    parser.add_argument('--bbox', dest='bbox', required=False)
     parser.add_argument('--prune',dest='prune', required=False, action='store_true', help='Clear temporary folder')
     parser.add_argument('--skip-osmupdate',dest='skip-osmupdate', required=False, action='store_true')
 
@@ -68,6 +69,7 @@ skip_osmupdate=None):
            quit()
         os.makedirs(directory)
 
+    #shutil.copyfile(
     #frist run of program
     #download pbf
     if os.path.exists(work_dump) == False:
@@ -84,8 +86,8 @@ skip_osmupdate=None):
         os.makedirs(osmupdate_tempdir)
 
     if skip_osmupdate != True:
-        cmd = 'osmupdate {work_dump} {updated_dump} --tempfiles={tempdir}/temp -v -B={poly} --hour'
-        cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump, tempdir=osmupdate_tempdir,poly=poly)
+        cmd = 'osmupdate {work_dump} {updated_dump} --tempfiles={tempdir}/temp -v -b={bbox} --hour'
+        cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump, tempdir=osmupdate_tempdir,poly=poly,bbox=bbox)
     else:
         cmd = 'osmconvert {work_dump} -o={updated_dump}'
         cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump, tempdir=osmupdate_tempdir,poly=poly)
@@ -103,4 +105,4 @@ skip_osmupdate=None):
 if __name__ == '__main__':
         parser = argparser_prepare()
         args = parser.parse_args()
-        get_fresh_dump(args.dump_url,args.work_dump, poly=args.poly,prune=args.prune)
+        get_fresh_dump(args.dump_url,args.work_dump, bbox=args.bbox,prune=args.prune)
