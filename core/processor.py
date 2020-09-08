@@ -114,8 +114,10 @@ class Processor:
         #open sheets geojson
         from osgeo import ogr
         import os
+        
+        dump_url = 'http://download.geofabrik.de/russia/siberian-fed-district-latest.osm.pbf'
 
-        shapefile = "states.shp"
+
         driver = ogr.GetDriverByName("GeoJSON")
         dataSource = driver.Open(geojson, 0)
         layer = dataSource.GetLayer()
@@ -127,6 +129,18 @@ class Processor:
         src_target.ImportFromEPSG(3857)
         transform = osr.CoordinateTransformation(src_source, src_target)
 
+        #update dump
+        osmupdate_bbox = self.get_bbox('siberia.geojson')
+        
+        layouts_geojson = self.make_layouts_poly('siberia.geojson')
+        result_poly = self.make_osmupdate_poly('siberia.geojson',WORKDIR)
+
+        cmd = 'python3 ../core/get_fresh_dump.py --url "{url}" --output "{WORKDIR}/{dump_name}.osm.pbf" --bbox "{bbox}" {prune} {skip_osmupdate}'
+        cmd = cmd.format(url=dump_url,WORKDIR=WORKDIR,bbox=osmupdate_bbox,POLY=result_poly,prune=isprune,skip_osmupdate=isskip_osmupdate,dump_name=dump_name)
+        logger.info(cmd)
+        os.system(cmd)
+        
+        
         for feature in layer:
             geom = feature.GetGeometryRef()
             spatialRef = layer.GetSpatialRef()
@@ -162,8 +176,22 @@ class Processor:
             
             print(sheet_name,sheet_filename,bbox,layout_extent,filtersring)
             print("\n")
+            
+            processor.process_map(
+    name=sheet_name,
+    WORKDIR=WORKDIR,
+    bbox=bbox, 
+    layout_extent = layout_extent,
+    osmfilter_string=filtersring,
+    prune=False,
+    dump_url=dump_url,
+    poly=poly,
+    dump_name='siberia',
+    skip_osmupdate=args.skip_osmupdate
+    )
+    
         layer.ResetReading()
-                #update dump
+        
         #for each record render map
         #pack to file
         
@@ -191,15 +219,7 @@ class Processor:
         else:
             isskip_osmupdate = ''
             
-        osmupdate_bbox = self.get_bbox('siberia.geojson')
-        
-        layouts_geojson = self.make_layouts_poly('siberia.geojson')
-        result_poly = self.make_osmupdate_poly('siberia.geojson',WORKDIR)
 
-        cmd = 'python3 ../core/get_fresh_dump.py --url "{url}" --output "{WORKDIR}/{dump_name}.osm.pbf" --bbox "{bbox}" {prune} {skip_osmupdate}'
-        cmd = cmd.format(url=dump_url,WORKDIR=WORKDIR,bbox=osmupdate_bbox,POLY=result_poly,prune=isprune,skip_osmupdate=isskip_osmupdate,dump_name=dump_name)
-        logger.info(cmd)
-        os.system(cmd)
         
         
         cmd = 'python3 ../core/process_basemap.py --dump_path {WORKDIR}/{dump_name}.osm.pbf --bbox {bbox} -v --output "{WORKDIR}/" '
