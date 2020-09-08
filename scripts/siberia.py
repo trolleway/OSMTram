@@ -51,6 +51,9 @@ logger.info('Start')
 
 processor = Processor()
 
+processor.process_sheets('siberia.geojson')
+quit()
+
 cities = list()
 #use http://bboxfinder.com to obtain bbox in EPSG:3857
 
@@ -100,7 +103,7 @@ for city in cities:
     WORKDIR=WORKDIR,
     bbox=city['bbox'], 
     layout_extent = city['layout_extent'],
-    osmfilter_string='route=trolleybus',
+    osmfilter_string='route=tram',
     prune=args.prune,
     dump_url=dump_url,
     poly=poly,

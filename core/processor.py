@@ -110,12 +110,68 @@ class Processor:
         bbox = '{lx},{ly},{rx},{ry}'.format(lx=lx,ly=ly,rx=rx,ry=ry)
         return bbox           
 
+    def process_sheets(self,geojson):
+        #open sheets geojson
+        from osgeo import ogr
+        import os
+
+        shapefile = "states.shp"
+        driver = ogr.GetDriverByName("GeoJSON")
+        dataSource = driver.Open(geojson, 0)
+        layer = dataSource.GetLayer()
+
+        src_source = osr.SpatialReference()
+        src_source.ImportFromEPSG(4326)
+
+        src_target = osr.SpatialReference()
+        src_target.ImportFromEPSG(3857)
+        transform = osr.CoordinateTransformation(src_source, src_target)
+
+        for feature in layer:
+            geom = feature.GetGeometryRef()
+            spatialRef = layer.GetSpatialRef()
+            #print(spatialRef)
+            #assert spatialRef == '4326'
+
+            extent = geom.GetEnvelope()   
+            lx = extent[0]
+            ly = extent[2]
+            rx = extent[1]
+            ry = extent[3]           
+            bbox = '{lx},{ly},{rx},{ry}'.format(lx=lx,ly=ly,rx=rx,ry=ry)
+            
+            geom.Transform(transform)
+            extent = geom.GetEnvelope()   
+            lx = extent[0]
+            ly = extent[2]
+            rx = extent[1]
+            ry = extent[3] 
+            
+            layout_extent = '''<Extent xmin="{xmin}" ymin="{ymin}" xmax="{xmax}" ymax="{ymax}"/>'''.format(
+            xmin=lx,
+            ymin=ly,
+            xmax=rx,
+            ymax=ry,
+             )
+            
+            sheet_name = feature.GetField('name_ru')
+            sheet_filename = feature.GetField('name_ru')
+            bbox = bbox
+            layout_extent = layout_extent
+            filtersring = 'route='+str(feature.GetField('type'))
+            
+            print(sheet_name,sheet_filename,bbox,layout_extent,filtersring)
+            print("\n")
+        layer.ResetReading()
+                #update dump
+        #for each record render map
+        #pack to file
+        
     def process_map(self,name,
     WORKDIR,
     bbox,
     dump_url,
     dump_name,
-    poly,
     osmfilter_string='route=tram',
     layout_extent='<Extent ymax="8087642" xmax="3487345" xmin="3470799" ymin="8075943"/>',
     prune=None,
