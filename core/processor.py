@@ -258,7 +258,8 @@ class Processor:
         logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
         logger = logging.getLogger(__name__)
 
-        filename = name+'.png'
+        filename = name+'.jpg'
+        
         if prune == True:
             isprune = ' --prune '
         else:
@@ -304,4 +305,5 @@ class Processor:
         cmd = cmd.format(WORKDIR=WORKDIR,png_file=os.path.join(os.path.realpath(WORKDIR),filename))
         logger.info(cmd)
         os.system(cmd)
+        
 
