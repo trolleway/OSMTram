@@ -102,6 +102,18 @@ class Processor:
         layer = dataSource.GetLayer()
         extent = layer.GetExtent()
         
+        # Create a Polygon from the extent tuple
+        ring = ogr.Geometry(ogr.wkbLinearRing)
+        ring.AddPoint(extent[0],extent[2])
+        ring.AddPoint(extent[1], extent[2])
+        ring.AddPoint(extent[1], extent[3])
+        ring.AddPoint(extent[0], extent[3])
+        ring.AddPoint(extent[0],extent[2])
+        poly = ogr.Geometry(ogr.wkbPolygon)
+        poly.AddGeometry(ring)
+
+        extent = poly.Buffer(0.7).GetEnvelope()
+        
         lx = extent[0]
         ly = extent[2]
         rx = extent[1]
