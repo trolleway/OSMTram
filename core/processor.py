@@ -224,9 +224,6 @@ class Processor:
             layout_extent = layout_extent
             filtersring = 'route='+str(feature.GetField('type'))
             
-            #debugmsg = sheet_name +' ' + sheet_filename +' ' + bbox +' ' + layout_extent +' ' + filtersring
-            #logger.debug(debugmsg)
-            #quit()
             
             self.process_map(
     name=sheet_name,
