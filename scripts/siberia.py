@@ -51,7 +51,7 @@ logger.info('Start')
 
 processor = Processor()
 
-processor.process_sheets('siberia.geojson')
+processor.process_sheets('siberia.geojson',WORKDIR,dump_name='siberia')
 quit()
 
 cities = list()

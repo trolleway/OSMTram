@@ -86,7 +86,7 @@ skip_osmupdate=None):
         os.makedirs(osmupdate_tempdir)
 
     if skip_osmupdate != True:
-        cmd = 'osmupdate {work_dump} {updated_dump} --tempfiles={tempdir}/temp -v -b={bbox} --hour'
+        cmd = 'osmupdate {work_dump} {updated_dump} --tempfiles={tempdir} -v -b={bbox} --hour'
         cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump, tempdir=osmupdate_tempdir,poly=poly,bbox=bbox)
     else:
         cmd = 'osmconvert {work_dump} -o={updated_dump}'

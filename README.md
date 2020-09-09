@@ -107,9 +107,9 @@ Docker image stil in development, script is avaible for install in Ubuntu.
 
 ```
 git clone --recurse-submodules https://github.com/trolleway/OSMTram.git
-mkdir workdir
+
 cd OSMTram/scripts
-python3 latvia-tram.py --workdir "../../workdir"
+python3 latvia-tram.py --workdir "../../data"
 ```
 
 <!-- USAGE EXAMPLES -->

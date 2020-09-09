@@ -108,11 +108,23 @@ class Processor:
         ry = extent[3]
        
         bbox = '{lx},{ly},{rx},{ry}'.format(lx=lx,ly=ly,rx=rx,ry=ry)
-        return bbox           
+        return bbox  
 
-    def process_sheets(self,geojson):
+    def reproject_4326_3857(self,x,y):
+        from pyproj import Proj, transform
+        
+        inProj = Proj('epsg:4326')
+        outProj = Proj('epsg:3857')
+        
+        xr,yr = transform(inProj,outProj,x,y)
+        print(x,y,xr,yr)
+        
+        return xr,yr
+
+    def process_sheets(self,geojson, WORKDIR, dump_name):
         #open sheets geojson
         from osgeo import ogr
+
         import os
         
         dump_url = 'http://download.geofabrik.de/russia/siberian-fed-district-latest.osm.pbf'
@@ -122,12 +134,12 @@ class Processor:
         dataSource = driver.Open(geojson, 0)
         layer = dataSource.GetLayer()
 
-        src_source = osr.SpatialReference()
+        '''src_source = osr.SpatialReference()
         src_source.ImportFromEPSG(4326)
 
         src_target = osr.SpatialReference()
-        src_target.ImportFromEPSG(3857)
-        transform = osr.CoordinateTransformation(src_source, src_target)
+        src_target.ImportFromEPSG(32637)
+        transform = osr.CoordinateTransformation(src_source, src_target)'''
 
         #update dump
         osmupdate_bbox = self.get_bbox('siberia.geojson')
@@ -136,7 +148,7 @@ class Processor:
         result_poly = self.make_osmupdate_poly('siberia.geojson',WORKDIR)
 
         cmd = 'python3 ../core/get_fresh_dump.py --url "{url}" --output "{WORKDIR}/{dump_name}.osm.pbf" --bbox "{bbox}" {prune} {skip_osmupdate}'
-        cmd = cmd.format(url=dump_url,WORKDIR=WORKDIR,bbox=osmupdate_bbox,POLY=result_poly,prune=isprune,skip_osmupdate=isskip_osmupdate,dump_name=dump_name)
+        cmd = cmd.format(url=dump_url,WORKDIR=WORKDIR,bbox=osmupdate_bbox,POLY=result_poly,prune='',skip_osmupdate='',dump_name=dump_name)
         logger.info(cmd)
         os.system(cmd)
         
@@ -154,30 +166,34 @@ class Processor:
             ry = extent[3]           
             bbox = '{lx},{ly},{rx},{ry}'.format(lx=lx,ly=ly,rx=rx,ry=ry)
             
-            geom.Transform(transform)
-            extent = geom.GetEnvelope()   
-            lx = extent[0]
-            ly = extent[2]
-            rx = extent[1]
-            ry = extent[3] 
+            x1_3857,y1_3857 = self.reproject_4326_3857(ly,lx)
+            x2_3857,y2_3857 = self.reproject_4326_3857(ry,rx)
             
+            '''geom.Transform(transform)
+            extent2 = geom.GetEnvelope()   
+            lx = extent2[0]
+            ly = extent2[2]
+            rx = extent2[1]
+            ry = extent2[3] '''
+                       
             layout_extent = '''<Extent xmin="{xmin}" ymin="{ymin}" xmax="{xmax}" ymax="{ymax}"/>'''.format(
-            xmin=lx,
-            ymin=ly,
-            xmax=rx,
-            ymax=ry,
+            xmin=round(x1_3857),
+            ymin=round(y1_3857),
+            xmax=round(x2_3857),
+            ymax=round(y2_3857),
              )
             
-            sheet_name = feature.GetField('name_ru')
+            sheet_name = str(feature.GetField('name_ru')) + ' ' + str(feature.GetField('type'))
             sheet_filename = feature.GetField('name_ru')
             bbox = bbox
             layout_extent = layout_extent
             filtersring = 'route='+str(feature.GetField('type'))
             
-            print(sheet_name,sheet_filename,bbox,layout_extent,filtersring)
-            print("\n")
+            #debugmsg = sheet_name +' ' + sheet_filename +' ' + bbox +' ' + layout_extent +' ' + filtersring
+            #logger.debug(debugmsg)
+            #quit()
             
-            processor.process_map(
+            self.process_map(
     name=sheet_name,
     WORKDIR=WORKDIR,
     bbox=bbox, 
@@ -185,9 +201,8 @@ class Processor:
     osmfilter_string=filtersring,
     prune=False,
     dump_url=dump_url,
-    poly=poly,
     dump_name='siberia',
-    skip_osmupdate=args.skip_osmupdate
+    skip_osmupdate=False
     )
     
         layer.ResetReading()
