@@ -82,6 +82,7 @@ skip_osmupdate=None):
 
     #if prevdump dump exists - run osmupdate, it updating it to last hour state and save as currentdump
     osmupdate_tempdir = os.path.join(directory,'osmupdate_temp')
+    osmupdate_tempdir = os.path.join(directory)
     if not os.path.exists(osmupdate_tempdir):
         os.makedirs(osmupdate_tempdir)
 

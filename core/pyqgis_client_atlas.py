@@ -73,12 +73,12 @@ def export_atlas(qgs_project_path, layout_name, filepath):
             if myAtlas.enabled():
                 print('signal')
                 result, error = QgsLayoutExporter.exportToImage(myAtlas, 
-                                    baseFilePath=img_path + '', extension=imageExtension, settings=image_settings)
+                                    baseFilePath=img_path + '//', extension=imageExtension, settings=image_settings)
                 if not result == QgsLayoutExporter.Success:
                     print(error)
-    quit()
+
     os.rename(os.path.join(img_path,'output_0.jpg'),os.path.join(img_path,filename))
-    quit()
+
                 
 
     #exporter.exportToImage(img_path, layout.atlas(), QgsLayoutExporter.ImageExportSettings())

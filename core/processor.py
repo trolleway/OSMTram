@@ -211,14 +211,14 @@ class Processor:
             geojson_page = os.path.join(WORKDIR,'pagebound.geojson')
             self.make_geosjon_page(geom,geojson_page)
             
-            extent = geom.GetEnvelope()   
+            extent = geom.Buffer(0.7).GetEnvelope()   
             lx = extent[0]
             ly = extent[2]
             rx = extent[1]
             ry = extent[3]           
             bbox = '{lx},{ly},{rx},{ry}'.format(lx=lx,ly=ly,rx=rx,ry=ry)
                       
-            sheet_name = str(feature.GetField('name_ru')) + ' ' + str(feature.GetField('type'))
+            sheet_name = str(feature.GetField('name_ru')) + '-' + str(feature.GetField('type'))
             sheet_filename = feature.GetField('name_ru')
             bbox = bbox
             layout_extent = layout_extent
@@ -305,5 +305,5 @@ class Processor:
         cmd = cmd.format(WORKDIR=WORKDIR,png_file=os.path.join(os.path.realpath(WORKDIR),filename))
         logger.info(cmd)
         os.system(cmd)
-        
+
 
