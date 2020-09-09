@@ -120,7 +120,59 @@ class Processor:
         print(x,y,xr,yr)
         
         return xr,yr
+    
+    def make_geosjon_page(self,geom,geojson_page,code='pagename'):
+        #make geojson file with one polygon
+        # Save extent to a new Shapefile
+        outDriver = ogr.GetDriverByName("GeoJSON")
 
+        # Remove output shapefile if it already exists
+        if os.path.exists(geojson_page):
+            outDriver.DeleteDataSource(geojson_page)
+
+        # Create the output shapefile
+        outDataSource = outDriver.CreateDataSource(geojson_page)
+        outLayer = outDataSource.CreateLayer("bound", geom_type=ogr.wkbPolygon)
+
+        # Add an ID field
+        codeField = ogr.FieldDefn("code", ogr.OFTString)
+        outLayer.CreateField(codeField)
+
+        # Create the feature and set values
+        featureDefn = outLayer.GetLayerDefn()
+        feature = ogr.Feature(featureDefn)
+        feature.SetGeometry(geom)
+        feature.SetField("code", code)
+        outLayer.CreateFeature(feature)
+        feature = None
+
+        # Save and close DataSource
+        outDataSource = None
+
+    def get_layout_extent_by_geom(self,geom):
+        #take ogr geom
+        #return xml code for qgis layuout page 
+        
+        extent = geom.GetEnvelope()   
+        lx = extent[0]
+        ly = extent[2]
+        rx = extent[1]
+        ry = extent[3]           
+        bbox = '{lx},{ly},{rx},{ry}'.format(lx=lx,ly=ly,rx=rx,ry=ry)
+        
+        x1_3857,y1_3857 = self.reproject_4326_3857(ly,lx)
+        x2_3857,y2_3857 = self.reproject_4326_3857(ry,rx)
+                           
+        layout_extent = '''<Extent xmin="{xmin}" ymin="{ymin}" xmax="{xmax}" ymax="{ymax}"/>'''.format(
+        xmin=round(x1_3857),
+        ymin=round(y1_3857),
+        xmax=round(x2_3857),
+        ymax=round(y2_3857),
+         )
+         
+        return layout_extent
+        
+        
     def process_sheets(self,geojson, WORKDIR, dump_name):
         #open sheets geojson
         from osgeo import ogr
@@ -155,34 +207,17 @@ class Processor:
         
         for feature in layer:
             geom = feature.GetGeometryRef()
-            spatialRef = layer.GetSpatialRef()
-            #print(spatialRef)
-            #assert spatialRef == '4326'
-
+            layout_extent = self.get_layout_extent_by_geom(geom)
+            geojson_page = os.path.join(WORKDIR,'pagebound.geojson')
+            self.make_geosjon_page(geom,geojson_page)
+            
             extent = geom.GetEnvelope()   
             lx = extent[0]
             ly = extent[2]
             rx = extent[1]
             ry = extent[3]           
             bbox = '{lx},{ly},{rx},{ry}'.format(lx=lx,ly=ly,rx=rx,ry=ry)
-            
-            x1_3857,y1_3857 = self.reproject_4326_3857(ly,lx)
-            x2_3857,y2_3857 = self.reproject_4326_3857(ry,rx)
-            
-            '''geom.Transform(transform)
-            extent2 = geom.GetEnvelope()   
-            lx = extent2[0]
-            ly = extent2[2]
-            rx = extent2[1]
-            ry = extent2[3] '''
-                       
-            layout_extent = '''<Extent xmin="{xmin}" ymin="{ymin}" xmax="{xmax}" ymax="{ymax}"/>'''.format(
-            xmin=round(x1_3857),
-            ymin=round(y1_3857),
-            xmax=round(x2_3857),
-            ymax=round(y2_3857),
-             )
-            
+                      
             sheet_name = str(feature.GetField('name_ru')) + ' ' + str(feature.GetField('type'))
             sheet_filename = feature.GetField('name_ru')
             bbox = bbox
@@ -265,7 +300,7 @@ class Processor:
                         dst = WORKDIR+'/out.qgs',
                         layout_extent=layout_extent)
 
-        cmd = 'python3 ../core/pyqgis_client.py --project "{WORKDIR}/out.qgs" --layout "4000x4000" --output "{png_file}" '
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/out.qgs" --layout "4000x4000_atlas" --output "{png_file}" '
         cmd = cmd.format(WORKDIR=WORKDIR,png_file=os.path.join(os.path.realpath(WORKDIR),filename))
         logger.info(cmd)
         os.system(cmd)

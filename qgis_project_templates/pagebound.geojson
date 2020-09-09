@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "pagebound",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "code": "Petrozavod" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 34.263508382700003, 61.82047226764 ], [ 34.287409574249999, 61.819636182239996 ], [ 34.464836797510003, 61.748712452470002 ], [ 34.431726652320002, 61.73454596106 ], [ 34.318623787450001, 61.759804503369999 ], [ 34.263508382700003, 61.82047226764 ] ] ] } }
+]
+}
