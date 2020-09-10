@@ -256,7 +256,7 @@ class Processor:
         from datetime import date
 
         today = date.today()
-        d1 = today.strftime("%Y-$m-$d")
+        d1 = today.strftime("%Y-%m-%d")
 
         atlas_filename = 'Маршруты трамваев и троллейбусов России ' + d1
 
