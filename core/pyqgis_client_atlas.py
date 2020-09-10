@@ -28,7 +28,7 @@ def argparser_prepare():
 
 
 
-def export_atlas(qgs_project_path, layout_name, filepath):
+def export_atlas(qgs_project_path, layout_name, filepath, fmt='jpg'):
 
     # Open existing project
     project = QgsProject.instance()
@@ -58,14 +58,13 @@ def export_atlas(qgs_project_path, layout_name, filepath):
     pdf_settings=QgsLayoutExporter(myAtlasMap).PdfExportSettings()
     image_settings = QgsLayoutExporter(myAtlasMap).ImageExportSettings()
     image_settings.dpi = 96
-    
-    imageExtension = '.jpg'
-    
+
     print('layout_name= {layout_name} '.format(layout_name=layout_name) )
     print('try export to {img_path} '.format(img_path=img_path) )
     
-    outputFormat = 'image'
+    outputFormat = 'pdf'
     if outputFormat == 'image':
+        imageExtension = '.jpg'
         if os.path.isfile(os.path.join(img_path,'output_0.jpg')):
             os.unlink(os.path.join(img_path,'output_0.jpg'))
             
@@ -77,8 +76,21 @@ def export_atlas(qgs_project_path, layout_name, filepath):
                 if not result == QgsLayoutExporter.Success:
                     print(error)
 
-    os.rename(os.path.join(img_path,'output_0.jpg'),os.path.join(img_path,filename))
+        os.rename(os.path.join(img_path,'output_0.jpg'),os.path.join(img_path,filename))
+    
+    if outputFormat == 'pdf':
+        imageExtension = '.pdf'
+        #if os.path.isfile(os.path.join(img_path,'output_0.jpg')):
+        #    os.unlink(os.path.join(img_path,'output_0.jpg'))
+            
+        for layout in QgsProject.instance().layoutManager().printLayouts():
+            if myAtlas.enabled():
+                result, error = QgsLayoutExporter.exportToPdf(myAtlas, img_path + '//output_0.pdf', settings=pdf_settings)
+                if not result == QgsLayoutExporter.Success:
+                    print(error)
 
+    os.rename(os.path.join(img_path,'output_0.pdf'),os.path.join(img_path,filename))
+    
                 
 
     #exporter.exportToImage(img_path, layout.atlas(), QgsLayoutExporter.ImageExportSettings())

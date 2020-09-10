@@ -23,6 +23,7 @@ RUN apt-get install --no-install-recommends -y osm2pgsql osmctools aria2
 RUN pip3 install tqdm
 RUN apt-get install --no-install-recommends -y  qgis python3-qgis  
 RUN apt-get install --no-install-recommends -y  xvfb
+RUN apt-get install --no-install-recommends -y  poppler-utils
 
 #add to sudoers
 RUN apt-get install -y apt-utils
@@ -38,10 +39,7 @@ RUN chmod  --recursive 777 /OSMTram
 RUN mkdir /OSMTram/volumedata
 WORKDIR /OSMTram
 
-RUN pip3 install pyproj
 
-RUN Xvfb :1 -screen 0 800x600x24&
-RUN export DISPLAY=:1
 
 
 # Создание конфигов с захардкодеными адресами

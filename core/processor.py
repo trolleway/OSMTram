@@ -216,12 +216,14 @@ class Processor:
         logger.info(cmd)
         os.system(cmd)
         
-        
+        cmd = 'rm /data/*.pdf'
+        os.system(cmd)
         for feature in layer:
+            sheet_name = str(feature.GetField('name_ru')) + ' ' + str(feature.GetField('type'))
             geom = feature.GetGeometryRef()
             layout_extent = self.get_layout_extent_by_geom(geom)
             geojson_page = os.path.join(WORKDIR,'pagebound.geojson')
-            self.make_geosjon_page(geom,geojson_page)
+            self.make_geosjon_page(geom,geojson_page,sheet_name)
             
             extent = geom.Buffer(0.7).GetEnvelope()   
             lx = extent[0]
@@ -251,6 +253,17 @@ class Processor:
     
         layer.ResetReading()
         
+        from datetime import date
+
+        today = date.today()
+        d1 = today.strftime("%Y-$m-$d")
+
+        atlas_filename = 'Маршруты трамваев и троллейбусов России ' + d1
+
+        
+        cmd = 'pdfunite /data/*.pdf "/data/'+atlas_filename+'.pdf"'
+        os.system(cmd)
+        
         #for each record render map
         #pack to file
         
@@ -267,7 +280,7 @@ class Processor:
         logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
         logger = logging.getLogger(__name__)
 
-        filename = name+'.jpg'
+        filename = name+'.pdf'
         
         if prune == True:
             isprune = ' --prune '
@@ -314,5 +327,7 @@ class Processor:
         cmd = cmd.format(WORKDIR=WORKDIR,png_file=os.path.join(os.path.realpath(WORKDIR),filename))
         logger.info(cmd)
         os.system(cmd)
+        
+
 
 
