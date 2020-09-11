@@ -185,15 +185,11 @@ class Processor:
         return layout_extent
         
         
-    def process_sheets(self,geojson, WORKDIR, dump_name):
+    def process_sheets(self,geojson, WORKDIR,dump_url, dump_name):
         #open sheets geojson
         from osgeo import ogr
-
         import os
         
-        dump_url = 'http://download.geofabrik.de/russia/siberian-fed-district-latest.osm.pbf'
-
-
         driver = ogr.GetDriverByName("GeoJSON")
         dataSource = driver.Open(geojson, 0)
         layer = dataSource.GetLayer()

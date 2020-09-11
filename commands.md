@@ -21,7 +21,7 @@ Xvfb :1 -screen 0 800x600x24&
 export DISPLAY=:1
 
 cd scripts
-python3 siberia.py --workdir /data
+python3 russia.py --workdir /data
 
 
 ```

@@ -35,8 +35,9 @@ def argparser_prepare():
 
 
 
-poly='siberia.poly'
-dump_url = 'http://download.geofabrik.de/russia/siberian-fed-district-latest.osm.pbf'
+poly='russia.poly'
+dump_url = 'http://download.geofabrik.de/russia-latest.osm.pbf'
+dump_url = 'http://download.geofabrik.de/russia/crimean-fed-district-latest.osm.pbf'
 
 parser = argparser_prepare()
 args = parser.parse_args()
@@ -51,5 +52,5 @@ logger.info('Start')
 
 processor = Processor()
 
-processor.process_sheets('siberia.geojson',WORKDIR,dump_name='siberia')
+processor.process_sheets('russia.geojson',WORKDIR,dump_name='russia')
 quit()
