@@ -3,15 +3,13 @@
 
 '''
 Inputs:
-* dump url
-* filter string for osmfilter
-* red_zone.geojson(optionaly)
-* database creds
+* pbf file
+* bbox
 * output folder
 
-Returns:
-* folder/terminals.geojson
-* folder/rotes_with_refs.geojson
+Generate
+* Some gpkg files for basemap: landuse,water,highways, etc...
+* gpkg with land and oceans polygons (clipped by bbox too)
 '''
 
 import os
