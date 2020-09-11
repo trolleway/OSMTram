@@ -206,10 +206,10 @@ class Processor:
         transform = osr.CoordinateTransformation(src_source, src_target)'''
 
         #update dump
-        osmupdate_bbox = self.get_bbox('siberia.geojson')
+        osmupdate_bbox = self.get_bbox(geojson)
         
-        layouts_geojson = self.make_layouts_poly('siberia.geojson')
-        result_poly = self.make_osmupdate_poly('siberia.geojson',WORKDIR)
+        layouts_geojson = self.make_layouts_poly(geojson)
+        result_poly = self.make_osmupdate_poly(geojson,WORKDIR)
 
         cmd = 'python3 ../core/get_fresh_dump.py --url "{url}" --output "{WORKDIR}/{dump_name}.osm.pbf" --bbox "{bbox}" {prune} {skip_osmupdate}'
         cmd = cmd.format(url=dump_url,WORKDIR=WORKDIR,bbox=osmupdate_bbox,POLY=result_poly,prune='',skip_osmupdate='',dump_name=dump_name)
