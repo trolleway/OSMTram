@@ -16,17 +16,10 @@ import os
 import argparse
 import logging
 
-# move all magic variables to up
-
 '''
 Usage
-
 python3 /home/trolleway/tmp/OSMTram/core/process_basemap.py --dump_path /home/trolleway/tmp/tests/nw.osm.pbf --bbox 31.0467,58.421,31.4765,58.6117 --output "/home/trolleway/tmp/tests/"
-
-
-
 '''
-
 
 def argparser_prepare():
 
@@ -83,8 +76,6 @@ def filter_osm_dump(dump_path, folder, bbox=None):
     os.system(cmd)
     logger.info('pbf filtering complete')
 
-
-
 def pbf2layer(dump_path, folder, name='landuse',pbf_layer='multipolygons',where=None,select=None):
     output_file_path = os.path.join(folder,name)+'.gpkg'
 
@@ -105,7 +96,6 @@ ogr2ogr -f "GPKG" -overwrite -oo CONFIG_FILE={script_folder}/osmconf_basemap.ini
     )
     logger.debug(cmd)
     os.system(cmd)
-
     return 0
 
 def bbox2ogr_clipdst(bbox):
@@ -126,7 +116,6 @@ def download_oceans(folder,bbox):
     SOURCEFILE='sea_source.zip'
     export_name='oceans.gpkg'
     export_name='water.gpkg'
-
 
     export_filepath = os.path.join(folder,export_name)
     filepath = os.path.join(folder,SOURCEFILE)
@@ -188,17 +177,12 @@ def download_land(folder,bbox):
     print(cmd)
     os.system(cmd)
 
-
-
-
 '''ogrinfo /vsizip/simplified-water-polygons-split-3857.zip/simplified-water-polygons-split-3857
 
 ogr2ogr -overwrite ocean.gpkg -t_srs EPSG:4326 -clipdst 29.9997 59.7816 30.6396 60.1117 /vsizip/simplified-water-polygons-split-3857.zip/simplified-water-polygons-split-3857
 '''
 
 if __name__ == '__main__':
-
-
         FILTERED_DUMP_NAME = 'basemap.osm.pbf'
         parser = argparser_prepare()
         args = parser.parse_args()
@@ -209,7 +193,6 @@ if __name__ == '__main__':
             logging.basicConfig(level=logging.INFO)
 
         logger.info('Start convert pbf to basemap layers')
-
 
         filter_osm_dump(dump_path=args.dump_path, folder=args.output, bbox = args.bbox)
         pbf2layer(dump_path=os.path.join(args.output,FILTERED_DUMP_NAME),
