@@ -143,7 +143,6 @@ def download_oceans(folder,bbox):
     dump_url=URL,
     export_filepath=export_filepath,
     clipdst=bbox2ogr_clipdst(bbox))
-    print(cmd)
     os.system(cmd)
 
 def download_land(folder,bbox):
@@ -174,7 +173,6 @@ def download_land(folder,bbox):
     dump_url=URL,
     export_filepath=export_filepath,
     clipdst=bbox2ogr_clipdst(bbox))
-    print(cmd)
     os.system(cmd)
 
 '''ogrinfo /vsizip/simplified-water-polygons-split-3857.zip/simplified-water-polygons-split-3857
