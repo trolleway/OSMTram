@@ -1,37 +1,30 @@
-## Welcome to GitHub Pages
+## Открытый атлас трамвайных и троллейбусных маршрутов России
 
-You can use the [editor on GitHub](https://github.com/trolleway/OSMTram/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+Это проект по генерации атласов маршрутов электротранспорта по данным Openstreetmap. Трассы маршрутов и базовые карты берутся из дампа Openstreetmap, обрабатываются скриптом, и превращаются в картинки с картами.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Скачать
 
-### Markdown
+Маршруты трамваев и троллейбусов России 2020-09-12.pdf https://yadi.sk/d/1upcL0zmqr6_8Q
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Наше предложение: 
+- Карты с конечными и односторонними маршрутами - то, что отличает нас от всех других карт из OSM
+- Можно смотреть, куда вообще можно попасть из некого места - это отличает нас от других сервисов в интернете.
+- Открытая лицензия: можно копировать на другие сайты
+- Открытый код: если нет обновлений, то можно сгенерировать атлас самому
+- Работает в Docker: вы сможете запустить эту программу
+- Независимость от других веб-сервисов: сможет работать и через 10 лет
 
-```markdown
-Syntax highlighted code block
+## Аттрибуция
 
-# Header 1
-## Header 2
-### Header 3
+Картографические данные: Пользователи Openstreetmap. Карты распространяются по лицензии cc-by-sa, согласно этому соглашению вы можете выкладывать её на своих сайтах, если подпишете так же.
 
-- Bulleted
-- List
+## Contributing
 
-1. Numbered
-2. List
+Нам нужно
 
-**Bold** and _Italic_ and `Code` text
+- Уточнение маршрутов в Openstreetmap. Правьте их в базе OSM редактором JOSM, изменения подхватятся нашими скриптами.
+- Сделать другие картографические стили
+- Сделать мобильное приложение
+- Придумать как устроить SEO
 
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/trolleway/OSMTram/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+https://github.com/trolleway/OSMTram/issues
