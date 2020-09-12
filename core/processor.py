@@ -243,7 +243,7 @@ class Processor:
     osmfilter_string=filtersring,
     prune=False,
     dump_url=dump_url,
-    dump_name='siberia',
+    dump_name=dump_name,
     skip_osmupdate=False
     )
     
