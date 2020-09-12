@@ -4,7 +4,7 @@
 
 ## Скачать
 
-Маршруты трамваев и троллейбусов России 2020-09-12.pdf https://yadi.sk/d/1upcL0zmqr6_8Q
+[Маршруты трамваев и троллейбусов России 2020-09-12.pdf](https://yadi.sk/d/1upcL0zmqr6_8Q)
 
 ## Наше предложение: 
 - Карты с конечными и односторонними маршрутами - то, что отличает нас от всех других карт из OSM
@@ -27,4 +27,4 @@
 - Сделать мобильное приложение
 - Придумать как устроить SEO
 
-https://github.com/trolleway/OSMTram/issues
+[https://github.com/trolleway/OSMTram/issues](https://github.com/trolleway/OSMTram/issues)
