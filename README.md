@@ -96,20 +96,29 @@ https://dev.to/abiodunjames/why-docker-creating-a-multi-container-application-wi
 
 
 
-### Installation withouth docker
-
-Docker image stil in development, script is avaible for install in Ubuntu.
-
-1. Install PostGIS, and create a database.
-2. Install stable version of QGIS
-3. Install gdal osmctools aria2c
-4. Edit OSMTram/core/config.py, set PostGIS creditials
-
+### Installation in docker
 ```
-git clone --recurse-submodules https://github.com/trolleway/OSMTram.git
+git clone https://github.com/trolleway/OSMTram.git
+cd OSMTram
+docker build -t osmtram:1.0 .
 
-cd OSMTram/scripts
-python3 latvia-tram.py --workdir "../../data"
+#поднять контейнер с postgis
+docker run --rm   --name osmtram_backend_db -e POSTGRES_PASSWORD=user -e POSTGRES_USER=user -e POSTGRES_DB=gis -d -p 5432:5432   mdillon/postgis
+
+
+ 
+#поднять и зайти в контейнер с ubuntu+python+gdal, в который проброшен порт с postgis
+docker run -it --link osmtram_backend_db:db -v ${PWD}/data:/data  -v ${PWD}:/OSMTram osmtram:1.0  /bin/bash
+пути для win
+docker run -it --link osmtram_backend_db:db -v c:\trolleway\OSMTram\data:/data  -v c:\trolleway\OSMTram:/OSMTram osmtram:1.0  /bin/bash
+```
+#внутри контейнера
+```
+Xvfb :1 -screen 0 800x600x24&
+export DISPLAY=:1
+
+cd scripts
+time python3 russia.py --workdir /data
 ```
 
 <!-- USAGE EXAMPLES -->
