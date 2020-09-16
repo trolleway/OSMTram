@@ -254,7 +254,7 @@ class Processor:
         today = date.today()
         d1 = today.strftime("%Y-%m-%d")
 
-        atlas_filename = 'Маршруты трамваев и троллейбусов России ' + d1
+        atlas_filename = 'Трамвайные и троллейбусные маршруты России. Атлас ' + d1
       
         cmd = 'pdfunite /data/*.pdf "/data/'+atlas_filename+'.pdf"'
         os.system(cmd)
