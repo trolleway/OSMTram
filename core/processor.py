@@ -234,7 +234,7 @@ class Processor:
             layout_extent = layout_extent
             filtersring = 'route='+str(feature.GetField('type'))
             
-            
+            logger.info(sheet_name)
             self.process_map(
     name=sheet_name,
     WORKDIR=WORKDIR,
@@ -255,8 +255,7 @@ class Processor:
         d1 = today.strftime("%Y-%m-%d")
 
         atlas_filename = 'Маршруты трамваев и троллейбусов России ' + d1
-
-        
+      
         cmd = 'pdfunite /data/*.pdf "/data/'+atlas_filename+'.pdf"'
         os.system(cmd)
         
