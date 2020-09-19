@@ -33,9 +33,7 @@ def export_atlas(qgs_project_path, layout_name, filepath, fmt='jpg'):
     # Open existing project
     project = QgsProject.instance()
     print(os.path.abspath(os.path.dirname(qgs_project_path)))
-    #quit()
     os.chdir(os.path.abspath(os.path.dirname(qgs_project_path)))
-    #project.read(qgs_project_path)
     project.read(os.path.abspath(qgs_project_path))
     project.readPath(os.path.abspath(os.path.dirname(qgs_project_path)))
 
@@ -58,11 +56,12 @@ def export_atlas(qgs_project_path, layout_name, filepath, fmt='jpg'):
     pdf_settings=QgsLayoutExporter(myAtlasMap).PdfExportSettings()
     image_settings = QgsLayoutExporter(myAtlasMap).ImageExportSettings()
     image_settings.dpi = 96
+    svg_settings=QgsLayoutExporter(myAtlasMap).SvgExportSettings() #https://qgis.org/api/structQgsLayoutExporter_1_1SvgExportSettings.html
 
     print('layout_name= {layout_name} '.format(layout_name=layout_name) )
     print('try export to {img_path} '.format(img_path=img_path) )
     
-    outputFormat = 'pdf'
+    outputFormat = fmt
     if outputFormat == 'image':
         imageExtension = '.jpg'
         if os.path.isfile(os.path.join(img_path,'output_0.jpg')):
@@ -89,7 +88,19 @@ def export_atlas(qgs_project_path, layout_name, filepath, fmt='jpg'):
                 if not result == QgsLayoutExporter.Success:
                     print(error)
 
-    os.rename(os.path.join(img_path,'output_0.pdf'),os.path.join(img_path,filename))
+        os.rename(os.path.join(img_path,'output_0.pdf'),os.path.join(img_path,filename))
+        
+    if outputFormat == 'svg':
+        imageExtension = '.svg'
+
+        for layout in QgsProject.instance().layoutManager().printLayouts():
+            if myAtlas.enabled():
+                result, error = QgsLayoutExporter.exportToSvg(myAtlas, img_path + '//output_0.svg', settings=svg_settings)
+                if not result == QgsLayoutExporter.Success:
+                    print(error)
+        print('signal')
+
+        os.rename(os.path.join(img_path,'output_0.svg'),os.path.join(img_path,filename))
     
                 
 

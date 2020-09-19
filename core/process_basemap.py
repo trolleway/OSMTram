@@ -31,7 +31,7 @@ def argparser_prepare():
     parser = argparse.ArgumentParser(description='',
             formatter_class=PrettyFormatter)
     parser.add_argument('--dump_path', dest='dump_path', required=True, help='Path to local .pbf file. Can both be filtered, or unfiltered')
-    parser.add_argument('--bbox', dest='bbox', required=False, help='text bbox')
+    parser.add_argument('--bbox', dest='bbox', required=True, help='text bbox')
     parser.add_argument('--output',dest='output', required=True, help='Output folder')
     parser.add_argument("-v", "--verbose", help="increase output verbosity",
                     action="store_true")

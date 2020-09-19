@@ -316,10 +316,19 @@ class Processor:
         substitute_project(
                         src='../qgis_project_templates/retrowave.qgs.template.qgs',
                         dst = WORKDIR+'/out.qgs',
+                        layout_extent=layout_extent)        
+        substitute_project(
+                        src='../qgis_project_templates/tinyblack.qgs.template.qgs',
+                        dst = WORKDIR+'/tinyblack.qgs',
                         layout_extent=layout_extent)
 
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/out.qgs" --layout "4000x4000_atlas" --output "{png_file}" '
-        cmd = cmd.format(WORKDIR=WORKDIR,png_file=os.path.join(os.path.realpath(WORKDIR),filename))
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/out.qgs" --layout "4000x4000_atlas" --output "{filename}" --fmt pdf '
+        cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),filename))
+        logger.info(cmd)
+        os.system(cmd)
+        
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/tinyblack.qgs" --layout "4000x4000_atlas" --output "{filename}" --fmt svg '
+        cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),'tinyblack_'+filename))
         logger.info(cmd)
         os.system(cmd)
         
