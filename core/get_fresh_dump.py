@@ -77,8 +77,6 @@ skip_osmupdate=None):
     if os.path.exists(work_dump) == False:
         cmd = 'aria2c --dir="{dir}" --out="{file}" {dump_url}'
         cmd = cmd.format(dir=directory,file=os.path.basename(work_dump), dump_url=dump_url)
-        print(cmd)
-
         os.system(cmd)
         #os.rename(downloaded_dump, work_dump) #os.rename should move file beetwen dirs too
 

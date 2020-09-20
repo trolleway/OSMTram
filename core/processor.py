@@ -127,9 +127,8 @@ class Processor:
         
         inProj = Proj('epsg:4326')
         outProj = Proj('epsg:3857')
-        
+       
         xr,yr = transform(inProj,outProj,x,y)
-        print(x,y,xr,yr)
         
         return xr,yr
     
@@ -247,8 +246,7 @@ class Processor:
     skip_osmupdate=False
     )
     
-        layer.ResetReading()
-        
+        layer.ResetReading() 
         from datetime import date
 
         today = date.today()
@@ -287,9 +285,6 @@ class Processor:
         else:
             isskip_osmupdate = ''
             
-
-        
-        
         cmd = 'python3 ../core/process_basemap.py --dump_path {WORKDIR}/{dump_name}.osm.pbf --bbox {bbox} -v --output "{WORKDIR}/" '
         cmd = cmd.format(WORKDIR=WORKDIR,bbox=bbox,dump_name=dump_name)
         logger.info(cmd)
@@ -322,13 +317,13 @@ class Processor:
                         dst = WORKDIR+'/tinyblack.qgs',
                         layout_extent=layout_extent)
 
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/out.qgs" --layout "4000x4000_atlas" --output "{filename}" --fmt pdf '
-        cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),filename))
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/out.qgs" --layout "4000x4000_atlas" --output "{filename}"  '
+        cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),name+'.pdf'))
         logger.info(cmd)
         os.system(cmd)
         
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/tinyblack.qgs" --layout "4000x4000_atlas" --output "{filename}" --fmt svg '
-        cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),'tinyblack_'+filename))
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/tinyblack.qgs" --layout "4000x4000_atlas" --output "{filename}" '
+        cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),'tinyblack_'+name+'.svg'))
         logger.info(cmd)
         os.system(cmd)
         
