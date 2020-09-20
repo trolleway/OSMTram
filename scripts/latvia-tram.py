@@ -33,8 +33,6 @@ def argparser_prepare():
         % {'prog': parser.prog}
     return parser
 
-
-
 dump_url = 'http://download.geofabrik.de/europe/latvia-latest.osm.pbf'
 
 parser = argparser_prepare()

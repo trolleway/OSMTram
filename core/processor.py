@@ -160,6 +160,11 @@ class Processor:
         # Save and close DataSource
         outDataSource = None
 
+    def make_zip_bymask(dirname, filename, mask):
+        import subprocess
+
+        subprocess.call(['zip', '-j', os.path.join(dirname,filename)] + glob.glob(os.path.join(dirname,mask)))
+                   
     def get_layout_extent_by_geom(self,geom):
         #take ogr geom
         #return xml code for qgis layuout page 
@@ -235,16 +240,16 @@ class Processor:
             
             logger.info(sheet_name)
             self.process_map(
-    name=sheet_name,
-    WORKDIR=WORKDIR,
-    bbox=bbox, 
-    layout_extent = layout_extent,
-    osmfilter_string=filtersring,
-    prune=False,
-    dump_url=dump_url,
-    dump_name=dump_name,
-    skip_osmupdate=False
-    )
+            name=sheet_name,
+            WORKDIR=WORKDIR,
+            bbox=bbox, 
+            layout_extent = layout_extent,
+            osmfilter_string=filtersring,
+            prune=False,
+            dump_url=dump_url,
+            dump_name=dump_name,
+            skip_osmupdate=False
+            )
     
         layer.ResetReading() 
         from datetime import date
@@ -256,6 +261,8 @@ class Processor:
       
         cmd = 'pdfunite /data/*.pdf "/data/'+atlas_filename+'.pdf"'
         os.system(cmd)
+        
+        self.make_zip_bymask(dirname = str(WORKDIR),filename = atlas_filename+'_svg.zip', mask = '.svg')
         
         #for each record render map
         #pack to file
