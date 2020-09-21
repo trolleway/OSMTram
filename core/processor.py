@@ -322,6 +322,10 @@ class Processor:
         substitute_project(
                         src='../qgis_project_templates/tinyblack.qgs.template.qgs',
                         dst = WORKDIR+'/tinyblack.qgs',
+                        layout_extent=layout_extent)        
+        substitute_project(
+                        src='../qgis_project_templates/wikipedia.qgs.template.qgs',
+                        dst = WORKDIR+'/wikipedia.qgs',
                         layout_extent=layout_extent)
 
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/out.qgs" --layout "4000x4000_atlas" --output "{filename}"  '
@@ -333,9 +337,14 @@ class Processor:
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),'tinyblack4000_'+name+'.svg'))
         logger.info(cmd)
         os.system(cmd)   
+                
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/tinyblack.qgs" --layout "4000x4000_atlas" --output "{filename}" '
+        cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),'tinyblack4000_'+name+'.svg'))
+        logger.info(cmd)
+        os.system(cmd)   
         
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/tinyblack.qgs" --layout "1000x1000_atlas" --output "{filename}" '
-        cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),'tinyblack1000_'+name+'.svg'))
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/wikipedia.qgs" --layout "4000x4000_atlas" --output "{filename}" '
+        cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),'wikipedia4000_'+name+'.svg'))
         logger.info(cmd)
         os.system(cmd)
         
