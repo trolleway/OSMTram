@@ -128,16 +128,25 @@ This is a docker container. It uses for input a bbox, filter string and map styl
 
 It consists from there scripts:
 
-* dump_prepare.py - Takes a url or pbf file, poly file, filter string, and filtering it to basemap.pbf and pt_data.pbf. Use osmfilter.
-* historical_dump.py - Download and prepare historical dump for dump_prepare. May will be run outside container, due to huge size of dumps. Use osmupdate and osmfilter.
-* basemap_process.py - Generate image of basemap for bbox. Importing basemap.pbf to postgis, create QGIS Server WMS, make png from WMS.
-* pt_data_process.py - Generate image of public transport map 
+* core/dump_prepare.py - Takes a url or pbf file, poly file, filter string, and filtering it to basemap.pbf and pt_data.pbf. Use osmfilter.
+* core/historical_dump.py - Download and prepare historical dump for dump_prepare. May will be run outside container, due to huge size of dumps. Use osmupdate and osmfilter.
+* core/basemap_process.py - Generate image of basemap for bbox. Importing basemap.pbf to postgis, create QGIS Server WMS, make png from WMS.
+* core/pt_data_process.py - Generate image of public transport map 
+
+* core/pyqgis_client_atlas.py - render pdf/svg/png map using standart qgis project with atlas layout. Extent is set in geojson file. 
+    One run generate one-page atlas, then pages combined in multi-page pdf or zip archive
+	
+### Deprecated scripts, should be removed
+
+* core/pyqgis_client.py
+* core/qgis_project_substitute.py
 
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
+<!--
 _For more examples, please refer to the [Documentation](https://example.com)_
-
+-->
 
 
 <!-- ROADMAP -->
