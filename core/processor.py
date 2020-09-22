@@ -329,7 +329,11 @@ class Processor:
                         src='../qgis_project_templates/wikipedia.qgs.template.qgs',
                         dst = WORKDIR+'/wikipedia.qgs',
                         layout_extent=layout_extent)
-
+        substitute_project(
+                        src='../qgis_project_templates/manila.qgs.template.qgs',
+                        dst = WORKDIR+'/manila.qgs',
+                        layout_extent=layout_extent)
+                        
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/out.qgs" --layout "4000x4000_atlas" --output "{filename}"  '
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),name+'.pdf'))
         logger.info(cmd)

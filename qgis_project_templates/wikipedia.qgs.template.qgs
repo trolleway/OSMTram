@@ -32,7 +32,7 @@
     <layer-tree-layer source="./highway.gpkg|layername=lines" name="highway" providerKey="ogr" checked="Qt::Checked" id="lines_47501b4e_d5fa_4bf8_b9e9_2eb867e76861" expanded="1">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer source="./landuse.gpkg|layername=multipolygons" name="multipolygons" providerKey="ogr" checked="Qt::Checked" id="multipolygons_8efa2e9b_31e8_4568_a398_530c5cace432" expanded="1">
+    <layer-tree-layer source="./landuse.gpkg|layername=multipolygons" name="multipolygons" providerKey="ogr" checked="Qt::Unchecked" id="multipolygons_8efa2e9b_31e8_4568_a398_530c5cace432" expanded="1">
       <customproperties/>
     </layer-tree-layer>
     <layer-tree-layer source="./water.gpkg|layername=multipolygons" name="water" providerKey="ogr" checked="Qt::Checked" id="multipolygons_96f0877f_a2a1_4ac5_bd79_5f55c222c3fd" expanded="1">
@@ -71,10 +71,10 @@
   <mapcanvas name="theMapCanvas" annotationsVisible="1">
     <units>meters</units>
     <extent>
-      <xmin>3808585.98070616694167256</xmin>
-      <ymin>8797179.02280529960989952</ymin>
-      <xmax>3831229.57576309563592076</xmax>
-      <ymax>8817695.87136519327759743</ymax>
+      <xmin>3803098.86089642206206918</xmin>
+      <ymin>8789041.96799821779131889</ymin>
+      <xmax>3848386.05101020494475961</xmax>
+      <ymax>8830075.66511793062090874</ymax>
     </extent>
     <rotation>0</rotation>
     <destinationsrs>
@@ -115,9 +115,9 @@
         <legendlayerfile isInOverview="0" layerid="lines_47501b4e_d5fa_4bf8_b9e9_2eb867e76861" visible="1"/>
       </filegroup>
     </legendlayer>
-    <legendlayer name="multipolygons" showFeatureCount="0" checked="Qt::Checked" drawingOrder="-1" open="true">
+    <legendlayer name="multipolygons" showFeatureCount="0" checked="Qt::Unchecked" drawingOrder="-1" open="true">
       <filegroup hidden="false" open="true">
-        <legendlayerfile isInOverview="0" layerid="multipolygons_8efa2e9b_31e8_4568_a398_530c5cace432" visible="1"/>
+        <legendlayerfile isInOverview="0" layerid="multipolygons_8efa2e9b_31e8_4568_a398_530c5cace432" visible="0"/>
       </filegroup>
     </legendlayer>
     <legendlayer name="water" showFeatureCount="0" checked="Qt::Checked" drawingOrder="-1" open="true">
@@ -227,7 +227,7 @@
           <symbol name="0" alpha="1" force_rhr="0" type="fill" clip_to_extent="1">
             <layer enabled="1" class="SimpleFill" pass="0" locked="0">
               <prop k="border_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-              <prop k="color" v="252,240,227,255"/>
+              <prop k="color" v="254,254,228,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -437,29 +437,52 @@ def my_form_open(dialog, layer, feature):
         <Removable>1</Removable>
         <Searchable>1</Searchable>
       </flags>
-      <renderer-v2 symbollevels="0" forceraster="0" type="RuleRenderer" enableorderby="0">
+      <renderer-v2 symbollevels="1" forceraster="0" type="RuleRenderer" enableorderby="0">
         <rules key="{9c3d3d5f-033f-405c-a002-932a610a27bc}">
-          <rule label="trunk" symbol="0" key="{c36a59a6-df72-4825-ad69-937354094fa9}" filter="highway = 'trunk'"/>
-          <rule label="motorway" symbol="1" key="{08e27b4e-3413-4c8e-88ab-97956354e121}" filter="highway = 'motorway'"/>
-          <rule label="primary" scalemindenom="1" symbol="2" key="{1f84d110-f5ff-485f-848b-9ff49fa11d81}" scalemaxdenom="1000000" filter="highway = 'primary'"/>
-          <rule label="secondary" scalemindenom="1" symbol="3" key="{5700d979-f759-48a9-8bcd-819962da18e2}" scalemaxdenom="1000000" filter="highway = 'secondary'"/>
-          <rule label="tertiary" scalemindenom="1" symbol="4" key="{fe55b910-5947-4b5a-8760-c4baf18ab81f}" scalemaxdenom="50000" filter="highway = 'tertiary'"/>
-          <rule label="residential" symbol="5" checkstate="0" key="{b3c812eb-2bea-4c84-872a-6aa627ff8eb1}" filter="highway = 'residential'"/>
-          <rule label="unclassified" symbol="6" checkstate="0" key="{8aa2f229-f8e7-454b-a9ad-41cf1289fb8b}" filter="highway = 'unclassified'"/>
-          <rule label="pedestrian" symbol="7" checkstate="0" key="{3a4b8cdf-ede7-4dfb-983a-dc643cfb5f9a}" filter="highway = 'pedestrian'"/>
+          <rule label="primary" scalemindenom="1" symbol="0" key="{1f84d110-f5ff-485f-848b-9ff49fa11d81}" scalemaxdenom="1000000" filter="highway in ('primary','motorway','trunk')"/>
+          <rule label="secondary" scalemindenom="1" symbol="1" key="{5700d979-f759-48a9-8bcd-819962da18e2}" scalemaxdenom="1000000" filter="highway = 'secondary'"/>
+          <rule label="tertiary" scalemindenom="1" symbol="2" key="{fe55b910-5947-4b5a-8760-c4baf18ab81f}" scalemaxdenom="50000" filter="highway = 'tertiary'"/>
+          <rule label="residential" symbol="3" checkstate="0" key="{b3c812eb-2bea-4c84-872a-6aa627ff8eb1}" filter="highway = 'residential'"/>
+          <rule label="unclassified" symbol="4" checkstate="0" key="{8aa2f229-f8e7-454b-a9ad-41cf1289fb8b}" filter="highway = 'unclassified'"/>
+          <rule label="pedestrian" symbol="5" checkstate="0" key="{3a4b8cdf-ede7-4dfb-983a-dc643cfb5f9a}" filter="highway = 'pedestrian'"/>
         </rules>
         <symbols>
           <symbol name="0" alpha="1" force_rhr="0" type="line" clip_to_extent="1">
-            <layer enabled="1" class="SimpleLine" pass="0" locked="0">
-              <prop k="capstyle" v="square"/>
+            <layer enabled="1" class="SimpleLine" pass="0" locked="1">
+              <prop k="capstyle" v="round"/>
               <prop k="customdash" v="5;2"/>
               <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="customdash_unit" v="MM"/>
               <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="251,255,255,255"/>
+              <prop k="joinstyle" v="round"/>
+              <prop k="line_color" v="153,153,153,255"/>
               <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="1"/>
+              <prop k="line_width" v="1.06"/>
+              <prop k="line_width_unit" v="MM"/>
+              <prop k="offset" v="0"/>
+              <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="ring_filter" v="0"/>
+              <prop k="use_custom_dash" v="0"/>
+              <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <data_defined_properties>
+                <Option type="Map">
+                  <Option value="" name="name" type="QString"/>
+                  <Option name="properties"/>
+                  <Option value="collection" name="type" type="QString"/>
+                </Option>
+              </data_defined_properties>
+            </layer>
+            <layer enabled="1" class="SimpleLine" pass="1" locked="0">
+              <prop k="capstyle" v="round"/>
+              <prop k="customdash" v="5;2"/>
+              <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <prop k="customdash_unit" v="MM"/>
+              <prop k="draw_inside_polygon" v="0"/>
+              <prop k="joinstyle" v="round"/>
+              <prop k="line_color" v="255,255,255,255"/>
+              <prop k="line_style" v="solid"/>
+              <prop k="line_width" v="0.86"/>
               <prop k="line_width_unit" v="MM"/>
               <prop k="offset" v="0"/>
               <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -477,16 +500,41 @@ def my_form_open(dialog, layer, feature):
             </layer>
           </symbol>
           <symbol name="1" alpha="1" force_rhr="0" type="line" clip_to_extent="1">
-            <layer enabled="1" class="SimpleLine" pass="0" locked="0">
-              <prop k="capstyle" v="square"/>
+            <layer enabled="1" class="SimpleLine" pass="0" locked="1">
+              <prop k="capstyle" v="round"/>
               <prop k="customdash" v="5;2"/>
               <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="customdash_unit" v="MM"/>
               <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="251,255,255,255"/>
+              <prop k="joinstyle" v="round"/>
+              <prop k="line_color" v="153,153,153,255"/>
               <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="1"/>
+              <prop k="line_width" v="1.06"/>
+              <prop k="line_width_unit" v="MM"/>
+              <prop k="offset" v="0"/>
+              <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="ring_filter" v="0"/>
+              <prop k="use_custom_dash" v="0"/>
+              <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <data_defined_properties>
+                <Option type="Map">
+                  <Option value="" name="name" type="QString"/>
+                  <Option name="properties"/>
+                  <Option value="collection" name="type" type="QString"/>
+                </Option>
+              </data_defined_properties>
+            </layer>
+            <layer enabled="1" class="SimpleLine" pass="1" locked="0">
+              <prop k="capstyle" v="round"/>
+              <prop k="customdash" v="5;2"/>
+              <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <prop k="customdash_unit" v="MM"/>
+              <prop k="draw_inside_polygon" v="0"/>
+              <prop k="joinstyle" v="round"/>
+              <prop k="line_color" v="255,255,255,255"/>
+              <prop k="line_style" v="solid"/>
+              <prop k="line_width" v="0.86"/>
               <prop k="line_width_unit" v="MM"/>
               <prop k="offset" v="0"/>
               <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -505,15 +553,15 @@ def my_form_open(dialog, layer, feature):
           </symbol>
           <symbol name="2" alpha="1" force_rhr="0" type="line" clip_to_extent="1">
             <layer enabled="1" class="SimpleLine" pass="0" locked="0">
-              <prop k="capstyle" v="round"/>
+              <prop k="capstyle" v="square"/>
               <prop k="customdash" v="5;2"/>
               <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="customdash_unit" v="MM"/>
               <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="round"/>
-              <prop k="line_color" v="252,255,255,255"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="line_color" v="153,153,153,255"/>
               <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="1.26"/>
+              <prop k="line_width" v="1.2"/>
               <prop k="line_width_unit" v="MM"/>
               <prop k="offset" v="0"/>
               <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -536,9 +584,9 @@ def my_form_open(dialog, layer, feature):
               <prop k="customdash_unit" v="MM"/>
               <prop k="draw_inside_polygon" v="0"/>
               <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="252,255,255,255"/>
+              <prop k="line_color" v="255,255,255,255"/>
               <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="1"/>
+              <prop k="line_width" v="0.92"/>
               <prop k="line_width_unit" v="MM"/>
               <prop k="offset" v="0"/>
               <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -556,60 +604,6 @@ def my_form_open(dialog, layer, feature):
             </layer>
           </symbol>
           <symbol name="3" alpha="1" force_rhr="0" type="line" clip_to_extent="1">
-            <layer enabled="1" class="SimpleLine" pass="0" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="5;2"/>
-              <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="MM"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="252,255,255,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.6"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="MM"/>
-              <prop k="ring_filter" v="0"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-              <data_defined_properties>
-                <Option type="Map">
-                  <Option value="" name="name" type="QString"/>
-                  <Option name="properties"/>
-                  <Option value="collection" name="type" type="QString"/>
-                </Option>
-              </data_defined_properties>
-            </layer>
-          </symbol>
-          <symbol name="4" alpha="1" force_rhr="0" type="line" clip_to_extent="1">
-            <layer enabled="1" class="SimpleLine" pass="0" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="5;2"/>
-              <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="MM"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="252,255,255,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.6"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="MM"/>
-              <prop k="ring_filter" v="0"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-              <data_defined_properties>
-                <Option type="Map">
-                  <Option value="" name="name" type="QString"/>
-                  <Option name="properties"/>
-                  <Option value="collection" name="type" type="QString"/>
-                </Option>
-              </data_defined_properties>
-            </layer>
-          </symbol>
-          <symbol name="5" alpha="1" force_rhr="0" type="line" clip_to_extent="1">
             <layer enabled="1" class="SimpleLine" pass="0" locked="0">
               <prop k="capstyle" v="square"/>
               <prop k="customdash" v="5;2"/>
@@ -636,7 +630,7 @@ def my_form_open(dialog, layer, feature):
               </data_defined_properties>
             </layer>
           </symbol>
-          <symbol name="6" alpha="1" force_rhr="0" type="line" clip_to_extent="1">
+          <symbol name="4" alpha="1" force_rhr="0" type="line" clip_to_extent="1">
             <layer enabled="1" class="SimpleLine" pass="0" locked="0">
               <prop k="capstyle" v="square"/>
               <prop k="customdash" v="5;2"/>
@@ -663,7 +657,7 @@ def my_form_open(dialog, layer, feature):
               </data_defined_properties>
             </layer>
           </symbol>
-          <symbol name="7" alpha="1" force_rhr="0" type="line" clip_to_extent="1">
+          <symbol name="5" alpha="1" force_rhr="0" type="line" clip_to_extent="1">
             <layer enabled="1" class="SimpleLine" pass="0" locked="0">
               <prop k="capstyle" v="square"/>
               <prop k="customdash" v="5;2"/>
@@ -1624,14 +1618,14 @@ def my_form_open(dialog, layer, feature):
           <symbol name="0" alpha="1" force_rhr="0" type="fill" clip_to_extent="1">
             <layer enabled="1" class="SimpleFill" pass="0" locked="0">
               <prop k="border_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-              <prop k="color" v="156,197,240,255"/>
+              <prop k="color" v="200,235,255,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="38,89,128,0"/>
+              <prop k="outline_color" v="38,89,128,255"/>
               <prop k="outline_style" v="solid"/>
-              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_width" v="0"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="style" v="solid"/>
               <data_defined_properties>
@@ -2065,7 +2059,7 @@ def my_form_open(dialog, layer, feature):
       <labeling type="simple">
         <settings calloutType="simple">
           <text-style fontSizeUnit="Point" fontUnderline="0" fontKerning="1" textColor="50,50,50,255" fontSizeMapUnitScale="3x:0,0,0,0,0,0" textOpacity="1" useSubstitutions="0" fontFamily="Noto Sans" multilineHeight="1" namedStyle="Regular" textOrientation="horizontal" blendMode="0" fieldName="wordwrap(routes_ref,22)" fontSize="15" fontLetterSpacing="0" isExpression="1" previewBkgrdColor="255,255,255,255" fontWeight="50" fontItalic="0" fontCapitals="0" fontWordSpacing="0" fontStrikeout="0">
-            <text-buffer bufferDraw="1" bufferNoFill="0" bufferOpacity="1" bufferSizeMapUnitScale="3x:0,0,0,0,0,0" bufferBlendMode="0" bufferSizeUnits="MM" bufferColor="252,231,209,255" bufferSize="0.7" bufferJoinStyle="128"/>
+            <text-buffer bufferDraw="1" bufferNoFill="0" bufferOpacity="1" bufferSizeMapUnitScale="3x:0,0,0,0,0,0" bufferBlendMode="0" bufferSizeUnits="MM" bufferColor="254,254,228,255" bufferSize="0.7" bufferJoinStyle="128"/>
             <background shapeFillColor="255,255,255,255" shapeOpacity="1" shapeOffsetMapUnitScale="3x:0,0,0,0,0,0" shapeJoinStyle="64" shapeRadiiMapUnitScale="3x:0,0,0,0,0,0" shapeDraw="0" shapeRadiiY="0" shapeOffsetUnit="MM" shapeRadiiX="0" shapeBorderColor="128,128,128,255" shapeBlendMode="0" shapeSizeX="0" shapeRadiiUnit="MM" shapeSizeY="0" shapeSizeMapUnitScale="3x:0,0,0,0,0,0" shapeRotationType="0" shapeOffsetX="0" shapeBorderWidth="0" shapeRotation="0" shapeOffsetY="0" shapeSizeType="0" shapeSizeUnit="MM" shapeBorderWidthMapUnitScale="3x:0,0,0,0,0,0" shapeBorderWidthUnit="MM" shapeType="0" shapeSVGFile="">
               <symbol name="markerSymbol" alpha="1" force_rhr="0" type="marker" clip_to_extent="1">
                 <layer enabled="1" class="SimpleMarker" pass="0" locked="0">
@@ -2390,13 +2384,13 @@ def my_form_open(dialog, layer, feature):
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="0,0,0,255"/>
+              <prop k="outline_color" v="50,50,50,255"/>
               <prop k="outline_style" v="solid"/>
-              <prop k="outline_width" v="0"/>
+              <prop k="outline_width" v="0.6"/>
               <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="scale_method" v="diameter"/>
-              <prop k="size" v="2"/>
+              <prop k="size" v="1.6"/>
               <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="size_unit" v="MM"/>
               <prop k="vertical_anchor_point" v="1"/>
@@ -2416,7 +2410,7 @@ def my_form_open(dialog, layer, feature):
       <labeling type="simple">
         <settings calloutType="simple">
           <text-style fontSizeUnit="Point" fontUnderline="0" fontKerning="1" textColor="50,50,50,255" fontSizeMapUnitScale="3x:0,0,0,0,0,0" textOpacity="1" useSubstitutions="0" fontFamily="Noto Sans" multilineHeight="1" namedStyle="Regular" textOrientation="horizontal" blendMode="0" fieldName="wordwrap(long_text,25)" fontSize="15" fontLetterSpacing="0" isExpression="1" previewBkgrdColor="255,255,255,255" fontWeight="50" fontItalic="0" fontCapitals="0" fontWordSpacing="0" fontStrikeout="0">
-            <text-buffer bufferDraw="1" bufferNoFill="0" bufferOpacity="1" bufferSizeMapUnitScale="3x:0,0,0,0,0,0" bufferBlendMode="0" bufferSizeUnits="MM" bufferColor="252,231,209,255" bufferSize="1" bufferJoinStyle="64"/>
+            <text-buffer bufferDraw="1" bufferNoFill="0" bufferOpacity="1" bufferSizeMapUnitScale="3x:0,0,0,0,0,0" bufferBlendMode="0" bufferSizeUnits="MM" bufferColor="254,254,228,255" bufferSize="1" bufferJoinStyle="64"/>
             <background shapeFillColor="255,255,255,255" shapeOpacity="1" shapeOffsetMapUnitScale="3x:0,0,0,0,0,0" shapeJoinStyle="64" shapeRadiiMapUnitScale="3x:0,0,0,0,0,0" shapeDraw="0" shapeRadiiY="0" shapeOffsetUnit="MM" shapeRadiiX="0" shapeBorderColor="128,128,128,255" shapeBlendMode="0" shapeSizeX="0" shapeRadiiUnit="MM" shapeSizeY="0" shapeSizeMapUnitScale="3x:0,0,0,0,0,0" shapeRotationType="0" shapeOffsetX="0" shapeBorderWidth="0" shapeRotation="0" shapeOffsetY="0" shapeSizeType="0" shapeSizeUnit="MM" shapeBorderWidthMapUnitScale="3x:0,0,0,0,0,0" shapeBorderWidthUnit="MM" shapeType="0" shapeSVGFile="">
               <symbol name="markerSymbol" alpha="1" force_rhr="0" type="marker" clip_to_extent="1">
                 <layer enabled="1" class="SimpleMarker" pass="0" locked="0">
