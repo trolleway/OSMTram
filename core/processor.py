@@ -340,13 +340,13 @@ class Processor:
         logger.info(cmd)
         os.system(cmd)   
                 
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/tinyblack.qgs" --layout "4000x4000_atlas" --output "{filename}" '
-        cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),'tinyblack4000_'+name+'.svg'))
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "4000x4000_atlas" --output "{filename}" '
+        cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),'manila4000_'+name+'.svg'))
         logger.info(cmd)
         os.system(cmd)   
         
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/wikipedia.qgs" --layout "4000x4000_atlas" --output "{filename}" '
-        cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),'wikipedia4000_'+name+'.svg'))
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "1000x1000_atlas" --output "{filename}" '
+        cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),'manila1000_'+name+'.svg'))
         logger.info(cmd)
         os.system(cmd)
         
