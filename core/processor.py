@@ -11,6 +11,8 @@ import stat
 #sys.path.append("../core")
 from qgis_project_substitute import substitute_project
 
+import shutil
+
 import config
 
 logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
@@ -88,7 +90,8 @@ class Processor:
         os.unlink(geojson_filename)
         
         result_poly = os.path.join(folder,'poly.poly')
-        os.rename('poly_0.poly',os.path.join(folder,'poly.poly'))
+        shutil.move('poly_0.poly',os.path.join(folder,'poly.poly'))
+        #os.rename only works if source and destination are on the same file system. You should use shutil.move instead.
         os.chmod(result_poly, 0o0777)
         
         return result_poly
