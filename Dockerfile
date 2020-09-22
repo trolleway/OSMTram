@@ -31,6 +31,9 @@ RUN apt-get install -y sudo
 RUN adduser trolleway sudo
 RUN usermod -aG sudo trolleway
 
+ADD https://api.github.com/repos/trolleway/OSMTram/git/refs/heads/master   ver.json
+#The API call will return different results when the head changes, invalidating the docker cache
+#/home/trolleway/repository_
 RUN git clone --recurse-submodules https://github.com/trolleway/OSMTram.git
 #RUN mkdir /OSMTram
 

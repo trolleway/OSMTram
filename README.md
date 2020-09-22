@@ -93,9 +93,6 @@ https://dev.to/abiodunjames/why-docker-creating-a-multi-container-application-wi
 
 <!--### Prerequisites -->
 
-
-
-
 ### Installation in docker
 ```
 git clone  --recurse-submodules https://github.com/trolleway/OSMTram.git
