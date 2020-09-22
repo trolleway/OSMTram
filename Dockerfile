@@ -31,8 +31,8 @@ RUN apt-get install -y sudo
 RUN adduser trolleway sudo
 RUN usermod -aG sudo trolleway
 
-#RUN git clone --recurse-submodules https://github.com/trolleway/OSMTram.git
-RUN mkdir /OSMTram
+RUN git clone --recurse-submodules https://github.com/trolleway/OSMTram.git
+#RUN mkdir /OSMTram
 
 RUN chmod  --recursive 777 /OSMTram
 

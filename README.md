@@ -108,9 +108,9 @@ docker run --rm   --name osmtram_backend_db -e POSTGRES_PASSWORD=user -e POSTGRE
 
  
 #поднять и зайти в контейнер с ubuntu+python+gdal, в который проброшен порт с postgis
-docker run -it --link osmtram_backend_db:db -v ${PWD}/data:/data  -v ${PWD}:/OSMTram osmtram:1.0  /bin/bash
+docker run -it --link osmtram_backend_db:db -v ${PWD}/data:/data   osmtram:1.0  /bin/bash
 пути для win
-docker run -it --link osmtram_backend_db:db -v c:\trolleway\OSMTram\data:/data  -v c:\trolleway\OSMTram:/OSMTram osmtram:1.0  /bin/bash
+docker run -it --link osmtram_backend_db:db -v c:\trolleway\OSMTram\data:/data  osmtram:1.0  /bin/bash
 ```
 #внутри контейнера
 ```

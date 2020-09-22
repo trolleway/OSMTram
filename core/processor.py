@@ -18,8 +18,7 @@ logger = logging.getLogger(__name__)
 
 class Processor:
 
-    def make_layouts_poly(self,filepath):
-        WORKDIR = '../data'
+    def make_layouts_poly(self,filepath,WORKDIR):
         #import layout geojson to postgis, and generating page bounds in all formats
         export_geojson = os.path.join(WORKDIR,'layout.geojson')
         
@@ -88,8 +87,8 @@ class Processor:
         
         os.unlink(geojson_filename)
         
-        result_poly = os.path.join('../data','poly.poly')
-        os.rename('poly_0.poly',os.path.join('../data','poly.poly'))
+        result_poly = os.path.join(folder,'poly.poly')
+        os.rename('poly_0.poly',os.path.join(folder,'poly.poly'))
         os.chmod(result_poly, 0o0777)
         
         return result_poly
@@ -208,7 +207,7 @@ class Processor:
         #update dump
         osmupdate_bbox = self.get_bbox(geojson)
         
-        layouts_geojson = self.make_layouts_poly(geojson)
+        layouts_geojson = self.make_layouts_poly(geojson,WORKDIR)
         result_poly = self.make_osmupdate_poly(geojson,WORKDIR)
 
         cmd = 'python3 ../core/get_fresh_dump.py --url "{url}" --output "{WORKDIR}/{dump_name}.osm.pbf" --bbox "{bbox}" {prune} {skip_osmupdate}'
