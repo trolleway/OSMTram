@@ -319,7 +319,7 @@ class Processor:
 
         substitute_project(
                         src='../qgis_project_templates/retrowave.qgs.template.qgs',
-                        dst = WORKDIR+'/out.qgs',
+                        dst = WORKDIR+'/retrowave.qgs',
                         layout_extent=layout_extent)        
         substitute_project(
                         src='../qgis_project_templates/tinyblack.qgs.template.qgs',
@@ -334,7 +334,7 @@ class Processor:
                         dst = WORKDIR+'/manila.qgs',
                         layout_extent=layout_extent)
                         
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/out.qgs" --layout "4000x4000_atlas" --output "{filename}"  '
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "3500x4000_atlas" --output "{filename}"  '
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),name+'.pdf'))
         logger.info(cmd)
         os.system(cmd)
