@@ -264,7 +264,7 @@ class Processor:
         cmd = 'pdfunite /data/*.pdf "/data/'+atlas_filename+'.pdf"'
         os.system(cmd)
         
-        self.make_zip_bymask(dirname = str(WORKDIR),filename = atlas_filename+'_svg.zip', mask = '.svg')
+        self.make_zip_bymask(dirname = WORKDIR, filename = atlas_filename + '_svg.zip', mask = '.svg')
         
         #for each record render map
         #pack to file
@@ -367,7 +367,17 @@ class Processor:
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_kakava1000.png'))
         logger.info(cmd)
         os.system(cmd)
-                  
+               
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "2000x2000_atlas" --output "{filename}" '
+        cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_kakava2000.png'))
+        logger.info(cmd)
+        os.system(cmd)
+               
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "4000x4000_atlas" --output "{filename}" '
+        cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_kakava4000.png'))
+        logger.info(cmd)
+        os.system(cmd)
+                                  
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/wikipedia-simpler.qgs" --layout "0700x0700_atlas" --output "{filename}" '
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_wikipedia0700.svg'))
         logger.info(cmd)
