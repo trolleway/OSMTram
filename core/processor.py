@@ -362,7 +362,12 @@ class Processor:
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_kakava1000.svg'))
         logger.info(cmd)
         os.system(cmd)
-          
+               
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "1000x1000_atlas" --output "{filename}" '
+        cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_kakava1000.png'))
+        logger.info(cmd)
+        os.system(cmd)
+                  
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/wikipedia-simpler.qgs" --layout "0700x0700_atlas" --output "{filename}" '
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_wikipedia0700.svg'))
         logger.info(cmd)
