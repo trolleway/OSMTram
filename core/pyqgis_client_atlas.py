@@ -76,7 +76,21 @@ def export_atlas(qgs_project_path, layout_name, filepath):
                     print(error)
 
         os.rename(os.path.join(img_path,'output_0.jpg'),os.path.join(img_path,filename))
-    
+     
+    if imageExtension == '.png':
+        if os.path.isfile(os.path.join(img_path,'output_0.png')):
+            os.unlink(os.path.join(img_path,'output_0.png'))
+            
+        for layout in QgsProject.instance().layoutManager().printLayouts():
+            if myAtlas.enabled():
+                print('signal')
+                result, error = QgsLayoutExporter.exportToImage(myAtlas, 
+                                    baseFilePath=img_path + '//', extension=imageExtension, settings=image_settings)
+                if not result == QgsLayoutExporter.Success:
+                    print(error)
+
+        os.rename(os.path.join(img_path,'output_0.png'),os.path.join(img_path,filename))
+           
     if imageExtension == '.pdf':
         #if os.path.isfile(os.path.join(img_path,'output_0.jpg')):
         #    os.unlink(os.path.join(img_path,'output_0.jpg'))
