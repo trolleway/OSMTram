@@ -200,9 +200,7 @@ class Processor:
         dataSource = driver.Open(geojson, 0)
         layer = dataSource.GetLayer()
         if attribute_filter != '': layer.SetAttributeFilter(attribute_filter)
-        for feature in layer:
-            sheet_name = str(feature.GetField('name_ru')) + ' ' + str(feature.GetField('type'))
-            print(sheet_name)
+
 
         '''src_source = osr.SpatialReference()
         src_source.ImportFromEPSG(4326)
