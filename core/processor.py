@@ -12,6 +12,7 @@ import stat
 from qgis_project_substitute import substitute_project
 
 import shutil
+import zipfile
 
 import config
 
@@ -266,7 +267,7 @@ class Processor:
         cmd = 'pdfunite /data/*.pdf "/data/'+atlas_filename+'.pdf"'
         os.system(cmd)
         
-        self.make_zip_bymask(dirname = WORKDIR, filename = atlas_filename + '_svg.zip', mask = '.svg')
+        #self.make_zip_bymask(dirname = WORKDIR, filename = atlas_filename + '_svg.zip', mask = '.svg')
         
         #for each record render map
         #pack to file
@@ -394,4 +395,41 @@ class Processor:
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_wikipedia4000.svg'))
         logger.info(cmd)
         os.system(cmd)       
+        
+        
+        files4zip = list()
+        files4zip = ['manila.qgs',
+        'tinyblack.qgs',
+        'wikipedia.qgs',
+        'wikipedia-simpler.qgs',
+        'routes.geojson',
+        'pagebound.geojson',
+        'terminals.geojson',
+        'landuse.gpkg',
+        'highway.gpkg',
+        'railway.gpkg',
+        'water.gpkg',
+        'land.gpkg',
+        ]
+        
+        files4zip.append(name+'_wikipedia1000.svg')
+        files4zip.append(name+'_wikipedia0700.svg')
+        files4zip.append(name+'_kakava1000.png')
+        files4zip_new = list()
+        for element in files4zip: files4zip_new.append(os.path.join(os.path.realpath(WORKDIR),element))
+        files4zip = files4zip_new
+        zip_filename = os.path.join(os.path.realpath(WORKDIR),name+'.BUNDLE.ZIP')
+        self.archive_files(files4zip,zip_filename)
+
+    def archive_files(self,files,target):
+        print(files,target)
+        zipObj = zipfile.ZipFile(target, 'w')
+        # Add multiple files to the zip
+        for element in files: 
+            if os.path.isfile(element): 
+                zipObj.write(element)
+
+        # close the Zip File
+        zipObj.close()
+        
 
