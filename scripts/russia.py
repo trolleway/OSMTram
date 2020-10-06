@@ -50,5 +50,6 @@ logger.info('Start')
 
 processor = Processor()
 
+#,attribute_filter='''"name_ru"= 'Москва' and "type"='tram' ''', osmupdate_mode='minute'
 processor.process_sheets('russia.geojson',WORKDIR,dump_url,dump_name='russia')
 quit()

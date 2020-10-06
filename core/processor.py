@@ -192,7 +192,7 @@ class Processor:
         return layout_extent
         
         
-    def process_sheets(self,geojson, WORKDIR,dump_url, dump_name,attribute_filter=''):
+    def process_sheets(self,geojson, WORKDIR,dump_url, dump_name,attribute_filter='', osmupdate_mode=''):
         #open sheets geojson
         from osgeo import ogr
         import os
@@ -215,9 +215,18 @@ class Processor:
         
         layouts_geojson = self.make_layouts_poly(geojson,WORKDIR)
         result_poly = self.make_osmupdate_poly(geojson,WORKDIR)
-
-        cmd = 'python3 ../core/get_fresh_dump.py --url "{url}" --output "{WORKDIR}/{dump_name}.osm.pbf" --bbox "{bbox}" {prune} {skip_osmupdate}'
-        cmd = cmd.format(url=dump_url,WORKDIR=WORKDIR,bbox=osmupdate_bbox,POLY=result_poly,prune='',skip_osmupdate='',dump_name=dump_name)
+        
+        if osmupdate_mode == 'hour':
+            mode = '--mode hour'
+        elif osmupdate_mode == 'minute':
+            mode = '--mode minute'        
+        elif osmupdate_mode == 'day':
+            mode = '--mode day' 
+        else:
+            mode = '' 
+            
+        cmd = 'python3 ../core/get_fresh_dump.py --url "{url}" --output "{WORKDIR}/{dump_name}.osm.pbf" --bbox "{bbox}" {mode} {prune} {skip_osmupdate}'
+        cmd = cmd.format(url=dump_url,WORKDIR=WORKDIR,bbox=osmupdate_bbox,POLY=result_poly,prune='',skip_osmupdate='',dump_name=dump_name, mode=mode)
         logger.info(cmd)
         os.system(cmd)
         
