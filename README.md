@@ -109,6 +109,11 @@ docker run -it --link osmtram_backend_db:db -v ${PWD}/data:/data   osmtram:1.0  
 пути для win
 docker run -it --link osmtram_backend_db:db -v c:\trolleway\OSMTram\data:/data  osmtram:1.0  /bin/bash
 ```
+
+Запуск dev-контейнера, куда папка с кодом пробрасывается, а не берётся из git
+```
+docker run -it --link osmtram_backend_db:db -v ${PWD}/data:/data -v ${PWD}:/OSMTram   osmtram:1.0  /bin/bash
+```
 #внутри контейнера
 ```
 Xvfb :1 -screen 0 800x600x24&

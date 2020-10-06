@@ -47,5 +47,5 @@ logger.info('Start')
 
 processor = Processor()
 
-processor.process_sheets('latvia.geojson',WORKDIR,dump_url,dump_name='latvia')
+processor.process_sheets('latvia.geojson',WORKDIR,dump_url,dump_name='latvia',attribute_filter='''"name_ru"= 'Рига' and "type"='trolleybus' ''')
 

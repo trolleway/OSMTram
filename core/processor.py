@@ -191,7 +191,7 @@ class Processor:
         return layout_extent
         
         
-    def process_sheets(self,geojson, WORKDIR,dump_url, dump_name):
+    def process_sheets(self,geojson, WORKDIR,dump_url, dump_name,attribute_filter=''):
         #open sheets geojson
         from osgeo import ogr
         import os
@@ -199,6 +199,10 @@ class Processor:
         driver = ogr.GetDriverByName("GeoJSON")
         dataSource = driver.Open(geojson, 0)
         layer = dataSource.GetLayer()
+        if attribute_filter != '': layer.SetAttributeFilter(attribute_filter)
+        for feature in layer:
+            sheet_name = str(feature.GetField('name_ru')) + ' ' + str(feature.GetField('type'))
+            print(sheet_name)
 
         '''src_source = osr.SpatialReference()
         src_source.ImportFromEPSG(4326)
