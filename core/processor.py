@@ -429,6 +429,7 @@ class Processor:
         files4zip = files4zip_new
         zip_filename = os.path.join(os.path.realpath(WORKDIR),name+'.BUNDLE.ZIP')
         self.archive_files(files4zip,zip_filename)
+        for element in files4zip: os.remove(element)
 
     def archive_files(self,files,target):
         print(files,target)
