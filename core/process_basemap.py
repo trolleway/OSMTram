@@ -220,7 +220,7 @@ if __name__ == '__main__':
         name='railway',
         pbf_layer='lines',
         where="railway is not null and railway NOT IN ('construction','proposed','razed','abandoned','disused')",
-        select="railway,name,bridge,tunnel"
+        select="railway,name,bridge,tunnel,service,usage"
         )
 
         download_oceans(folder=args.output, bbox = args.bbox)
