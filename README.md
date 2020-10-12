@@ -103,7 +103,6 @@ docker build -t osmtram:1.0 .
 docker run --rm   --name osmtram_backend_db -e POSTGRES_PASSWORD=user -e POSTGRES_USER=user -e POSTGRES_DB=gis -d -p 5432:5432   mdillon/postgis
 
 
- 
 #поднять и зайти в контейнер с ubuntu+python+gdal, в который проброшен порт с postgis
 docker run -it --link osmtram_backend_db:db -v ${PWD}/data:/data   osmtram:1.0  /bin/bash
 пути для win
@@ -121,6 +120,12 @@ export DISPLAY=:1
 
 cd scripts
 time python3 russia.py --workdir /data
+```
+
+## Examples
+
+```
+time python3 run.py italy-sud.metadata.json --workdir /data 
 ```
 
 <!-- USAGE EXAMPLES -->

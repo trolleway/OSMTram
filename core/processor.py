@@ -197,6 +197,9 @@ class Processor:
         from osgeo import ogr
         import os
         
+        print(geojson)
+        assert os.path.isfile(geojson)
+        
         driver = ogr.GetDriverByName("GeoJSON")
         dataSource = driver.Open(geojson, 0)
         layer = dataSource.GetLayer()
@@ -233,7 +236,7 @@ class Processor:
         cmd = 'rm /data/*.pdf'
         os.system(cmd)
         for feature in layer:
-            sheet_name = str(feature.GetField('name_ru')) + ' ' + str(feature.GetField('type'))
+            sheet_name = str(feature.GetField('name_loc')) + ' ' + str(feature.GetField('route'))
             geom = feature.GetGeometryRef()
             layout_extent = self.get_layout_extent_by_geom(geom)
             geojson_page = os.path.join(WORKDIR,'pagebound.geojson')
@@ -246,11 +249,16 @@ class Processor:
             ry = extent[3]           
             bbox = '{lx},{ly},{rx},{ry}'.format(lx=lx,ly=ly,rx=rx,ry=ry)
                       
-            sheet_name = str(feature.GetField('name_ru')) + '-' + str(feature.GetField('type'))
-            sheet_filename = feature.GetField('name_ru')
+            sheet_filename = feature.GetField('name_loc')
             bbox = bbox
             layout_extent = layout_extent
-            filtersring = 'route='+str(feature.GetField('type'))
+            filtersrc = ''
+            filtersring = 'route='+str(feature.GetField('route'))
+            try:
+                filtersrc = str(feature.GetField('filter'))
+            except:
+                pass
+            if filtersrc != '': filtersring = filtersrc
             
             logger.info(sheet_name)
             self.process_map(
