@@ -59,7 +59,7 @@ skip_osmupdate=None):
     logger.info('prune='+str(prune))
     logger.info('skip_osmupdate='+str(skip_osmupdate))
     updated_dump=os.path.join(directory,'just_updated_dump.osm.pbf')
-
+    temp_dump=os.path.join(directory,'temp_dump.osm.pbf')
 
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -88,7 +88,7 @@ skip_osmupdate=None):
 
     if skip_osmupdate != True:
         #--tempfiles={tempdir}
-        cmd = 'osmupdate {work_dump} {updated_dump}  -v -b={bbox} --{mode}'
+        cmd = 'osmupdate {work_dump} {updated_dump} -b={bbox} --{mode}'
         cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump, tempdir=osmupdate_tempdir,poly=poly,bbox=bbox,mode=mode)
     else:
         cmd = 'osmconvert {work_dump} -o={updated_dump}'
@@ -102,8 +102,30 @@ skip_osmupdate=None):
         os.remove(work_dump)
         os.rename(updated_dump, work_dump)
 
+    # filter dump
+    os.rename(work_dump, temp_dump)
+    filter_dump(temp_dump,work_dump)
+    os.remove(temp_dump)
     return 0
 
+def filter_dump(src,dst):
+        filter = '''route= railway= highway= natural=water landuse= waterway=riverbank'''
+        output_path_1 = os.path.join(os.path.dirname(src),'filtering1')
+        output_path_2 = os.path.join(os.path.dirname(src),'filtering2')
+        output_path_3 = dst
+
+        cmd = '''
+        osmconvert {dump_path} -o={output_path_1}.o5m
+        osmfilter {output_path_1}.o5m --keep= --keep="{filter}" --drop="highway=track highway=path highway=footway highway=service landuse=farmland landuse=meadow natural=forest natural=grassland landuse=forest" --out-o5m >{output_path_2}.o5m
+        rm -f {output_path_1}.o5m
+        osmconvert {output_path_2}.o5m -o={output_path_3}
+        rm -f {output_path_2}.o5m
+        '''
+        cmd = cmd.format(dump_path=src,output_path_1=output_path_1,output_path_2=output_path_2,output_path_3=output_path_3, filter=filter)
+        logger.info(cmd)
+        os.system(cmd)
+        
+        
 if __name__ == '__main__':
         parser = argparser_prepare()
         args = parser.parse_args()

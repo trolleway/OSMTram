@@ -258,8 +258,9 @@ class Processor:
                 filtersrc = str(feature.GetField('filter'))
             except:
                 pass
-            if filtersrc != '': filtersring = filtersrc
-            
+
+            if (filtersrc != '' and filtersrc is not None and filtersrc != 'None'): filtersring = filtersrc
+
             logger.info(sheet_name)
             self.process_map(
             name=sheet_name,
