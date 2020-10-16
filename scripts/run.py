@@ -76,4 +76,3 @@ attribute_filter = args.attribute_filter,
 osmupdate_mode = args.osmupdate_mode,
 skip_osmupdate = args.skip_osmupdate
 )
-quit()
