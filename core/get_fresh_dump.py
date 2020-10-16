@@ -129,4 +129,4 @@ def filter_dump(src,dst):
 if __name__ == '__main__':
         parser = argparser_prepare()
         args = parser.parse_args()
-        get_fresh_dump(args.dump_url,args.work_dump, bbox=args.bbox,prune=args.prune,mode=args.mode)
+        get_fresh_dump(args.dump_url,args.work_dump, bbox=args.bbox,prune=args.prune,mode=args.mode, skip_osmupdate = args.skip_osmupdate)
