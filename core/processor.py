@@ -192,26 +192,17 @@ class Processor:
         return layout_extent
         
         
-    def process_sheets(self,geojson, WORKDIR,dump_url, dump_name,attribute_filter='', osmupdate_mode=''):
+    def process_sheets(self,geojson, WORKDIR, dump_url, dump_name, attribute_filter = '', osmupdate_mode = '', skip_osmupdate = None):
         #open sheets geojson
         from osgeo import ogr
         import os
         
-        print(geojson)
         assert os.path.isfile(geojson)
         
         driver = ogr.GetDriverByName("GeoJSON")
         dataSource = driver.Open(geojson, 0)
         layer = dataSource.GetLayer()
         if attribute_filter != '': layer.SetAttributeFilter(attribute_filter)
-
-
-        '''src_source = osr.SpatialReference()
-        src_source.ImportFromEPSG(4326)
-
-        src_target = osr.SpatialReference()
-        src_target.ImportFromEPSG(32637)
-        transform = osr.CoordinateTransformation(src_source, src_target)'''
 
         #update dump
         osmupdate_bbox = self.get_bbox(geojson)
@@ -227,6 +218,8 @@ class Processor:
             mode = '--mode day' 
         else:
             mode = '' 
+
+        assert skip_osmupdate is None or skip_osmupdate == True
             
         cmd = 'python3 ../core/get_fresh_dump.py --url "{url}" --output "{WORKDIR}/{dump_name}.osm.pbf" --bbox "{bbox}" {mode} {prune} {skip_osmupdate}'
         cmd = cmd.format(url=dump_url,WORKDIR=WORKDIR,bbox=osmupdate_bbox,POLY=result_poly,prune='',skip_osmupdate='',dump_name=dump_name, mode=mode)
