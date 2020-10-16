@@ -37,7 +37,8 @@ def argparser_prepare():
     parser.epilog = \
         '''Samples:
 %(prog)s
-
+--attribute_filter="name_int = Vidnoe  --skip-osmupdate
+--attribute_filter="name_int" = 'Moscow' and "type"='tram'  --osmupdate_mode='minute'
 ''' \
         % {'prog': parser.prog}
     return parser
@@ -67,7 +68,7 @@ logger.info('Start')
 
 processor = Processor()
 
-#,attribute_filter='''"name_ru"= 'Москва' and "type"='tram' ''', osmupdate_mode='minute'
+#,
 processor.process_sheets(metadata['layout_geojson'],
 WORKDIR,
 dump_url = metadata['dump_url'],
