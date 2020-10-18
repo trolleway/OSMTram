@@ -203,6 +203,10 @@ class Processor:
         dataSource = driver.Open(geojson, 0)
         layer = dataSource.GetLayer()
         if attribute_filter != '': layer.SetAttributeFilter(attribute_filter)
+        featureCount = layer.GetFeatureCount()
+        if featureCount < 1:
+            logger.warning('No records found with filter '+attribute_filter + ' in file ' + geojson)
+            quit('stopping')
 
         #update dump
         osmupdate_bbox = self.get_bbox(geojson)
