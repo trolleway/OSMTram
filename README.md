@@ -115,7 +115,7 @@ Xvfb :1 -screen 0 800x600x24&
 export DISPLAY=:1
 
 cd scripts
-time python3 russia.py --workdir /data
+time python3 run.py russia.json --workdir /data --skip-osmupdate --where "name_int='Volgograd' and route='tram'"
 ```
 
 ### Installation in docker (develop)
