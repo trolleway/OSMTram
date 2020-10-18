@@ -1,0 +1,4 @@
+[submodule "core/osmot"]
+	path = core/osmot
+	url = https://github.com/trolleway/osmot
+	branch = master
