@@ -429,8 +429,13 @@ class Processor:
         ]
         
         files4zip.append(name+'_wikipedia1000.svg')
+        files4zip.append(name+'_wikipedia4000.svg')
         files4zip.append(name+'_wikipedia0700.svg')
         files4zip.append(name+'_kakava1000.png')
+        files4zip.append(name+'_kakava1000.svg')
+        files4zip.append(name+'_kakava2000.svg')
+        files4zip.append(name+'_kakava4000.svg')
+        
         files4zip_new = list()
         for element in files4zip: files4zip_new.append(os.path.join(os.path.realpath(WORKDIR),element))
         files4zip = files4zip_new

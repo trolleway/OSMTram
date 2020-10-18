@@ -23,10 +23,10 @@ def argparser_prepare():
     parser = argparse.ArgumentParser(description='OSMTram process',
             formatter_class=PrettyFormatter)
     parser.add_argument('metadata', help='metadata.json file')        
-    parser.add_argument('--skip-osmupdate',dest='skip_osmupdate', required=False, action='store_true')
+    parser.add_argument('--skip-osmupdate',dest='skip_osmupdate', required=False, default=None, action='store_true')
     parser.add_argument('--workdir',dest='WORKDIR', required=True)
     parser.add_argument('--where',dest='attribute_filter', required=False,help = 'attrubute filter for layout geojson')
-    parser.add_argument('--osmupdate_mode',
+    parser.add_argument('--osmupdate-mode',
     dest='osmupdate_mode', 
     required=False, 
     default='hour', 
@@ -37,8 +37,8 @@ def argparser_prepare():
     parser.epilog = \
         '''Samples:
 %(prog)s
---attribute_filter="name_int = Vidnoe  --skip-osmupdate
---attribute_filter="name_int" = 'Moscow' and "type"='tram'  --osmupdate_mode='minute'
+--where="name_int = Vidnoe  --skip-osmupdate
+--where "name_int = 'Gdansk'" --osmupdate-mode day
 ''' \
         % {'prog': parser.prog}
     return parser
