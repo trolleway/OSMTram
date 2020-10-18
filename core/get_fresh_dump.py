@@ -25,7 +25,7 @@ def argparser_prepare():
     parser.add_argument('--bbox', dest='bbox', required=False)
     parser.add_argument('--mode', dest='mode', required=False,choices=['minute', 'hour', 'day'], default='hour')
     parser.add_argument('--prune',dest='prune', required=False, action='store_true', help='Clear temporary folder')
-    parser.add_argument('--skip-osmupdate',dest='skip-osmupdate', required=False, action='store_true')
+    parser.add_argument('--skip-osmupdate',dest='skip_osmupdate', required=False, action='store_true')
 
     parser.epilog = \
         '''Samples:

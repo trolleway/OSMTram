@@ -220,10 +220,15 @@ class Processor:
             mode = '' 
 
         assert skip_osmupdate is None or skip_osmupdate == True
+        
+        if skip_osmupdate:
+            s = '--skip-osmupdate'
+        else:
+            s = ''
             
         cmd = 'python3 ../core/get_fresh_dump.py --url "{url}" --output "{WORKDIR}/{dump_name}.osm.pbf" --bbox "{bbox}" {mode} {prune} {skip_osmupdate}'
-        cmd = cmd.format(url=dump_url,WORKDIR=WORKDIR,bbox=osmupdate_bbox,POLY=result_poly,prune='',skip_osmupdate='',dump_name=dump_name, mode=mode)
-        logger.info(cmd)
+        cmd = cmd.format(url=dump_url,WORKDIR=WORKDIR,bbox=osmupdate_bbox,POLY=result_poly,prune='',skip_osmupdate=s,dump_name=dump_name, mode=mode)
+        logger.debug(cmd)
         os.system(cmd)
         
         cmd = 'rm /data/*.pdf'

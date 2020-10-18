@@ -139,6 +139,7 @@ docker run -it --link osmtram_backend_db:db -v c:\trolleway\OSMTram\data:/data -
 
 ```
 time python3 run.py italy-sud.metadata.json --workdir /data 
+time python3 run.py poland.json --skip-osmupdate --workdir /data --where "name_int = 'Gdansk'"
 ```
 
 <!-- USAGE EXAMPLES -->
