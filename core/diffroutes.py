@@ -43,34 +43,57 @@ geometry_changes_minor (is_minor_geometry_change)
     return parser
 
 
-
-'''
-check if sourcr files exists
-convert to routes layers using ogr 
-(сразу в память, а хули нет-то)
-
-check if any route layers non-zero
-
-begin synchro routine
-
-for feature in routelayer_left:
-    founded_route = self.search_route(route_feature, routeslayer_right)
-    if founded_route is None:
-        cmp_result = self.DELETED
-    else:
-        tags_diff = self.calc_tags_diff(route_feature, founded_feature)
-        geometry_changes,geometry_changes_minor = self.calc_geometry_changes(route_feature, founded_feature)
+class Processor:
     
-# add deleted and modified routes to json
-#search for created routes
-for route_feature in routelayer_right:
-    founded_route = self.search_route(route_feature, routeslayer_left)
-    if founded_route is None:
-        cmp_result = self.CREATED
+    def open2mem(self,pbf_filepath):
+        ds = gdal.OpenEx
+        layer = ds.GetLayer('Multilinestrings')
         
-    
-#add created routes to json    
-#end of synchro routine
+        ds_mem = 
+        layer_mem = 
+        
+        return layer_mem.Clone()
+        
+    def search_route(self,route_feature,routeslayer):
+        for feature in routes_layer:
+            if feature.GetField('osm_id')==route_feature.GetField('osm_id'): 
+                return feature
+        return None
+        
+    def calc_diff(self):
+
+        #check if sourcr files exists
+        assert os.path.isfile(pbf1)
+        assert os.path.isfile(pbf2)
+        
+        #convert to routes layers using ogr 
+        #(сразу в память, а хули нет-то)
+        routeslayer_left = self.open2mem(pbf1)
+        routeslayer_right = self.open2mem(pbf2)
+
+
+        #check if any route layers non-zero
+        assert (routeslayer_left.GetFeatureCount() > 0) or (routeslayer_right.GetFeatureCount() > 0) 
+        #begin synchro routine
+
+        for feature in routelayer_left:
+            founded_route = self.search_route(route_feature, routeslayer_right.Clone())
+            if founded_route is None:
+                cmp_result = self.DELETED
+            else:
+                tags_diff = self.calc_tags_diff(route_feature, founded_feature)
+                geometry_changes,geometry_changes_minor = self.calc_geometry_changes(route_feature, founded_feature)
+            
+        # add deleted and modified routes to json
+        #search for created routes
+        for route_feature in routelayer_right:
+            founded_route = self.search_route(route_feature, routeslayer_left)
+            if founded_route is None:
+                cmp_result = self.CREATED
+                
+            
+        #add created routes to json    
+        #end of synchro routine
 
 
 '''
