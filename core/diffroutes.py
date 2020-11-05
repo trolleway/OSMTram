@@ -57,7 +57,7 @@ class Processor:
     def search_route(self,route_feature,routeslayer):
         for feature in routes_layer:
             if feature.GetField('osm_id')==route_feature.GetField('osm_id'): 
-                return feature
+                return feature.clone()
         return None
         
     def calc_diff(self):
@@ -71,18 +71,24 @@ class Processor:
         routeslayer_left = self.open2mem(pbf1)
         routeslayer_right = self.open2mem(pbf2)
 
-
+        result_struct = list()
         #check if any route layers non-zero
         assert (routeslayer_left.GetFeatureCount() > 0) or (routeslayer_right.GetFeatureCount() > 0) 
         #begin synchro routine
 
         for feature in routelayer_left:
             founded_route = self.search_route(route_feature, routeslayer_right.Clone())
+            record = {}
             if founded_route is None:
                 cmp_result = self.DELETED
+                record.update({'status' : cmp_result}
             else:
+                cmp_result = self.CHANGED
                 tags_diff = self.calc_tags_diff(route_feature, founded_feature)
                 geometry_changes,geometry_changes_minor = self.calc_geometry_changes(route_feature, founded_feature)
+                record.update({'status' : cmp_result}
+                record.update({'tags_diff' : tags_diff}
+            result_struct.append(record)
             
         # add deleted and modified routes to json
         #search for created routes
@@ -90,11 +96,21 @@ class Processor:
             founded_route = self.search_route(route_feature, routeslayer_left)
             if founded_route is None:
                 cmp_result = self.CREATED
-                
+                record = {}
+                record.update({'status' : cmp_result}
+                tags_diff = self.calc_tags_diff(None, founded_route)
             
         #add created routes to json    
         #end of synchro routine
-
+        
+        
+        '''
+        { 
+        
+        
+        
+        }
+'''
 
 '''
 
