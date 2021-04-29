@@ -35,7 +35,7 @@ def argparser_prepare():
 
 
 
-dump_url = 'http://download.geofabrik.de/russia-latest.osm.pbf'
+dump_url = 'http://download.geofabrik.de/russia/central-fed-district-latest.osm.pbf'
 
 parser = argparser_prepare()
 args = parser.parse_args()
@@ -50,6 +50,6 @@ logger.info('Start')
 
 processor = Processor()
 
-#,attribute_filter='''"name_ru"= 'Москва' and "type"='tram' ''', osmupdate_mode='minute'
-processor.process_sheets('russia.geojson',WORKDIR,dump_url,dump_name='russia')
+#
+processor.process_sheets('russia.geojson',WORKDIR,dump_url,dump_name='russia',attribute_filter='''"name_ru"= 'Москва' and "type"='tram' ''', osmupdate_mode='hour')
 quit()
