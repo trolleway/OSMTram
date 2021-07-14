@@ -1,10 +1,7 @@
-time python3 run.py russia.json --workdir /data --osmupdate-mode minute --where "route='trolleybus' AND name_loc in ('Великий Новгород','Смоленск','Тула','Курск','Керчь','Симферополь')"
+time python3 run.py russia.json --workdir /data --osmupdate-mode hour --where " name_loc in ('Саратов','Великий Новгород','Смоленск','Тула','Курск','Керчь','Симферополь')"
 
-Великий Новгород
 Брянск
-Смоленск
 Тула
-Курск
 Чита
 Новосибирск
 Томск
@@ -42,3 +39,6 @@ cheched
 СИмфероволб
 Энгельс
 Саратов
+Великий Новгород
+Смоленск
+Курск
