@@ -1,4 +1,5 @@
-time python3 run.py russia.json --workdir /data --osmupdate-mode hour --where " name_loc in ('Саратов','Великий Новгород','Смоленск','Тула','Курск','Керчь','Симферополь')"
+time python3 run.py russia.json --workdir /data --osmupdate-mode hour --where " name_loc in ('Саратов','Великий Новгород','Чебоксары')"
+time python3 run.py russia.json --workdir /data --osmupdate-mode hour --where " name_loc in ('Великий Новгород','Чебоксары','Подольск')"
 
 Брянск
 Тула
