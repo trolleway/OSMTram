@@ -25,12 +25,6 @@ def argparser_prepare():
         % {'prog': parser.prog}
     return parser
 
-
-
-
-
-
-
 def substitute_project(src,dst,layout_extent):
     #open template file
     file = open(src, 'r')
