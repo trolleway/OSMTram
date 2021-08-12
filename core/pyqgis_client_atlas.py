@@ -39,7 +39,6 @@ def export_atlas(qgs_project_path, layout_name, filepath):
     project.read(os.path.abspath(qgs_project_path))
     project.readPath(os.path.abspath(os.path.dirname(qgs_project_path)))
 
-    #print(f'Project in "{project.fileName()} loaded successfully')
     print('Project in "{fn} loaded successfully'.format(fn=project.fileName()) )
 
     # Open prepared layout that as atlas enabled and set
@@ -59,9 +58,6 @@ def export_atlas(qgs_project_path, layout_name, filepath):
     image_settings = QgsLayoutExporter(myAtlasMap).ImageExportSettings()
     image_settings.dpi = 96
     svg_settings=QgsLayoutExporter(myAtlasMap).SvgExportSettings() #https://qgis.org/api/structQgsLayoutExporter_1_1SvgExportSettings.html
-
-    print('layout_name= {layout_name} '.format(layout_name=layout_name) )
-    print('try export to {img_path} '.format(img_path=img_path) )
     
     if imageExtension == '.jpg':
         if os.path.isfile(os.path.join(img_path,'output_0.jpg')):
@@ -92,8 +88,6 @@ def export_atlas(qgs_project_path, layout_name, filepath):
         os.rename(os.path.join(img_path,'output_0.png'),os.path.join(img_path,filename))
            
     if imageExtension == '.pdf':
-        #if os.path.isfile(os.path.join(img_path,'output_0.jpg')):
-        #    os.unlink(os.path.join(img_path,'output_0.jpg'))
             
         for layout in QgsProject.instance().layoutManager().printLayouts():
             if myAtlas.enabled():
@@ -111,8 +105,6 @@ def export_atlas(qgs_project_path, layout_name, filepath):
                     print(error)
 
         os.rename(os.path.join(img_path,'output_0.svg'),os.path.join(img_path,filename))
-    
-                
 
     #exporter.exportToImage(img_path, layout.atlas(), QgsLayoutExporter.ImageExportSettings())
     #there will be ERROR 6: The PNG driver does not support update access to existing datasets,
@@ -127,11 +119,6 @@ def main():
     # Start a QGIS application without GUI
     qgs = QgsApplication([], False)
     qgs.initQgis()
-
-
-    #project_path = args.project
-    #output_folder = '/home/trolleway/tmp/tests'
-    #layout_name = args.layout
 
     export_atlas(args.project, args.layout, args.output)
 
