@@ -16,23 +16,11 @@ def argparser_prepare():
             formatter_class=PrettyFormatter)
     parser.add_argument('dump1', help='1st pbf file')      
     parser.add_argument('dump2', help='2st pbf file')     
-    parser.add_argument('--skip-osmupdate',dest='skip_osmupdate', required=False, default=None, action='store_true')
-    parser.add_argument('--workdir',dest='WORKDIR', required=True)
-    parser.add_argument('--where',dest='attribute_filter', required=False,help = 'attrubute filter for layout geojson')
-    parser.add_argument('--osmupdate-mode',
-    dest='osmupdate_mode', 
-    required=False, 
-    default='hour', 
-    const='hour', 
-    choices=['minute', 'hour', 'day'], nargs = '?',
-    help = 'osmupdate mode')
+
         
     parser.epilog = \
         '''Samples:
-%(prog)s
---where="name_int = Vidnoe  --skip-osmupdate
---where "name_int = 'Gdansk'" --osmupdate-mode day
-
+%(prog)s dump1.osm.pbf dump2.osm.pbf
 JSON structure:
 Array of routes (one record = one type=route). Each record has:
 route (bus, tram, or any route=* tag)
@@ -299,6 +287,9 @@ osmconvert temp.osm.pbf -o=temp.o5m
 
 
 if __name__ == '__main__':
+    parser = argparser_prepare()
+    args = parser.parse_args()
+    
     processor = Processor()
-    diff_dict = processor.calc_diff(pbf1='testdata/2020-10-01.osm.pbf',pbf2='testdata/2020-11-07.osm.pbf')
+    diff_dict = processor.calc_diff(pbf1=args.dump1,pbf2=args.dump2)
     processor.print_diff(diff_dict)
