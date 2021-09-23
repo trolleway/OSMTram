@@ -4,6 +4,7 @@
 
 import os
 import ogr, gdal, osr
+import argparse
 
 def argparser_prepare():
 
@@ -44,7 +45,8 @@ class Processor:
     CREATED = 'created'   
     
     def open2mem(self,path):
-        gdal.SetConfigOption('OSM_CONFIG_FILE', 'osmconf.ini')
+        gdal.SetConfigOption('OSM_CONFIG_FILE', 'core/osmconf.ini')
+        gdal.SetConfigOption('OGR_INTERLEAVED_READING', 'YES')
         ds = gdal.OpenEx(path,gdal.OF_READONLY) #,allowed_drivers=['PBF']
         assert ds is not None
         layer = ds.GetLayer('multilinestrings')
@@ -152,9 +154,10 @@ class Processor:
 
         result_struct = list()
         #check if any route layers non-zero
-        assert (routeslayer_left.GetFeatureCount() > 0) or (routeslayer_right.GetFeatureCount() > 0) 
+        #assert (routeslayer_left.GetFeatureCount() > 0) or (routeslayer_right.GetFeatureCount() > 0) 
 
         for route_feature in routeslayer_left:
+            print(route_feature.GetField('ref'))
             founded_route_feature = self.search_route(route_feature, routeslayer_right, ds_mem_right)
 
             record = dict()
@@ -289,6 +292,8 @@ osmconvert temp.osm.pbf -o=temp.o5m
 if __name__ == '__main__':
     parser = argparser_prepare()
     args = parser.parse_args()
+    print(args.dump1)
+    print(args.dump2)
     
     processor = Processor()
     diff_dict = processor.calc_diff(pbf1=args.dump1,pbf2=args.dump2)
