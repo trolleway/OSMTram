@@ -46,7 +46,7 @@ class Processor:
     
     def open2mem(self,path):
         gdal.SetConfigOption('OSM_CONFIG_FILE', 'core/osmconf.ini')
-        gdal.SetConfigOption('OGR_INTERLEAVED_READING', 'YES')
+        # OGR_INTERLEAVED_READING shall not be used in modern gdal versions
         ds = gdal.OpenEx(path,gdal.OF_READONLY) #,allowed_drivers=['PBF']
         assert ds is not None
         layer = ds.GetLayer('multilinestrings')
