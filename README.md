@@ -113,6 +113,7 @@ docker run -it --link osmtram_backend_db:db -v c:\trolleway\OSMTram\data:/data  
 ```
 Xvfb :1 -screen 0 800x600x24&
 export DISPLAY=:1
+# TODO: change virtual display run for     os.environ["QT_QPA_PLATFORM"] = "offscreen"
 
 cd scripts
 time python3 run.py russia.json --workdir /data --skip-osmupdate --where "name_int='Volgograd' and route='tram'"
