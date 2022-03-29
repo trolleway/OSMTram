@@ -128,11 +128,11 @@ cd OSMTram/Dockerfile_dev
 docker build -t osmtram:1.0 .
 cd ..
 
-#run container with postgis
+#run postgis in docker
 docker run --rm   --name osmtram_backend_db -e POSTGRES_PASSWORD=user -e POSTGRES_USER=user -e POSTGRES_DB=gis -d -p 5432:5432   mdillon/postgis
 
-#пути для win
-docker run -it --link osmtram_backend_db:db -v c:\trolleway\OSMTram\data:/data -v c:\trolleway\OSMTram:/OSMTram  osmtram:1.0  /bin/bash
+#win
+docker run -it --link osmtram_backend_db:db -v ${PWD}/data:/data -v ${PWD}:/OSMTram osmtram:1.0  /bin/bash
 ```
 
 

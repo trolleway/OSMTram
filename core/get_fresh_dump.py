@@ -41,6 +41,18 @@ def get_filename_from_url(dump_url):
 def get_folder_from_path(path):
     return os.path.dirname((os.path.abspath(path)))
 
+def stringify(value):
+    _stringify_values = {
+        (type(None), None): '-',
+        (bool, True): '▩',
+        (bool, False): '□'
+    }
+
+    try:
+        return _stringify_values[(type(value), value)]
+    except (KeyError, TypeError):
+        return str(value)
+
 def get_fresh_dump(dump_url,
 work_dump='touchdown/rus-nw.osm.pbf',
 bbox='31.0467,58.421,31.4765,58.6117',
@@ -51,13 +63,13 @@ skip_osmupdate=None):
     #get fresh dump by osmupdate or download from dump
 
     downloaded_dump=get_filename_from_url(dump_url)
-    logger.info('downloaded_dump='+downloaded_dump)
+    logger.info('downloaded_dump'.ljust(40)+downloaded_dump)
     directory=get_folder_from_path(work_dump)
-    logger.info('directory='+directory)
-    logger.info('work_dump='+work_dump)
-    logger.info('existing of dump='+str(os.path.exists(work_dump)))
-    logger.info('prune='+str(prune))
-    logger.info('skip_osmupdate='+str(skip_osmupdate))
+    logger.info('directory'.ljust(40)+directory)
+    logger.info('work_dump'.ljust(40)+stringify(work_dump))
+    logger.info('existing of dump'.ljust(40)+stringify(os.path.exists(work_dump)))
+    logger.info('prune'.ljust(40)+stringify(prune))
+    logger.info('skip_osmupdate'.ljust(40)+stringify(skip_osmupdate))
     updated_dump=os.path.join(directory,'just_updated_dump.osm.pbf')
     temp_dump=os.path.join(directory,'temp_dump.osm.pbf')
 
@@ -114,6 +126,7 @@ def filter_dump(src,dst):
         output_path_2 = os.path.join(os.path.dirname(src),'filtering2')
         output_path_3 = dst
 
+        logger.info('Filtering dump... ')
         cmd = '''
         osmconvert {dump_path} -o={output_path_1}.o5m
         osmfilter {output_path_1}.o5m --keep= --keep="{filter}" --drop="highway=track highway=path highway=footway highway=service landuse=farmland landuse=meadow natural=forest natural=grassland landuse=forest" --out-o5m >{output_path_2}.o5m
@@ -124,8 +137,8 @@ def filter_dump(src,dst):
         cmd = cmd.format(dump_path=src,output_path_1=output_path_1,output_path_2=output_path_2,output_path_3=output_path_3, filter=filter)
         logger.info(cmd)
         os.system(cmd)
-        
-        
+
+
 if __name__ == '__main__':
         parser = argparser_prepare()
         args = parser.parse_args()
