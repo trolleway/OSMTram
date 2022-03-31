@@ -129,7 +129,7 @@ def filter_dump(src,dst):
         logger.info('Filtering dump... ')
         cmd = '''
         osmconvert {dump_path} -o={output_path_1}.o5m
-        osmfilter {output_path_1}.o5m --keep= --keep="{filter}" --drop="highway=track highway=path highway=footway highway=service landuse=farmland landuse=meadow natural=forest natural=grassland landuse=forest" --out-o5m >{output_path_2}.o5m
+        osmfilter {output_path_1}.o5m --keep= --keep="{filter}" --drop="highway=track highway=path highway=footway living_street=yes landuse=farmland landuse=meadow natural=forest natural=grassland landuse=forest" --out-o5m >{output_path_2}.o5m
         rm -f {output_path_1}.o5m
         osmconvert {output_path_2}.o5m -o={output_path_3}
         rm -f {output_path_2}.o5m
