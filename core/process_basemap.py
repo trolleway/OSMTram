@@ -38,13 +38,13 @@ def argparser_prepare():
 
     parser.epilog = \
         '''Samples:
-%(prog)s --dump_path country.pbf --output "temp/yaroslavl"
+time python3 process_basemap.py --dump_path moldova-latest.osm.pbf --bbox 26.5857,45.2225,30.365,48.5546  --output out --verbose
 
 ''' \
         % {'prog': parser.prog}
     return parser
 
-def filter_osm_dump(dump_path, folder, bbox=None):
+def filter_osm_dump(dump_path, folder, bbox=None, mode = None):
     import json
     import pprint
     pp=pprint.PrettyPrinter(indent=2)
@@ -53,7 +53,8 @@ def filter_osm_dump(dump_path, folder, bbox=None):
     output_path_1 = os.path.join(folder,'tmp1')
     output_path_2 = os.path.join(folder,'tmp2')
     output_path_final = os.path.join(folder,FILTERED_DUMP_NAME)
-    bbox_string = ''
+    if mode == 'railway':
+        output_path_final = os.path.join(folder,FILTERED_DUMP_NAME_RAILWAY)
     if bbox is not None: bbox_string='-b='+bbox
 
     cmd='''
@@ -63,8 +64,16 @@ def filter_osm_dump(dump_path, folder, bbox=None):
 
     rm -r {output_path_1}.o5m
     rm -r {output_path_2}.o5m
+    '''
+    if mode == 'railway':
+        cmd='''
+        osmconvert {dump_path} {bbox_string} --complete-ways  --complex-ways -o={output_path_1}.o5m
+        osmfilter {output_path_1}.o5m --keep= --keep-relations="route=train" -o={output_path_2}.o5m
+        osmconvert {output_path_2}.o5m -o={output_path_final}
 
-'''
+        rm -r {output_path_1}.o5m
+        rm -r {output_path_2}.o5m
+        '''
     cmd = cmd.format(dump_path = dump_path,
     filter = filter,
     output_path_1 = output_path_1,
@@ -182,6 +191,7 @@ ogr2ogr -overwrite ocean.gpkg -t_srs EPSG:4326 -clipdst 29.9997 59.7816 30.6396 
 
 if __name__ == '__main__':
         FILTERED_DUMP_NAME = 'basemap.osm.pbf'
+        FILTERED_DUMP_NAME_RAILWAY = 'basemap_railway.osm.pbf'
         parser = argparser_prepare()
         args = parser.parse_args()
 
@@ -193,6 +203,8 @@ if __name__ == '__main__':
         logger.info('Start convert pbf to basemap layers')
 
         filter_osm_dump(dump_path=args.dump_path, folder=args.output, bbox = args.bbox)
+        filter_osm_dump(dump_path=args.dump_path, folder=args.output, bbox = args.bbox, mode='railway')
+
         pbf2layer(dump_path=os.path.join(args.output,FILTERED_DUMP_NAME),
         folder=args.output,
         pbf_layer='multipolygons',
@@ -215,7 +227,7 @@ if __name__ == '__main__':
         select="highway,name,bridge,tunnel"
         )
 
-        pbf2layer(dump_path=os.path.join(args.output,FILTERED_DUMP_NAME),
+        pbf2layer(dump_path=os.path.join(args.output,FILTERED_DUMP_NAME_RAILWAY),
         folder=args.output,
         name='railway',
         pbf_layer='lines',
