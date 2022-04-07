@@ -95,7 +95,7 @@ https://dev.to/abiodunjames/why-docker-creating-a-multi-container-application-wi
 
 ### Installation in docker (prod)
 ```
-git clone  --recurse-submodules https://github.com/trolleway/OSMTram.git
+git clone  --recurse-submodules git@github.com:trolleway/OSMTram.git
 cd OSMTram
 docker build -t osmtram:1.0 .
 
@@ -123,7 +123,7 @@ time python3 run.py russia.json --workdir /data --skip-osmupdate --where "name_i
 Same as prod, but mount code folder to container, no need to rebuild container at code change
 
 ```
-git clone  --recurse-submodules https://github.com/trolleway/OSMTram.git
+git clone  --recurse-submodules git@github.com:trolleway/OSMTram.git
 cd OSMTram/Dockerfile_dev
 docker build -t osmtram:1.0 .
 cd ..
