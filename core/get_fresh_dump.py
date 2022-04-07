@@ -104,6 +104,7 @@ skip_osmupdate=None):
         cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump, tempdir=osmupdate_tempdir,poly=poly,bbox=bbox,mode=mode)
     else:
         cmd = 'osmconvert {work_dump} -o={updated_dump}'
+        cmd = 'cp -r {work_dump} {updated_dump}'
         cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump, tempdir=osmupdate_tempdir,poly=poly)
     logger.info(cmd)
     os.system(cmd)
@@ -114,10 +115,13 @@ skip_osmupdate=None):
         os.remove(work_dump)
         os.rename(updated_dump, work_dump)
 
-    # filter dump
-    os.rename(work_dump, temp_dump)
-    filter_dump(temp_dump,work_dump)
-    os.remove(temp_dump)
+    if skip_osmupdate != True:
+        pass
+        # filter dump
+        #os.rename(work_dump, temp_dump)
+        #filter_dump(temp_dump,work_dump)
+        # попробую убрать filter_dump, от него много проблем с пропаданием линий из-за сложности строк фильтра
+        #os.remove(temp_dump)
     return 0
 
 def filter_dump(src,dst):
