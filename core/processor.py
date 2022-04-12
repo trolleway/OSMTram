@@ -6,6 +6,7 @@ import logging
 from osgeo import ogr
 from osgeo import osr
 
+
 #import sys
 import stat
 #sys.path.append("../core")
@@ -264,6 +265,53 @@ class Processor:
             if (filtersrc != '' and filtersrc is not None and filtersrc != 'None'): filtersring = filtersrc
 
             logger.info(sheet_name)
+
+
+
+            wtext = '''
+{{Map
+|description=$desc$
+|date=$date$
+|map_date={{other date|after|2021}}
+|location=$location$
+|projection=EPSG:3857
+|heading=N
+|latitude=$lat$
+|longitude=$lon$
+|source={{own}}
+|author={{Creator:Artem Svetlov}}
+|permission=
+|other versions=
+}}
+
+=={{int:license-header}}==
+{{OpenStreetMap}}
+
+[[Category:Trolleybuses in $location$]]
+[[Category:Maps by OSMTram]]
+            '''
+
+            from datetime import date
+            today = date.today()
+            try:
+                #if all attributes not null
+                desc = '{{ru|1=Карта '+feature['name_loc']+' '+feature['route']+'}}{{en|1=Map of '+feature['name_int']+' '+feature['route']+'}}'
+            except:
+                desc = '{{ru|1=Карта  '+feature['route']+'}}{{en|1=Map of  '+feature['route']+'}}'
+            wtext = wtext.replace('$desc$', desc)
+            wtext = wtext.replace('$date$',today.strftime("%Y-%m-%d"))
+            if feature['name_int'] is not None:
+                wtext = wtext.replace('$location$', feature['name_int'])
+            else:
+                wtext = wtext.replace('$location$', feature['name_loc'])
+            wtext = wtext.replace('$lat$', str(round(geom.Centroid().GetY(),2)))
+            wtext = wtext.replace('$lon$', str(round(geom.Centroid().GetX(),2)))
+
+            print(wtext)
+            filename=os.path.join(os.path.realpath(WORKDIR),''+sheet_name+'_wikitext.txt')
+            with open(filename, 'w') as f: f.write(wtext)
+
+            continue
             self.process_map(
             name=sheet_name,
             WORKDIR=WORKDIR,
@@ -275,7 +323,6 @@ class Processor:
             dump_name=dump_name,
             skip_osmupdate=False
             )
-
         layer.ResetReading()
         from datetime import date
 
@@ -415,6 +462,9 @@ class Processor:
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_wikipedia4000.svg'))
         logger.info(cmd)
         os.system(cmd)
+
+        # text2wikimedia commons
+
 
 
         files4zip = list()

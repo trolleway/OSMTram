@@ -70,7 +70,7 @@ def filter_osm_dump(dump_path,  folder,filter='route=bus',):
         rm -f {output_path_2}.o5m
         '''
         cmd = cmd.format(dump_path=dump_path,output_path_1=output_path_1,output_path_2=output_path_2,output_path_3=output_path_3, filter=filter)
-        logger.info(cmd)
+        logger.debug(cmd)
         os.system(cmd)
 
 def cleardb(host,dbname,user,password):
@@ -104,7 +104,7 @@ def importdb(host,database,username,password,filepath):
     osm2pgsql_cmd = 'export PGPASSWORD={password} ; osm2pgsql --create --slim -E 3857 --cache-strategy sparse --cache 100 --host {host} --database {database} --username {username} {filepath}'.format(host=host,
     database=database,username=username,password=password,filepath=filepath)
     logger.debug(osm2pgsql_cmd)
-    
+
     os.system(osm2pgsql_cmd)
 
 
