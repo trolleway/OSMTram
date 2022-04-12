@@ -103,6 +103,7 @@ def cleardb(host,dbname,user,password):
 def importdb(host,database,username,password,filepath):
     osm2pgsql_cmd = 'export PGPASSWORD={password} ; osm2pgsql --create --slim -E 3857 --cache-strategy sparse --cache 100 --host {host} --database {database} --username {username} {filepath}'.format(host=host,
     database=database,username=username,password=password,filepath=filepath)
+    osm2pgsql_cmd += '2> /dev/null'
     logger.debug(osm2pgsql_cmd)
 
     os.system(osm2pgsql_cmd)

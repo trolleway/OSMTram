@@ -291,6 +291,19 @@ class Processor:
 [[Category:Maps by OSMTram]]
             '''
 
+
+            self.process_map(
+            name=sheet_name,
+            WORKDIR=WORKDIR,
+            bbox=bbox,
+            layout_extent = layout_extent,
+            osmfilter_string=filtersring,
+            prune=False,
+            dump_url=dump_url,
+            dump_name=dump_name,
+            skip_osmupdate=False
+            )
+            
             from datetime import date
             today = date.today()
             try:
@@ -307,22 +320,11 @@ class Processor:
             wtext = wtext.replace('$lat$', str(round(geom.Centroid().GetY(),2)))
             wtext = wtext.replace('$lon$', str(round(geom.Centroid().GetX(),2)))
 
-            print(wtext)
+
             filename=os.path.join(os.path.realpath(WORKDIR),''+sheet_name+'_wikitext.txt')
             with open(filename, 'w') as f: f.write(wtext)
 
-            continue
-            self.process_map(
-            name=sheet_name,
-            WORKDIR=WORKDIR,
-            bbox=bbox,
-            layout_extent = layout_extent,
-            osmfilter_string=filtersring,
-            prune=False,
-            dump_url=dump_url,
-            dump_name=dump_name,
-            skip_osmupdate=False
-            )
+
         layer.ResetReading()
         from datetime import date
 
