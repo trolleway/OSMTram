@@ -410,57 +410,57 @@ class Processor:
                         dst = WORKDIR+'/manila.qgs',
                         layout_extent=layout_extent)
 
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "4000x4000_atlas" --output "{filename}"  '
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "4000x4000_atlas" --output "{filename}"   > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),name+'.pdf'))
         logger.info(cmd)
         os.system(cmd)
 
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/tinyblack.qgs" --layout "4000x4000_atlas" --output "{filename}" '
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/tinyblack.qgs" --layout "4000x4000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),'tinyblack4000_'+name+'.svg'))
         logger.info(cmd)
         os.system(cmd)
 
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "4000x4000_atlas" --output "{filename}" '
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "4000x4000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_kakava4000.svg'))
         logger.info(cmd)
         os.system(cmd)
 
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "2000x2000_atlas" --output "{filename}" '
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "2000x2000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_kakava2000.svg'))
         logger.info(cmd)
         os.system(cmd)
 
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "1000x1000_atlas" --output "{filename}" '
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "1000x1000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_kakava1000.svg'))
         logger.info(cmd)
         os.system(cmd)
 
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "1000x1000_atlas" --output "{filename}" '
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "1000x1000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_kakava1000.png'))
         logger.info(cmd)
         os.system(cmd)
 
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "2000x2000_atlas" --output "{filename}" '
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "2000x2000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_kakava2000.png'))
         logger.info(cmd)
         os.system(cmd)
 
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "4000x4000_atlas" --output "{filename}" '
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "4000x4000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_kakava4000.png'))
         logger.info(cmd)
         os.system(cmd)
 
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/wikipedia-simpler.qgs" --layout "0700x0700_atlas" --output "{filename}" '
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/wikipedia-simpler.qgs" --layout "0700x0700_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_wikipedia0700.svg'))
         logger.info(cmd)
         os.system(cmd)
 
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/wikipedia.qgs" --layout "1000x1000_atlas" --output "{filename}" '
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/wikipedia.qgs" --layout "1000x1000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_wikipedia1000.svg'))
         logger.info(cmd)
         os.system(cmd)
 
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/wikipedia.qgs" --layout "4000x4000_atlas" --output "{filename}" '
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/wikipedia.qgs" --layout "4000x4000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_wikipedia4000.svg'))
         logger.info(cmd)
         os.system(cmd)
