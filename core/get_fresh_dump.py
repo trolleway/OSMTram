@@ -99,21 +99,25 @@ skip_osmupdate=None):
         os.makedirs(osmupdate_tempdir)
 
     if skip_osmupdate != True:
-        #--tempfiles={tempdir}
+        # do update dump
         cmd = 'osmupdate {work_dump} {updated_dump} -b={bbox} --{mode}'
         cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump, tempdir=osmupdate_tempdir,poly=poly,bbox=bbox,mode=mode)
+        logger.info(cmd)
+        os.system(cmd)   
+        #if osmupdate not find updates in internet - new file not created, will be used downloaded file (TODO: is behavior changed since 2019?)
+        if os.path.exists(updated_dump) == True:
+            #rename currentdump to prevdump
+            os.remove(work_dump)
+            os.rename(updated_dump, work_dump)
     else:
-        cmd = 'osmconvert {work_dump} -o={updated_dump}'
-        cmd = 'cp -r {work_dump} {updated_dump}'
-        cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump, tempdir=osmupdate_tempdir,poly=poly)
-    logger.info(cmd)
-    os.system(cmd)
+        #no update dump
+        pass
+        #cmd = 'osmconvert {work_dump} -o={updated_dump}'
+        #cmd = 'cp -r {work_dump} {updated_dump}'
+        #cmd = cmd.format(work_dump = work_dump, updated_dump = updated_dump, tempdir=osmupdate_tempdir,poly=poly)
+        #logger.info(cmd)
+        #os.system(cmd)
 
-    #if osmupdate not find updates in internet - new file not created, will be used downloaded file
-    if os.path.exists(updated_dump) == True:
-        #rename currentdump to prevdump
-        os.remove(work_dump)
-        os.rename(updated_dump, work_dump)
 
     if skip_osmupdate != True:
         pass

@@ -83,7 +83,7 @@ def filter_osm_dump(dump_path, folder, bbox=None, mode = None):
 
     logger.debug(cmd)
     os.system(cmd)
-    logger.info('pbf filtering complete')
+    logger.info('pbf filtering step complete')
 
 def pbf2layer(dump_path, folder, name='landuse',pbf_layer='multipolygons',where=None,select=None):
     output_file_path = os.path.join(folder,name)+'.gpkg'
@@ -94,7 +94,7 @@ def pbf2layer(dump_path, folder, name='landuse',pbf_layer='multipolygons',where=
     if select is not None: select_string = ' -select "{select}"'.format(select=select)
     cmd = '''
 rm -f  {output_file_path}
-ogr2ogr -f "GPKG" -overwrite -oo CONFIG_FILE={script_folder}/osmconf_basemap.ini {select_string} {where_string}  {output_file_path} {dump_path} {pbf_layer}
+ogr2ogr -f "GPKG" -overwrite -oo CONFIG_FILE={script_folder}/osmconf_basemap.ini {select_string} {where_string}  {output_file_path} {dump_path} {pbf_layer}   > /dev/null 2>&1
     '''
     cmd = cmd.format(output_file_path = output_file_path,
     dump_path = dump_path,
@@ -103,6 +103,7 @@ ogr2ogr -f "GPKG" -overwrite -oo CONFIG_FILE={script_folder}/osmconf_basemap.ini
     select_string = select_string,
     script_folder = os.path.dirname(os.path.realpath(__file__)),
     )
+    logger.info(name)
     logger.debug(cmd)
     os.system(cmd)
     return 0
@@ -195,12 +196,12 @@ if __name__ == '__main__':
         parser = argparser_prepare()
         args = parser.parse_args()
 
-        logging.basicConfig(level=logging.WARNING,format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
-        logger = logging.getLogger(__name__)
         if args.verbose:
-            logging.basicConfig(level=logging.INFO)
-
-        logger.info('Start convert pbf to basemap layers')
+            logging_level=logging.DEBUG
+        else:
+            logging_level=logging.INFO
+        logging.basicConfig(level=logging_level,format='%(asctime)s BASEMAP %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
+        logger = logging.getLogger(__name__)
 
         filter_osm_dump(dump_path=args.dump_path, folder=args.output, bbox = args.bbox)
         filter_osm_dump(dump_path=args.dump_path, folder=args.output, bbox = args.bbox, mode='railway')

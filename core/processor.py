@@ -366,7 +366,7 @@ class Processor:
         else:
             isskip_osmupdate = ''
 
-        cmd = 'python3 ../core/process_basemap.py --dump_path {WORKDIR}/{dump_name}.osm.pbf --bbox {bbox} -v --output "{WORKDIR}/" '
+        cmd = 'python3 ../core/process_basemap.py --dump_path {WORKDIR}/{dump_name}.osm.pbf --bbox {bbox} --output "{WORKDIR}/" ' # --verbose is allowed
         cmd = cmd.format(WORKDIR=WORKDIR,bbox=bbox,dump_name=dump_name)
         logger.info(cmd)
         os.system(cmd)
