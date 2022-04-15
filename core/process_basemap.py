@@ -52,38 +52,37 @@ def filter_osm_dump(dump_path, folder, bbox=None, mode = None):
     refs=[]
     output_path_1 = os.path.join(folder,'tmp1')
     output_path_2 = os.path.join(folder,'tmp2')
-    output_path_final = os.path.join(folder,FILTERED_DUMP_NAME)
-    if mode == 'railway':
-        output_path_final = os.path.join(folder,FILTERED_DUMP_NAME_RAILWAY)
-    if bbox is not None: bbox_string='-b='+bbox
+    output_path_final         = os.path.join(folder,FILTERED_DUMP_NAME)
+    output_path_final_railway = os.path.join(folder,FILTERED_DUMP_NAME_RAILWAY)
 
+    if bbox is not None: bbox_string='-b='+bbox
+    
+    logger.info('Filtering osm dump for basemap')
     cmd='''
     osmconvert {dump_path} {bbox_string} --complete-ways  --complex-ways -o={output_path_1}.o5m
     osmfilter {output_path_1}.o5m --keep-tags="all type= highway= railway= landuse= natural= water= waterway= " --drop-tags="=footway" -o={output_path_2}.o5m
     osmconvert {output_path_2}.o5m -o={output_path_final}
 
+    rm -r {output_path_2}.o5m
+    
+    osmfilter {output_path_1}.o5m --keep= --keep-relations="route=train" -o={output_path_2}.o5m
+    osmconvert {output_path_2}.o5m -o={output_path_final_railway}
+    
     rm -r {output_path_1}.o5m
     rm -r {output_path_2}.o5m
     '''
-    if mode == 'railway':
-        cmd='''
-        osmconvert {dump_path} {bbox_string} --complete-ways  --complex-ways -o={output_path_1}.o5m
-        osmfilter {output_path_1}.o5m --keep= --keep-relations="route=train" -o={output_path_2}.o5m
-        osmconvert {output_path_2}.o5m -o={output_path_final}
 
-        rm -r {output_path_1}.o5m
-        rm -r {output_path_2}.o5m
-        '''
     cmd = cmd.format(dump_path = dump_path,
     filter = filter,
-    output_path_1 = output_path_1,
-    output_path_2 = output_path_2,
-    output_path_final = output_path_final,
+    output_path_1             = output_path_1,
+    output_path_2             = output_path_2,
+    output_path_final         = output_path_final,
+    output_path_final_railway = output_path_final_railway,
     bbox_string = bbox_string)
 
     logger.debug(cmd)
     os.system(cmd)
-    logger.info('pbf filtering step complete')
+    logger.info('Filtering osm dump for basemap complete')
 
 def pbf2layer(dump_path, folder, name='landuse',pbf_layer='multipolygons',where=None,select=None):
     output_file_path = os.path.join(folder,name)+'.gpkg'
@@ -204,7 +203,7 @@ if __name__ == '__main__':
         logger = logging.getLogger(__name__)
 
         filter_osm_dump(dump_path=args.dump_path, folder=args.output, bbox = args.bbox)
-        filter_osm_dump(dump_path=args.dump_path, folder=args.output, bbox = args.bbox, mode='railway')
+
 
         pbf2layer(dump_path=os.path.join(args.output,FILTERED_DUMP_NAME),
         folder=args.output,

@@ -25,10 +25,10 @@ import logging
 
 FILTERED_DUMP_NAME = 'routes.osm.pbf'
 
-logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
+logging.basicConfig(level=logging.INFO,format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger(__name__)
 
-logger.info('Start')
+
 
 def argparser_prepare():
 
@@ -104,7 +104,7 @@ def importdb(host,database,username,password,filepath):
     osm2pgsql_cmd = 'export PGPASSWORD={password} ; osm2pgsql --create --slim -E 3857 --cache-strategy sparse --cache 100 --host {host} --database {database} --username {username} {filepath}'.format(host=host,
     database=database,username=username,password=password,filepath=filepath)
     osm2pgsql_cmd += ' 2> /dev/null'
-    logger.debug(osm2pgsql_cmd)
+    logger.info(osm2pgsql_cmd)
 
     os.system(osm2pgsql_cmd)
 
