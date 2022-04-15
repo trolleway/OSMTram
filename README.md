@@ -139,9 +139,11 @@ docker run -it --link osmtram_backend_db:db -v ${PWD}/data:/data -v ${PWD}:/OSMT
 ## Examples
 
 ```
-time python3 run.py italy-sud.metadata.json --workdir /data 
+time python3 run.py italy-sud.metadata.json --workdir /data
 time python3 run.py poland.json --skip-osmupdate --workdir /data --where "name_int = 'Gdansk'"
 time python3 run.py russia.json --skip-osmupdate --workdir /data --where "name_int = 'Ekaterinburg' and route='tram'"
+time python3 run.py russia.json --skip-osmupdate --workdir /data --where "not valid"
+
 ```
 
 <!-- USAGE EXAMPLES -->
@@ -154,11 +156,11 @@ It consists from there scripts:
 * core/dump_prepare.py - Takes a url or pbf file, poly file, filter string, and filtering it to basemap.pbf and pt_data.pbf. Use osmfilter.
 * core/historical_dump.py - Download and prepare historical dump for dump_prepare. May will be run outside container, due to huge size of dumps. Use osmupdate and osmfilter.
 * core/basemap_process.py - Generate image of basemap for bbox. Importing basemap.pbf to postgis, create QGIS Server WMS, make png from WMS.
-* core/pt_data_process.py - Generate image of public transport map 
+* core/pt_data_process.py - Generate image of public transport map
 
-* core/pyqgis_client_atlas.py - render pdf/svg/png map using standart qgis project with atlas layout. Extent is set in geojson file. 
+* core/pyqgis_client_atlas.py - render pdf/svg/png map using standart qgis project with atlas layout. Extent is set in geojson file.
     One run generate one-page atlas, then pages combined in multi-page pdf or zip archive
-	
+
 ### Deprecated scripts, should be removed
 
 * core/pyqgis_client.py
