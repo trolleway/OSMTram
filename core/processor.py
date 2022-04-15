@@ -5,6 +5,7 @@ import os
 import logging
 from osgeo import ogr
 from osgeo import osr
+import subprocess
 
 
 #import sys
@@ -424,6 +425,8 @@ class Processor:
         'land.gpkg',
         ]
 
+        if os.path.isfile('chronodata.gpkg'): os.remove('chronodata.gpkg')
+
         filename = os.path.join(os.path.realpath(WORKDIR),name+'.pdf')
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "4000x4000_atlas" --output "{filename}"   > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
@@ -473,8 +476,24 @@ class Processor:
         os.system(cmd)
         files4zip.append(filename)
 
+        #hook for historical lines
+        #copy map data here, and render with same qgis projects
+
+        #cmd = ['ogr2ogr', '-overwrite','-clipsrc '+bbox.replace(',',' '),'-nlt multilinestring',WORKDIR+'/chronolines.gpkg','chronolines-russia-tram.gpkg']
+        cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt multilinestring ' + WORKDIR+'/chronolines.gpkg chronolines-russia-tram.gpkg'
+        logger.info(cmd)
+        os.system(cmd)
+        files4zip.append('chronolines.gpkg')
+
         # text2wikimedia commons
 
+        filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_closed_lines_4000.svg')
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "4000x4000_atlas" --output "{filename}"  > /dev/null 2>&1'
+        cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
+        logger.debug(cmd)
+        logger.info(filename)
+        os.system(cmd)
+        files4zip.append(filename)
 
 
         files4zip_new = list()
@@ -482,7 +501,8 @@ class Processor:
         files4zip = files4zip_new
         zip_filename = os.path.join(os.path.realpath(WORKDIR),name+'.BUNDLE.ZIP')
         self.archive_files(files4zip,zip_filename)
-        for element in files4zip: os.remove(element)
+        for element in files4zip:
+            if os.path.isfile(element): os.remove(element)
 
     def archive_files(self,files,target):
         print('pack '+target)
