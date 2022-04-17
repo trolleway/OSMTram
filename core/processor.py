@@ -304,11 +304,13 @@ class Processor:
             basemap_caching = basemap_caching
             )
 
+            transport_ru_genitive={'trolleybus':'троллейбуса','tram':'трамвая','subway':'метро'}
             from datetime import date
             today = date.today()
             try:
                 #if all attributes not null
-                desc = '{{ru|1=Карта '+feature['name_loc']+' '+feature['route']+'}}{{en|1=Map of '+feature['name_int']+' '+feature['route']+'}}'
+                
+                desc = '{{ru|1=Карта маршрутов '+transport_ru_genitive.get(feature['route'],'')+' в городе '+feature['name_loc']+'}}{{en|1=Map of '+feature['name_int']+' '+feature['route']+' lines}}'
             except:
                 desc = '{{ru|1=Карта  '+feature['route']+'}}{{en|1=Map of  '+feature['route']+'}}'
             wtext = wtext.replace('$desc$', desc)
