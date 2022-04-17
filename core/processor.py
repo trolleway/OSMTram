@@ -504,7 +504,7 @@ class Processor:
         keep_files = ['kakava4000.svg']
         for element in files4zip:
             if os.path.isfile(element):
-                if not element.endswith(keep_files):
+                if not element.endswith('kakava4000.zip'):
                     os.remove(element)
 
     def archive_files(self,files,target):
@@ -513,7 +513,7 @@ class Processor:
         # Add multiple files to the zip
         for element in files:
             if os.path.isfile(element):
-                zipObj.write(element)
+                zipObj.write(element,arcname=os.path.basename(element))
 
         # close the Zip File
         zipObj.close()
