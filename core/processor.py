@@ -501,8 +501,11 @@ class Processor:
         files4zip = files4zip_new
         zip_filename = os.path.join(os.path.realpath(WORKDIR),name+'.BUNDLE.ZIP')
         self.archive_files(files4zip,zip_filename)
+        keep_files = ['kakava4000.svg']
         for element in files4zip:
-            if os.path.isfile(element): os.remove(element)
+            if os.path.isfile(element):
+                if not element.endswith(keep_files):
+                    os.remove(element)
 
     def archive_files(self,files,target):
         print('pack '+target)
