@@ -123,16 +123,16 @@ time python3 run.py russia.json --workdir /data --skip-osmupdate --where "name_i
 Same as prod, but mount code folder to container, no need to rebuild container at code change
 
 ```
-git clone  --recurse-submodules git@github.com:trolleway/OSMTram.git
-cd OSMTram/Dockerfile_dev
-docker build -t osmtram:1.0 .
+git clone  --recurse-submodules https://github.com/trolleway/OSMTram.git
+cd OSMTram
+docker build -f Dockerfiledev -t osmtram:dev .
 cd ..
 
 #run postgis in docker
 docker run --rm   --name osmtram_backend_db -e POSTGRES_PASSWORD=user -e POSTGRES_USER=user -e POSTGRES_DB=gis -d -p 5432:5432   mdillon/postgis
 
 #win
-docker run -it --link osmtram_backend_db:db -v ${PWD}/data:/data -v ${PWD}:/OSMTram osmtram:1.0  /bin/bash
+docker run -it --link osmtram_backend_db:db -v ${PWD}/data:/data -v ${PWD}:/OSMTram osmtram:dev  /bin/bash
 ```
 
 
