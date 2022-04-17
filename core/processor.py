@@ -194,7 +194,7 @@ class Processor:
         return layout_extent
 
 
-    def process_sheets(self,geojson, WORKDIR, dump_url, dump_name, attribute_filter = '', osmupdate_mode = '', skip_osmupdate = None):
+    def process_sheets(self,geojson, WORKDIR, dump_url, dump_name, attribute_filter = '', osmupdate_mode = '', skip_osmupdate = None, basemap_caching = False):
         #open sheets geojson
         from osgeo import ogr
         import os
@@ -299,10 +299,9 @@ class Processor:
             bbox=bbox,
             layout_extent = layout_extent,
             osmfilter_string=filtersring,
-            prune=False,
             dump_url=dump_url,
             dump_name=dump_name,
-            skip_osmupdate=False
+            basemap_caching = basemap_caching
             )
 
             from datetime import date
@@ -349,27 +348,46 @@ class Processor:
     dump_name,
     osmfilter_string='route=tram',
     layout_extent='<Extent ymax="8087642" xmax="3487345" xmin="3470799" ymin="8075943"/>',
-    prune=None,
-    skip_osmupdate=None):
-
-
+    basemap_caching = False):
+    
+        BASEMAP_CACHE_DIR = os.path.join(WORKDIR,'BASEMAP_CACHE')
 
         filename = name+'.pdf'
 
-        if prune == True:
-            isprune = ' --prune '
-        else:
-            isprune = ''
-
-        if skip_osmupdate == True:
-            isskip_osmupdate = ' --skip-osmupdate '
-        else:
-            isskip_osmupdate = ''
-
-        cmd = 'python3 ../core/process_basemap.py --dump_path {WORKDIR}/{dump_name}.osm.pbf --bbox {bbox} --output "{WORKDIR}/" ' # --verbose is allowed
-        cmd = cmd.format(WORKDIR=WORKDIR,bbox=bbox,dump_name=dump_name)
-        logger.info(cmd)
-        os.system(cmd)
+        skip_process_basemap = False
+        # check if basemap data exists
+        basemap_cache_filename = os.path.join(BASEMAP_CACHE_DIR,name)+'.zip'
+        if basemap_caching and os.path.exists(BASEMAP_CACHE_DIR):
+            logger.debug('cache dir exist')
+            basemap_cache_filename = os.path.join(BASEMAP_CACHE_DIR,name)+'.zip'
+            if os.path.exists(basemap_cache_filename):
+                logger.debug('cache archive exist')
+                zip_file = zipfile.ZipFile(basemap_cache_filename)
+                
+                
+                if zip_file.testzip() is None :  #returns none if archive ok, or name of frist bad file
+                    logger.debug('zip file tested')
+                    zip_file.extractall(WORKDIR)
+                    logger.info('basemap extracted from cache')
+                    skip_process_basemap = True
+          
+        if not skip_process_basemap:
+            cmd = 'python3 ../core/process_basemap.py --dump_path {WORKDIR}/{dump_name}.osm.pbf --bbox {bbox} --output "{WORKDIR}/" ' # --verbose is allowed
+            cmd = cmd.format(WORKDIR=WORKDIR,bbox=bbox,dump_name=dump_name)
+            logger.info(cmd)
+            os.system(cmd)
+        
+        #store basemap data in cache
+        if basemap_caching:
+            if not os.path.exists(BASEMAP_CACHE_DIR):
+                os.makedirs(BASEMAP_CACHE_DIR)
+            basemap_files_name = ('highway.gpkg','land.gpkg','landuse.gpkg','railway.gpkg','water.gpkg')
+            basemap_files = list()
+            for element in basemap_files_name:
+                basemap_files.append(os.path.join(os.path.realpath(WORKDIR),element)) 
+            
+            self.archive_files(basemap_files,target=basemap_cache_filename)
+                
 
         cmd = 'osmconvert "{WORKDIR}/{dump_name}.osm.pbf" -b={bbox} -o="{WORKDIR}/current_city.osm.pbf"'
         cmd = cmd.format(WORKDIR=WORKDIR,bbox=bbox,dump_name=dump_name)
@@ -501,10 +519,10 @@ class Processor:
         files4zip = files4zip_new
         zip_filename = os.path.join(os.path.realpath(WORKDIR),name+'.BUNDLE.ZIP')
         self.archive_files(files4zip,zip_filename)
-        keep_files = ['kakava4000.svg']
+        #clean dir
         for element in files4zip:
             if os.path.isfile(element):
-                if not element.endswith('kakava4000.zip'):
+                if not element.endswith('kakava4000.svg'):
                     os.remove(element)
 
     def archive_files(self,files,target):

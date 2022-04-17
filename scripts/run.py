@@ -24,6 +24,7 @@ def argparser_prepare():
             formatter_class=PrettyFormatter)
     parser.add_argument('metadata', help='metadata.json file')        
     parser.add_argument('--skip-osmupdate',dest='skip_osmupdate', required=False, default=None, action='store_true')
+    parser.add_argument('--basemap_caching',dest='basemap_caching', required=False, default=None, action='store_true')
     parser.add_argument('--workdir',dest='WORKDIR', required=True)
     parser.add_argument('--where',dest='attribute_filter', required=False,help = 'attrubute filter for layout geojson')
     parser.add_argument('--osmupdate-mode',
@@ -64,16 +65,18 @@ WORKDIR=args.WORKDIR
 logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger(__name__)
 
-logger.info('Start')
 
 processor = Processor()
 
-#,
+
+
+
 processor.process_sheets(metadata['layout_geojson'],
 WORKDIR,
 dump_url = metadata['dump_url'],
 dump_name = metadata['dump_name'],
 attribute_filter = args.attribute_filter,
 osmupdate_mode = args.osmupdate_mode,
-skip_osmupdate = args.skip_osmupdate
+skip_osmupdate = args.skip_osmupdate,
+basemap_caching = args.basemap_caching
 )
