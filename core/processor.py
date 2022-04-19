@@ -310,7 +310,7 @@ class Processor:
             try:
                 #if all attributes not null
                 
-                desc = '{{ru|1=Карта маршрутов '+transport_ru_genitive.get(feature['route'],'')+' в городе '+feature['name_loc']+'}}{{en|1=Map of '+feature['name_int']+' '+feature['route']+' lines}}'
+                desc = '{{ru|1=Карта маршрутов '+transport_ru_genitive.get(feature['route'],'')+' в городе '+feature['name_loc']+'}}{{en|1=Map of '+feature['name_int']+' '+feature['route']+" lines \n Generated with script https://github.com/trolleway/OSMTram automatically from OpenStreetMap dump}}"
             except:
                 desc = '{{ru|1=Карта  '+feature['route']+'}}{{en|1=Map of  '+feature['route']+'}}'
             wtext = wtext.replace('$desc$', desc)
