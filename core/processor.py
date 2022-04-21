@@ -67,6 +67,7 @@ class Processor:
         os.system(cmd)
 
         # magic postgis process for generating poly file with lesser nodes count
+        # magic postgis process for generating poly file with lesser nodes count
         sql = 'DROP TABLE IF EXISTS layouts_poly0 ; CREATE TABLE layouts_poly0 AS SELECT ST_Transform(ST_Envelope(ST_Buffer(ST_Transform(wkb_geometry,3857),15000)),4326) AS wkb_geometry FROM layouts;'
         cmd = '''ogrinfo PG:"host={host} dbname={dbname} user={user} password={password}"  -sql '{sql}' '''
         cmd = cmd.format(host=config.host, dbname=config.dbname, user=config.user, password=config.password, sql=sql)
@@ -310,7 +311,7 @@ class Processor:
             try:
                 #if all attributes not null
                 
-                desc = '{{ru|1=Карта маршрутов '+transport_ru_genitive.get(feature['route'],'')+' в городе '+feature['name_loc']+'}}{{en|1=Map of '+feature['name_int']+' '+feature['route']+" lines \n Generated with script https://github.com/trolleway/OSMTram automatically from OpenStreetMap dump}}"
+                desc = '{{ru|1=Карта маршрутов '+transport_ru_genitive.get(feature['route'],'')+' в городе '+feature['name_loc']+'}}{{en|1=Map of '+feature['name_int']+' '+feature['route']+" lines \n Generated with script https://github.com/trolleway/OSMTram automatically from OpenStreetMap dump \n Ask me for update map}} {{ Created with QGIS|v }} "
             except:
                 desc = '{{ru|1=Карта  '+feature['route']+'}}{{en|1=Map of  '+feature['route']+'}}'
             wtext = wtext.replace('$desc$', desc)
@@ -445,7 +446,8 @@ class Processor:
         'land.gpkg',
         ]
 
-        if os.path.isfile('chronodata.gpkg'): os.remove('chronodata.gpkg')
+        #if os.path.isfile('chronodata.gpkg'): os.remove('chronodata.gpkg')
+        #if os.path.isfile('notes_now.gpkg'): os.remove('notes_now.gpkg')
 
         filename = os.path.join(os.path.realpath(WORKDIR),name+'.pdf')
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "4000x4000_atlas" --output "{filename}"   > /dev/null 2>&1'
@@ -496,10 +498,32 @@ class Processor:
         os.system(cmd)
         files4zip.append(filename)
 
+
+        cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt point ' + WORKDIR+'/notes_now.gpkg notes_now_trolleybus.gpkg'
+        logger.info(cmd)
+        os.system(cmd)
+        files4zip.append('notes_now.gpkg')
+
+        filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava2000_notes.svg')
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "2000x2000_atlas" --output "{filename}"  > /dev/null 2>&1'
+        cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
+        logger.debug(cmd)
+        logger.info(filename)
+        os.system(cmd)
+        files4zip.append(filename)
+        filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava4000_notes.svg')
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "2000x2000_atlas" --output "{filename}"  > /dev/null 2>&1'
+        cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
+        logger.debug(cmd)
+        logger.info(filename)
+        os.system(cmd)
+        files4zip.append(filename)
+        
+        
         #hook for historical lines
         #copy map data here, and render with same qgis projects
 
-        #cmd = ['ogr2ogr', '-overwrite','-clipsrc '+bbox.replace(',',' '),'-nlt multilinestring',WORKDIR+'/chronolines.gpkg','chronolines-russia-tram.gpkg']
+
         cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt multilinestring ' + WORKDIR+'/chronolines.gpkg chronolines-russia-tram.gpkg'
         logger.info(cmd)
         os.system(cmd)
