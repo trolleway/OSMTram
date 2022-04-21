@@ -24,7 +24,7 @@ def argparser_prepare():
             formatter_class=PrettyFormatter)
     parser.add_argument('metadata', help='metadata.json file')        
     parser.add_argument('--skip-osmupdate',dest='skip_osmupdate', required=False, default=None, action='store_true')
-    parser.add_argument('--basemap_caching',dest='basemap_caching', required=False, default=None, action='store_true')
+    parser.add_argument('--basemap-caching',dest='basemap_caching', required=False, default=None, action='store_true')
     parser.add_argument('--workdir',dest='WORKDIR', required=True)
     parser.add_argument('--where',dest='attribute_filter', required=False,help = 'attrubute filter for layout geojson')
     parser.add_argument('--osmupdate-mode',
