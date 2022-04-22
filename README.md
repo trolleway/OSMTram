@@ -116,7 +116,7 @@ export DISPLAY=:1
 # TODO: change virtual display run for     os.environ["QT_QPA_PLATFORM"] = "offscreen"
 
 cd scripts
-time python3 run.py russia.json --workdir /data --skip-osmupdate --basemap-caching --where "name_int='Volgograd' and route='tram'"
+time python3 run.py russia.json --workdir /data  --basemap-caching --where "name_int='Volgograd' and route='tram'"
 ```
 
 ### Installation in docker (develop)
