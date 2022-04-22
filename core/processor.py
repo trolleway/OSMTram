@@ -312,7 +312,7 @@ class Processor:
             today = date.today()
             try:
                 #if all attributes not null
-                
+
                 desc = '{{ru|1=Карта маршрутов '+transport_ru_genitive.get(feature['route'],'')+' в городе '+feature['name_loc']+'}}{{en|1=Map of '+feature['name_int']+' '+feature['route']+" lines \n Generated with script https://github.com/trolleway/OSMTram automatically from OpenStreetMap dump \n Ask me for update map}} {{ Created with QGIS|v }} "
             except:
                 desc = '{{ru|1=Карта  '+feature['route']+'}}{{en|1=Map of  '+feature['route']+'}}'
@@ -354,7 +354,7 @@ class Processor:
     osmfilter_string='route=tram',
     layout_extent='<Extent ymax="8087642" xmax="3487345" xmin="3470799" ymin="8075943"/>',
     basemap_caching = False):
-    
+
         BASEMAP_CACHE_DIR = os.path.join(WORKDIR,'BASEMAP_CACHE')
 
         filename = name+'.pdf'
@@ -368,20 +368,20 @@ class Processor:
             if os.path.exists(basemap_cache_filename):
                 logger.debug('cache archive exist')
                 zip_file = zipfile.ZipFile(basemap_cache_filename)
-                
-                
+
+
                 if zip_file.testzip() is None :  #returns none if archive ok, or name of frist bad file
                     logger.debug('zip file tested')
                     zip_file.extractall(WORKDIR)
                     logger.info('basemap extracted from cache')
                     skip_process_basemap = True
-          
+
         if not skip_process_basemap:
             cmd = 'python3 ../core/process_basemap.py --dump_path {WORKDIR}/{dump_name}.osm.pbf --bbox {bbox} --output "{WORKDIR}/" ' # --verbose is allowed
             cmd = cmd.format(WORKDIR=WORKDIR,bbox=bbox,dump_name=dump_name)
             logger.info(cmd)
             os.system(cmd)
-        
+
         #store basemap data in cache
         if basemap_caching:
             if not os.path.exists(BASEMAP_CACHE_DIR):
@@ -389,10 +389,10 @@ class Processor:
             basemap_files_name = ('highway.gpkg','land.gpkg','landuse.gpkg','railway.gpkg','water.gpkg')
             basemap_files = list()
             for element in basemap_files_name:
-                basemap_files.append(os.path.join(os.path.realpath(WORKDIR),element)) 
-            
+                basemap_files.append(os.path.join(os.path.realpath(WORKDIR),element))
+
             self.archive_files(basemap_files,target=basemap_cache_filename)
-                
+
 
         cmd = 'osmconvert "{WORKDIR}/{dump_name}.osm.pbf" -b={bbox} -o="{WORKDIR}/current_city.osm.pbf"'
         cmd = cmd.format(WORKDIR=WORKDIR,bbox=bbox,dump_name=dump_name)
@@ -450,13 +450,13 @@ class Processor:
 
         #if os.path.isfile('chronodata.gpkg'): os.remove('chronodata.gpkg')
         #if os.path.isfile('notes_now.gpkg'): os.remove('notes_now.gpkg')
-        
+
         fn = None
         if 'trolleybus' in osmfilter_string: fn='trolleybus_street_labels.gpkg'
         if 'tram' in osmfilter_string: fn='tram_street_labels.gpkg'
 
         if fn is not None:
-            cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt multilinestring -nln street_labels ' + WORKDIR+'/street_labels.gpkg '+fn
+            cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt multilinestring -nln street_labels ' + WORKDIR+'/street_labels.gpkg  '+fn + ' street_labels'
             logger.info(cmd)
             os.system(cmd)
             files4zip.append('street_labels.gpkg')
@@ -496,7 +496,6 @@ class Processor:
         filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava1000.svg')
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "1000x1000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
-        logger.debug(cmd)
         logger.info(filename)
         os.system(cmd)
         files4zip.append(filename)
@@ -505,7 +504,6 @@ class Processor:
         filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_wikipedia4000.svg')
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/wikipedia.qgs" --layout "4000x4000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
-        logger.debug(cmd)
         logger.info(filename)
         os.system(cmd)
         files4zip.append(filename)
@@ -515,30 +513,36 @@ class Processor:
         logger.info(cmd)
         os.system(cmd)
         files4zip.append('notes_now.gpkg')
-        
 
+        filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava1000_notes.svg')
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "1000x1000_atlas" --output "{filename}"  > /dev/null 2>&1'
+        cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
+        logger.info(filename)
+        os.system(cmd)
+        files4zip.append(filename)
 
         filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava2000_notes.svg')
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "2000x2000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
-        logger.debug(cmd)
         logger.info(filename)
         os.system(cmd)
         files4zip.append(filename)
+
         filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava4000_notes.svg')
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "2000x2000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
-        logger.debug(cmd)
         logger.info(filename)
         os.system(cmd)
         files4zip.append(filename)
-        
-        
+
+
         #hook for historical lines
         #copy map data here, and render with same qgis projects
+        fn = None
+        if 'trolleybus' in osmfilter_string: fn='trolleybus lines.gpkg'
+        if 'tram' in osmfilter_string: fn='tram lines.gpkg'
 
-
-        cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt multilinestring -nln chronolines ' + WORKDIR+'/chronolines.gpkg chronolines-russia-tram.gpkg'
+        cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt multilinestring -nln chronolines ' + WORKDIR+'/chronolines.gpkg "'+fn+'" lines'
         logger.info(cmd)
         os.system(cmd)
         files4zip.append('chronolines.gpkg')
