@@ -459,7 +459,12 @@ class Processor:
             cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt multilinestring -nln street_labels ' + WORKDIR+'/street_labels.gpkg  '+fn + ' street_labels'
             logger.info(cmd)
             os.system(cmd)
-            files4zip.append('street_labels.gpkg')
+            files4zip.append('street_labels.gpkg')        
+
+        cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt point -nln poi  ' + WORKDIR+'/poi.gpkg ../geodata_custom/poi.gpkg poi'
+        logger.info(cmd)
+        os.system(cmd)
+        files4zip.append('street_labels.gpkg')
 
         filename = os.path.join(os.path.realpath(WORKDIR),name+'.pdf')
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "4000x4000_atlas" --output "{filename}"   > /dev/null 2>&1'
