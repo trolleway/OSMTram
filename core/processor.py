@@ -451,20 +451,20 @@ class Processor:
         #if os.path.isfile('chronodata.gpkg'): os.remove('chronodata.gpkg')
         #if os.path.isfile('notes_now.gpkg'): os.remove('notes_now.gpkg')
 
-        fn = None
-        if 'trolleybus' in osmfilter_string: fn='trolleybus_street_labels.gpkg'
-        if 'tram' in osmfilter_string: fn='tram_street_labels.gpkg'
-
-        if fn is not None:
-            cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt multilinestring -nln street_labels ' + WORKDIR+'/street_labels.gpkg  '+fn + ' street_labels'
-            logger.info(cmd)
-            os.system(cmd)
-            files4zip.append('street_labels.gpkg')        
-
         cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt point -nln poi  ' + WORKDIR+'/poi.gpkg ../geodata_custom/poi.gpkg poi'
         logger.info(cmd)
         os.system(cmd)
         files4zip.append('street_labels.gpkg')
+
+        fn = None
+        if 'trolleybus' in osmfilter_string: fn='notes_now_trolleybus.gpkg'
+        if 'tram' in osmfilter_string: fn='notes_now_tram.gpkg'
+
+        if fn is not None:
+            cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt point  ' + WORKDIR+'/notes_now.gpkg ../geodata_custom/'+fn+' notes_now'
+            logger.info(cmd)
+            os.system(cmd)
+            files4zip.append('notes_now.gpkg')
 
         filename = os.path.join(os.path.realpath(WORKDIR),name+'.pdf')
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "4000x4000_atlas" --output "{filename}"   > /dev/null 2>&1'
@@ -482,7 +482,7 @@ class Processor:
         os.system(cmd)
         files4zip.append(filename)
 
-        filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava4000.svg')
+        filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava4000_quiet.svg')
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "4000x4000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
         logger.debug(cmd)
@@ -490,13 +490,32 @@ class Processor:
         os.system(cmd)
         files4zip.append(filename)
 
-        filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava2000.svg')
+        filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava2000_quiet.svg')
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "2000x2000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
         logger.debug(cmd)
         logger.info(filename)
         os.system(cmd)
         files4zip.append(filename)
+        
+        filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava1000_quiet.svg')
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "1000x1000_atlas" --output "{filename}"  > /dev/null 2>&1'
+        cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
+        logger.debug(cmd)
+        logger.info(filename)
+        os.system(cmd)
+        files4zip.append(filename)
+
+
+        fn = None
+        if 'trolleybus' in osmfilter_string: fn='trolleybus_street_labels.gpkg'
+        if 'tram' in osmfilter_string: fn='tram_street_labels.gpkg'
+
+        if fn is not None:
+            cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt multilinestring -nln street_labels ' + WORKDIR+'/street_labels.gpkg  '+fn + ' street_labels'
+            logger.info(cmd)
+            os.system(cmd)
+            files4zip.append('street_labels.gpkg')        
 
         filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava1000.svg')
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "1000x1000_atlas" --output "{filename}"  > /dev/null 2>&1'
@@ -506,35 +525,22 @@ class Processor:
         files4zip.append(filename)
 
 
-        filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_wikipedia4000.svg')
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/wikipedia.qgs" --layout "4000x4000_atlas" --output "{filename}"  > /dev/null 2>&1'
+        filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_wikipedia1000.svg')
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/wikipedia.qgs" --layout "1000x1000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
         logger.info(filename)
         os.system(cmd)
         files4zip.append(filename)
 
-
-        cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt point  ' + WORKDIR+'/notes_now.gpkg notes_now_trolleybus.gpkg'
-        logger.info(cmd)
-        os.system(cmd)
-        files4zip.append('notes_now.gpkg')
-
-        filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava1000_notes.svg')
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "1000x1000_atlas" --output "{filename}"  > /dev/null 2>&1'
-        cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
-        logger.info(filename)
-        os.system(cmd)
-        files4zip.append(filename)
-
-        filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava2000_notes.svg')
+        filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava2000.svg')
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "2000x2000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
         logger.info(filename)
         os.system(cmd)
         files4zip.append(filename)
-
-        filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava4000_notes.svg')
-        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "2000x2000_atlas" --output "{filename}"  > /dev/null 2>&1'
+        
+        filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava4000.svg')
+        cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "4000x4000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
         logger.info(filename)
         os.system(cmd)
@@ -571,7 +577,7 @@ class Processor:
         #clean dir
         for element in files4zip:
             if os.path.isfile(element):
-                if not element.endswith('kakava4000.svg'):
+                if not element.endswith('2000.svg'):
                     os.remove(element)
 
     def archive_files(self,files,target):
