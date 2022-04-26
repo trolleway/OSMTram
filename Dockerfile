@@ -21,7 +21,7 @@ RUN apt-get install --no-install-recommends -y python3-psycopg2
 RUN apt-get install --no-install-recommends -y time
 RUN apt-get install --no-install-recommends -y osm2pgsql osmctools aria2 zip
 RUN pip3 install tqdm
-RUN apt-get install --no-install-recommends -y  qgis python3-qgis  
+RUN apt-get install --no-install-recommends -y  qgis python3-qgis
 RUN apt-get install --no-install-recommends -y  xvfb
 RUN apt-get install --no-install-recommends -y  poppler-utils
 
@@ -39,7 +39,8 @@ RUN git clone --recurse-submodules https://github.com/trolleway/OSMTram.git
 RUN chmod  --recursive 777 /OSMTram
 
 RUN mkdir /OSMTram/volumedata
-WORKDIR /OSMTram
+ENV QT_QPA_PLATFORM=offscreen
+WORKDIR /OSMTram/scripts
 
 
 

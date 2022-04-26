@@ -111,11 +111,6 @@ docker run -it --link osmtram_backend_db:db -v c:\trolleway\OSMTram\data:/data  
 
 #внутри контейнера
 ```
-Xvfb :1 -screen 0 800x600x24&
-export DISPLAY=:1
-# TODO: change virtual display run for     os.environ["QT_QPA_PLATFORM"] = "offscreen"
-
-cd scripts
 time python3 run.py russia.json --workdir /data  --basemap-caching --where "name_int='Volgograd' and route='tram'"
 ```
 
@@ -126,7 +121,7 @@ Same as prod, but mount code folder to container, no need to rebuild container a
 git clone  --recurse-submodules https://github.com/trolleway/OSMTram.git
 cd OSMTram
 docker build -f Dockerfiledev -t osmtram:dev .
-cd ..
+
 
 #run postgis in docker
 docker run --rm   --name osmtram_backend_db -e POSTGRES_PASSWORD=user -e POSTGRES_USER=user -e POSTGRES_DB=gis -d -p 5432:5432   mdillon/postgis

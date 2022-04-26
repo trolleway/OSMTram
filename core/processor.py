@@ -497,7 +497,7 @@ class Processor:
         logger.info(filename)
         os.system(cmd)
         files4zip.append(filename)
-        
+
         filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava1000_quiet.svg')
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "1000x1000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
@@ -515,7 +515,7 @@ class Processor:
             cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt multilinestring -nln street_labels ' + WORKDIR+'/street_labels.gpkg  '+fn + ' street_labels'
             logger.info(cmd)
             os.system(cmd)
-            files4zip.append('street_labels.gpkg')        
+            files4zip.append('street_labels.gpkg')
 
         filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava1000.svg')
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "1000x1000_atlas" --output "{filename}"  > /dev/null 2>&1'
@@ -538,7 +538,7 @@ class Processor:
         logger.info(filename)
         os.system(cmd)
         files4zip.append(filename)
-        
+
         filename=os.path.join(os.path.realpath(WORKDIR),''+name+'_map_kakava4000.svg')
         cmd = 'python3 ../core/pyqgis_client_atlas.py --project "{WORKDIR}/manila.qgs" --layout "4000x4000_atlas" --output "{filename}"  > /dev/null 2>&1'
         cmd = cmd.format(WORKDIR=WORKDIR,filename=filename)
@@ -553,10 +553,11 @@ class Processor:
         if 'trolleybus' in osmfilter_string: fn='trolleybus lines.gpkg'
         if 'tram' in osmfilter_string: fn='tram lines.gpkg'
 
-        cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt multilinestring -nln chronolines ' + WORKDIR+'/chronolines.gpkg "'+fn+'" lines'
-        logger.info(cmd)
-        os.system(cmd)
-        files4zip.append('chronolines.gpkg')
+        if fn is not None:
+            cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt multilinestring -nln chronolines ' + WORKDIR+'/chronolines.gpkg "'+fn+'" lines'
+            logger.info(cmd)
+            os.system(cmd)
+            files4zip.append('chronolines.gpkg')
 
         # text2wikimedia commons
 
