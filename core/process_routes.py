@@ -41,6 +41,7 @@ def argparser_prepare():
             formatter_class=PrettyFormatter)
     parser.add_argument('--dump_path', dest='dump_path', required=True, help='Path to local .pbf file. Can both be filtered, or unfiltered')
     parser.add_argument('--filter', dest='filter', required=True, help='parameter string to osmfilter. \ ')
+    parser.add_argument('--drop_filter', dest='drop_filter', required=False, help='parameter string to second pass osmfilter in drop command  Sample: ref=13 or ref=12 or ref=11  ')
     parser.add_argument('--red_zone',dest='red_zone', required=False, help='Path to local GeoJSON file with red zone. Routes intersects with red zone will be deleted.')
     parser.add_argument('--output',dest='output', required=True, help='Output folder')
 
@@ -52,7 +53,7 @@ def argparser_prepare():
         % {'prog': parser.prog}
     return parser
 
-def filter_osm_dump(dump_path,  folder,filter='route=bus',):
+def filter_osm_dump(dump_path,  folder,filter='route=bus',drop_filter=None):
         import json
         import pprint
         pp=pprint.PrettyPrinter(indent=2)
@@ -62,14 +63,25 @@ def filter_osm_dump(dump_path,  folder,filter='route=bus',):
         output_path_2 = os.path.join(folder,'filtering2')
         output_path_3 = os.path.join(folder,FILTERED_DUMP_NAME)
 
-        cmd = '''
-        osmconvert {dump_path} -o={output_path_1}.o5m
-        osmfilter {output_path_1}.o5m --keep= --keep-relations="{filter}" --out-o5m >{output_path_2}.o5m
-        rm -f {output_path_1}.o5m
-        osmconvert {output_path_2}.o5m -o={output_path_3}
-        rm -f {output_path_2}.o5m
-        '''
-        cmd = cmd.format(dump_path=dump_path,output_path_1=output_path_1,output_path_2=output_path_2,output_path_3=output_path_3, filter=filter)
+        if drop_filter is None:
+            cmd = '''
+            osmconvert {dump_path} -o={output_path_1}.o5m
+            osmfilter {output_path_1}.o5m --keep= --keep-relations="{filter}" --out-o5m >{output_path_2}.o5m
+            rm -f {output_path_1}.o5m
+            osmconvert {output_path_2}.o5m -o={output_path_3}
+            rm -f {output_path_2}.o5m
+            '''
+        elif drop_filter is not None:
+            cmd = '''
+            osmconvert {dump_path} -o={output_path_1}.o5m
+            osmfilter {output_path_1}.o5m --keep= --keep-relations="{filter}" --drop="{drop_filter}" --out-o5m >{output_path_2}.o5m
+            rm -f {output_path_1}.o5m
+            osmconvert {output_path_2}.o5m -o={output_path_3}
+            rm -f {output_path_2}.o5m
+            '''
+        cmd = cmd.format(dump_path=dump_path,output_path_1=output_path_1,output_path_2=output_path_2,output_path_3=output_path_3,
+        filter=filter,
+        drop_filter = drop_filter)
         logger.debug(cmd)
         os.system(cmd)
 
@@ -191,7 +203,7 @@ if __name__ == '__main__':
         parser = argparser_prepare()
         args = parser.parse_args()
 
-        filter_osm_dump(dump_path=args.dump_path, filter=args.filter,folder=args.output)
+        filter_osm_dump(dump_path=args.dump_path, filter=args.filter,folder=args.output, drop_filter=args.drop_filter)
         os.system('export PGPASSWORD='+password)
 
         cleardb(host,dbname,user,password)

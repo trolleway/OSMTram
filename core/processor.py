@@ -263,6 +263,10 @@ class Processor:
                 filtersrc = str(feature.GetField('filter'))
             except:
                 pass
+            try:
+                drop_filter = str(feature.GetField('drop_filter'))
+            except:
+                drop_filter = None
 
             if (filtersrc != '' and filtersrc is not None and filtersrc != 'None'): filtersring = filtersrc
 
@@ -302,6 +306,7 @@ class Processor:
             bbox=bbox,
             layout_extent = layout_extent,
             osmfilter_string=filtersring,
+            drop_filter=drop_filter,
             dump_url=dump_url,
             dump_name=dump_name,
             basemap_caching = basemap_caching
@@ -352,6 +357,7 @@ class Processor:
     dump_url,
     dump_name,
     osmfilter_string='route=tram',
+    drop_filter = None,
     layout_extent='<Extent ymax="8087642" xmax="3487345" xmin="3470799" ymin="8075943"/>',
     basemap_caching = False):
 
@@ -399,8 +405,8 @@ class Processor:
         logger.info(cmd)
         os.system(cmd)
 
-        cmd = 'python3 ../core/process_routes.py --dump_path "{WORKDIR}/current_city.osm.pbf" --filter "{osmfilter_string}" --output "{WORKDIR}/" '
-        cmd = cmd.format(WORKDIR=WORKDIR,osmfilter_string=osmfilter_string)
+        cmd = 'python3 ../core/process_routes.py --dump_path "{WORKDIR}/current_city.osm.pbf" --filter "{osmfilter_string}" --drop_filter "{drop_filter}" --output "{WORKDIR}/" '
+        cmd = cmd.format(WORKDIR=WORKDIR,osmfilter_string=osmfilter_string, drop_filter=drop_filter)
         logger.info(cmd)
         os.system(cmd)
 
