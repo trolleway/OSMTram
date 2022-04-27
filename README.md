@@ -137,6 +137,7 @@ docker run -it --link osmtram_backend_db:db -v ${PWD}/data:/data -v ${PWD}:/OSMT
 time python3 run.py italy-sud.metadata.json --workdir /data
 time python3 run.py poland.json --skip-osmupdate --workdir /data --where "name_int = 'Gdansk'"
 time python3 run.py russia.json --skip-osmupdate --basemap-caching --workdir /data --where "name_int = 'Ekaterinburg' and route='tram'"
+time python3 run.py russia.json --basemap-caching --workdir /data --where "name_int = 'Ekaterinburg' and route='trolleybus'"
 time python3 run.py russia.json --skip-osmupdate --workdir /data --where "not valid"
 
 ```

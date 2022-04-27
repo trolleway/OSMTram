@@ -57,6 +57,7 @@ def export_atlas(qgs_project_path, layout_name, filepath):
     image_settings = QgsLayoutExporter(myAtlasMap).ImageExportSettings()
     image_settings.dpi = 96
     svg_settings=QgsLayoutExporter(myAtlasMap).SvgExportSettings() #https://qgis.org/api/structQgsLayoutExporter_1_1SvgExportSettings.html
+    svg_settings.forceVectorOutput = False
 
     if imageExtension == '.jpg':
         if os.path.isfile(os.path.join(img_path,'output_0.jpg')):

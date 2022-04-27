@@ -20,6 +20,9 @@ import time
 import config
 import argparse
 import logging
+from osgeo import ogr, gdal
+from transliterate import translit, get_available_language_codes
+
 
 # move all magic variables to up
 
@@ -179,18 +182,42 @@ def process(host,dbname,user,password):
         )
         logger.info(cmd)
         os.system(cmd)
+        
+def transliterate(path):
+    #add attribute to layer, transliterating field "name"
+    if not os.path.isfile(path):
+        logger.info('not found file '+path)
+        return
+        
+    ds = gdal.OpenEx(path,gdal.OF_UPDATE)
+    assert ds is not None
+    layer = ds.GetLayer()
+    assert layer is not None
+
+    fieldname = 'name_int'
+
+    new_field = layer.CreateField(ogr.FieldDefn(fieldname, ogr.OFTString))
+    
+    for feature in layer:
+        try:
+            feature.SetField(fieldname,translit(feature.GetField('name').replace('"',''), 'ru', reversed=True))
+            layer.SetFeature(feature)
+        except:
+            continue
+    
+    del layer
+    del ds
+    
 
 def postgis2geojson(host,dbname,user,password,table, folder=''):
     file_path = os.path.join(folder,table) + '.geojson'
     if os.path.exists(file_path):
         os.remove(file_path)
 
-    cmd='''
-ogr2ogr -f GeoJSON {file_path}    \
+    cmd='''ogr2ogr -f GeoJSON {file_path}    \
   "PG:host='''+host+''' dbname='''+dbname+''' user='''+user+''' password='''+password+'''" "'''+table+'''"
     '''
     cmd = cmd.format(file_path = file_path)
-    print(cmd)
     os.system(cmd)
 
 if __name__ == '__main__':
@@ -212,6 +239,7 @@ if __name__ == '__main__':
         process(host,dbname,user,password)
         postgis2geojson(host,dbname,user,password,'terminals',folder=args.output)
         postgis2geojson(host,dbname,user,password,'routes',folder=args.output)
+        transliterate(os.path.join(args.output,'terminals.geojson'))
 
         #os.rename(os.path.join(args.output,'terminals_export.geojson'),os.path.join(args.output,'terminals.geojson'))
         #os.rename(os.path.join(args.output,'routes_with_refs.geojson'),os.path.join(args.output,'routes.geojson'))
