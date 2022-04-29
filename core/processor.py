@@ -294,6 +294,7 @@ class Processor:
 {{OpenStreetMap}}
 
 [[Category:Maps of $location$]]
+[[Category:Public transport maps of $location$]]
 [[Category:Maps by OSMTram]]
             '''
             if 'tram' in filtersring: wtext+="[[Category:Tram transport in $location$]]\n[[Category:Trams in $location$]]"

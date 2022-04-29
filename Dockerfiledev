@@ -20,7 +20,7 @@ RUN apt-get install --no-install-recommends -y python3-pip
 RUN apt-get install --no-install-recommends -y python3-psycopg2
 RUN apt-get install --no-install-recommends -y time
 RUN apt-get install --no-install-recommends -y osm2pgsql osmctools aria2 zip
-RUN pip3 install tqdm
+RUN pip3 install tqdm transliterate
 RUN apt-get install --no-install-recommends -y  qgis python3-qgis
 RUN apt-get install --no-install-recommends -y  xvfb
 RUN apt-get install --no-install-recommends -y  poppler-utils
