@@ -248,10 +248,10 @@ class Processor:
             self.make_geosjon_page(geom,geojson_page,sheet_name)
 
             extent = geom.Buffer(0.7).GetEnvelope()
-            lx = extent[0]
-            ly = extent[2]
-            rx = extent[1]
-            ry = extent[3]
+            lx = round(extent[0],4) #just for console print
+            ly = round(extent[2],4)
+            rx = round(extent[1],4)
+            ry = round(extent[3],4)
             bbox = '{lx},{ly},{rx},{ry}'.format(lx=lx,ly=ly,rx=rx,ry=ry)
 
             sheet_filename = feature.GetField('name_loc')
