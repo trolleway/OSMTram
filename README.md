@@ -103,9 +103,9 @@ docker build -t osmtram:1.0 .
 docker run --rm   --name osmtram_backend_db -e POSTGRES_PASSWORD=user -e POSTGRES_USER=user -e POSTGRES_DB=gis -d -p 5432:5432   mdillon/postgis
 
 #поднять и зайти в контейнер с ubuntu+python+gdal, в который проброшен порт с postgis
-docker run -it --link osmtram_backend_db:db -v ${PWD}/data:/data   osmtram:1.0  /bin/bash
+docker run --rm -it --link osmtram_backend_db:db -v ${PWD}/data:/data   osmtram:1.0  /bin/bash
 пути для win
-docker run -it --link osmtram_backend_db:db -v c:\trolleway\OSMTram\data:/data  osmtram:1.0  /bin/bash
+docker run --rm -it --link osmtram_backend_db:db -v c:\trolleway\OSMTram\data:/data  osmtram:1.0  /bin/bash
 ```
 
 
@@ -127,7 +127,7 @@ docker build -f Dockerfiledev -t osmtram:dev .
 docker run --rm   --name osmtram_backend_db -e POSTGRES_PASSWORD=user -e POSTGRES_USER=user -e POSTGRES_DB=gis -d -p 5432:5432   mdillon/postgis
 
 #win
-docker run -it --link osmtram_backend_db:db -v ${PWD}/data:/data -v ${PWD}:/OSMTram osmtram:dev  /bin/bash
+docker run --rm -it --link osmtram_backend_db:db -v ${PWD}/data:/data -v ${PWD}:/OSMTram osmtram:dev  /bin/bash
 ```
 
 

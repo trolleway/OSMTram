@@ -195,7 +195,6 @@ def transliterate(path):
     assert layer is not None
 
     fieldname = 'name_int'
-
     new_field = layer.CreateField(ogr.FieldDefn(fieldname, ogr.OFTString))
     
     for feature in layer:
@@ -204,9 +203,9 @@ def transliterate(path):
             layer.SetFeature(feature)
         except:
             continue
-    
     del layer
-    del ds
+    del ds 
+
     
 
 def postgis2geojson(host,dbname,user,password,table, folder=''):
