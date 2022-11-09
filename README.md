@@ -84,9 +84,9 @@ This section should list any major frameworks that you built your project using.
 * [PostGIS](https://postgis.net/)
 * [Docker](https://www.docker.com/)
 * [Python](https://www.python.org/)
-* [QGIS Server]
+* [QGIS] (https://qgis.org/)
 
-https://dev.to/abiodunjames/why-docker-creating-a-multi-container-application-with-docker--1gpb
+
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -95,21 +95,20 @@ https://dev.to/abiodunjames/why-docker-creating-a-multi-container-application-wi
 
 ### Installation in docker (prod)
 ```
-git clone  --recurse-submodules git@github.com:trolleway/OSMTram.git
+git clone  --recurse-submodules https://github.com/trolleway/OSMTram.git
+# here is git submodules, download zip from github will not work
 cd OSMTram
 docker build -t osmtram:1.0 .
 
-#поднять контейнер с postgis
+#start postgis container
 docker run --rm   --name osmtram_backend_db -e POSTGRES_PASSWORD=user -e POSTGRES_USER=user -e POSTGRES_DB=gis -d -p 5432:5432   mdillon/postgis
 
-#поднять и зайти в контейнер с ubuntu+python+gdal, в который проброшен порт с postgis
+#start and go to container with ubuntu+python+gdal, with network link to postgis
 docker run --rm -it --link osmtram_backend_db:db -v ${PWD}/data:/data   osmtram:1.0  /bin/bash
-пути для win
-docker run --rm -it --link osmtram_backend_db:db -v c:\trolleway\OSMTram\data:/data  osmtram:1.0  /bin/bash
+# on Windows run in powershell
 ```
 
-
-#внутри контейнера
+# Into container
 ```
 time python3 run.py russia.json --workdir /data  --basemap-caching --where "name_int='Volgograd' and route='tram'"
 ```
@@ -161,11 +160,11 @@ It consists from there scripts:
 
 * core/pyqgis_client.py
 * core/qgis_project_substitute.py
-
+<!--
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
-<!--
+
 _For more examples, please refer to the [Documentation](https://example.com)_
 -->
 
@@ -190,9 +189,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 <!--## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
-
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)-->
+Artem Svetlov - [@trolleway](https://twitter.com/trolleway) - trolleway@yandex.ru
 
 
 
