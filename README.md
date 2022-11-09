@@ -94,9 +94,13 @@ This section should list any major frameworks that you built your project using.
 <!--### Prerequisites -->
 
 ### Installation in docker (prod)
+
+This script run in Docker container, witch can be run on any modern OS.
+
+Install git. Here is git submodules, download zip from github will not work. See https://github.com/git-guides/install-git
+
 ```
 git clone  --recurse-submodules https://github.com/trolleway/OSMTram.git
-# here is git submodules, download zip from github will not work
 cd OSMTram
 docker build -t osmtram:1.0 .
 
@@ -129,6 +133,10 @@ docker run --rm   --name osmtram_backend_db -e POSTGRES_PASSWORD=user -e POSTGRE
 docker run --rm -it --link osmtram_backend_db:db -v ${PWD}/data:/data -v ${PWD}:/OSMTram osmtram:dev  /bin/bash
 ```
 
+## Map style change
+
+Script start QGIS in docker container, make copy of QGIS project from /qgis_project_templates, put data layers into gpkg files, and run QGIS operation "Atlas rendering".
+If you wish change map appearance, open and edit qgis_project_templates/manila.qgs.template.qgs in QGIS. There is sample layers for map styling already in that folder.
 
 ## Examples
 
