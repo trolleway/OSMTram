@@ -152,6 +152,22 @@ time python3 run.py russia.json --skip-osmupdate --workdir /data --where "not va
 <!-- USAGE EXAMPLES -->
 ## Detailed description
 
+```mermaid
+graph TD
+A[run.py] -->|countryname.json| B(Read boundaries geojson)
+B --> |wget/osmupdate| C(download and upgrade OSM dump)
+C -->|osmconvert/osmium| D[Crop OSM by BBOX]
+D -->|ogr| E[Convert OSM to GPKG with basemap]
+C -->|core/process_routes.py osmfilter| ROUTES[extract route relations to pbf]
+ROUTES -->|core/process_routes.py osm2pgsql| POSTGIS[import routes pbf to PostGIS]
+POSTGIS -->|core/osmot python| POSTGIS2[Generate route labels for streets]
+POSTGIS2 -->|core/osmot python| POSTGIS3[Generate arrows labels for one-way routes]
+POSTGIS3 -->|core/osmot python| POSTGIS4[Generate terminal points]
+POSTGIS4 -->|core/osmot ogr2ogr| ROUTES.GEOJSON[Export lines, terminals to GeoJSON]  
+ROUTES.GEOJSON -->|qgis| QGIS[render map from files in QGIS to svg, png, pdf]  
+E -->| |QGIS
+```
+
 This is a docker container. It uses for input a bbox, filter string and map style, and generate a png image file.
 
 It consists from there scripts:
