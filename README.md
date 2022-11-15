@@ -149,6 +149,14 @@ time python3 run.py russia.json --skip-osmupdate --workdir /data --where "not va
 
 ```
 
+## Edit map style
+
+1. Download QGIS and open one of .qgs projects in /qgis_project_templates/
+2. There is sample data layers for some typical city. You can edit layers symbolics and label properties. 
+3. Overwrite .qgs project or save to new project and add refrences into core/processor.py
+
+At next run a map will rendered using changed project
+
 <!-- USAGE EXAMPLES -->
 ## Detailed description
 
