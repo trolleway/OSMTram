@@ -133,10 +133,6 @@ docker run --rm   --name osmtram_backend_db -e POSTGRES_PASSWORD=user -e POSTGRE
 docker run --rm -it --link osmtram_backend_db:db -v ${PWD}/data:/data -v ${PWD}:/OSMTram osmtram:dev  /bin/bash
 ```
 
-## Map style change
-
-Script start QGIS in docker container, make copy of QGIS project from /qgis_project_templates, put data layers into gpkg files, and run QGIS operation "Atlas rendering".
-If you wish change map appearance, open and edit qgis_project_templates/manila.qgs.template.qgs in QGIS. There is sample layers for map styling already in that folder.
 
 ## Examples
 
@@ -155,7 +151,10 @@ time python3 run.py russia.json --skip-osmupdate --workdir /data --where "not va
 2. There is sample data layers for some typical city. You can edit layers symbolics and label properties. 
 3. Overwrite .qgs project or save to new project and add refrences into core/processor.py
 
-At next run a map will rendered using changed project
+At next run a map will rendered using changed project. 
+
+
+
 
 <!-- USAGE EXAMPLES -->
 ## Detailed description
@@ -187,6 +186,8 @@ It consists from there scripts:
 
 * core/pyqgis_client_atlas.py - render pdf/svg/png map using standart qgis project with atlas layout. Extent is set in geojson file.
     One run generate one-page atlas, then pages combined in multi-page pdf or zip archive
+    
+    Script start QGIS in docker container, make copy of QGIS project from /qgis_project_templates, put data layers into gpkg files, and run QGIS operation "Atlas rendering"
 
 ### Deprecated scripts, should be removed
 
