@@ -461,7 +461,7 @@ class Processor:
         cmd = 'ogr2ogr -overwrite -clipsrc '+bbox.replace(',',' ')+' -nlt point -nln poi  ' + WORKDIR+'/poi.gpkg ../geodata_custom/poi.gpkg poi'
         logger.info(cmd)
         os.system(cmd)
-        files4zip.append('street_labels.gpkg')
+        files4zip.append('poi.gpkg')
 
         fn = None
         if 'trolleybus' in osmfilter_string: fn='notes_now_trolleybus.gpkg'
