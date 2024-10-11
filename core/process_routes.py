@@ -199,8 +199,12 @@ def transliterate(path):
     
     for feature in layer:
         try:
-            feature.SetField(fieldname,translit(feature.GetField('name').replace('"',''), 'ru', reversed=True))
-            layer.SetFeature(feature)
+            original_text = feature.GetField('name')
+            lat_text = translit(original_text.replace('"',''), 'ru', reversed=True)  
+            #make transliteration only for non RU texts  
+            if original_text != translit(feature.GetField('name'), 'ru', reversed=True):   	
+                feature.SetField(fieldname,translit(feature.GetField('name').replace('"',''), 'ru', reversed=True))
+                layer.SetFeature(feature)
         except:
             continue
     del layer
