@@ -1,5 +1,5 @@
 {
-"dump_url":"http://download.geofabrik.de/russia-latest.osm.pbf",
+"dump_url":"https://download.geofabrik.de/russia-latest.osm.pbf",
 "dump_name":"russia",
 "layout_geojson":"russia.geojson"
 }
